@@ -260,7 +260,7 @@ export default function HomeScreen() {
         </div>
 
         {/* List Content */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingBottom: '80px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingBottom: '130px' }}>
           {showForecasts ? (
             <>
               {/* Disclaimer */}
