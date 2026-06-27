@@ -10,11 +10,12 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CATEGORY_LABELS, CATEGORY_ICONS, UserRole } from '@civicmind/shared';
+import { CATEGORY_ICONS, UserRole } from '@civicmind/shared';
 import { MapPlaceholder, StatusBadge, EmptyState, SLARiskBadge, FullPageSpinner } from '../components/shared.js';
 import { AppSwitcher } from '../../../shared/src/components/AppSwitcher.js';
 import { MOCK_ISSUES } from '../data/mockData.js';
 import { useAuth } from '../context/AuthContext.js';
+import { useI18n } from '../context/I18nContext.js';
 import type { IssueDetail } from '../../../shared/src/api-client.js';
 
 const CATEGORY_OPTIONS = ['All', 'pothole', 'streetlight', 'garbage', 'water_leakage', 'drainage', 'road_damage', 'traffic_signal', 'other'];
@@ -52,6 +53,7 @@ function getRiskLabel(score: number): string {
 export default function HomeScreen() {
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { t } = useI18n();
   const [issues, setIssues] = useState<IssueDetail[]>([]);
   const [forecasts, setForecasts] = useState<HotspotForecast[]>([]);
   const [loading, setLoading] = useState(true);
@@ -245,7 +247,7 @@ export default function HomeScreen() {
                 className={`filter-chip ${catFilter === cat && !showForecasts ? 'active' : ''}`}
                 onClick={() => { setCatFilter(cat); setShowForecasts(false); }}
               >
-                {cat === 'All' ? '🌐 All' : `${CATEGORY_ICONS[cat as keyof typeof CATEGORY_ICONS] ?? '⚠️'} ${CATEGORY_LABELS[cat as keyof typeof CATEGORY_LABELS] ?? cat}`}
+                {cat === 'All' ? '🌐 All' : `${CATEGORY_ICONS[cat as keyof typeof CATEGORY_ICONS] ?? '⚠️'} ${t(cat as any) ?? cat}`}
               </button>
             ))}
             {/* Hotspot Forecast toggle */}
@@ -277,7 +279,7 @@ export default function HomeScreen() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: '14px', color: '#1e293b', marginBottom: '2px' }}>
-                      {CATEGORY_LABELS[fc.predicted_category as keyof typeof CATEGORY_LABELS] ?? fc.predicted_category}
+                      {t(fc.predicted_category as any) ?? fc.predicted_category}
                     </div>
                     <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {fc.ward_or_area_id}
@@ -311,7 +313,7 @@ export default function HomeScreen() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--color-text-primary)', marginBottom: '4px' }}>
-                      {(CATEGORY_LABELS as Record<string, string>)[issue.category] ?? issue.category}
+                      {t(issue.category as any) ?? issue.category}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {issue.location?.address_text ?? (typeof issue.location?.lat === 'number' && typeof issue.location?.lng === 'number' ? `${issue.location.lat.toFixed(4)}, ${issue.location.lng.toFixed(4)}` : 'Location unavailable')}

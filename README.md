@@ -10,15 +10,7 @@ CivicSense is an autonomous civic intelligence platform that replaces the passiv
 
 A citizen reports a civic issue (pothole, broken streetlight, garbage overflow, water leakage, etc.) with nothing more than a photo, a location, and an optional short description. From that point forward, CivicSense's agents validate the report, identify and notify the correct government department, track the response against service-level expectations, escalate automatically if ignored, and verify — using independent before/after computer vision — that any claimed fix was a real fix. 
 
----
 
-## Screenshots
-
-![Citizen photo capture → AI classification screen]()
-![Authority dashboard with live SLA countdown]()
-![Escalation event OR before/after verification comparison]()
-
----
 
 ## Key Features
 
@@ -28,6 +20,7 @@ A citizen reports a civic issue (pothole, broken streetlight, garbage overflow, 
 | **Intelligent Routing** | Auto-identify the correct department and auto-draft a formal complaint |
 | **Autonomous SLA Escalation** | Auto-escalate unaddressed issues to higher authority tiers without citizen follow-up |
 | **Resolution Verification** | Before/after AI vision comparison certifies that "resolved" means actually resolved |
+| **Multi-Language Support** | Full AI-generated translation support for 7 Indian languages (English, Tamil, Hindi, Telugu, Malayalam, Bengali, Kannada) |
 | **Authority Dashboard** | A structured, SLA-aware worklist replacing ad hoc complaint handling |
 | **Admin Console** | System-wide oversight for AI monitoring and ecosystem health |
 

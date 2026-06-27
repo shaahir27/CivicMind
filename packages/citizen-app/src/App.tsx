@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
-import { I18nProvider, useI18n } from './context/I18nContext.js';
+import { I18nProvider, useI18n, SUPPORTED_LANGUAGES } from './context/I18nContext.js';
 
 // Screens
 import OnboardingScreen from './screens/OnboardingScreen.js';
@@ -81,13 +81,22 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="sidebar-footer">
-          <button
-            className="sidebar-link"
-            onClick={() => { setLocale(locale === 'en' ? 'ta' : 'en'); setSidebarOpen(false); }}
-          >
-            <span className="sidebar-icon">🌐</span>
-            <span className="sidebar-label">{t('switchLanguage')}</span>
-          </button>
+          <div className="sidebar-link" style={{ padding: '0', background: 'transparent' }}>
+            <span className="sidebar-icon" style={{ marginLeft: '12px' }}>🌐</span>
+            <select
+              value={locale}
+              onChange={(e) => { setLocale(e.target.value as any); setSidebarOpen(false); }}
+              style={{
+                flex: 1, border: 'none', background: 'transparent',
+                fontSize: '15px', fontWeight: 500, color: 'var(--color-text-secondary)',
+                padding: '12px', outline: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)'
+              }}
+            >
+              {SUPPORTED_LANGUAGES.map(lang => (
+                <option key={lang.code} value={lang.code}>{lang.name}</option>
+              ))}
+            </select>
+          </div>
           <button
             className="sidebar-link"
             style={{ color: 'var(--color-danger)' }}

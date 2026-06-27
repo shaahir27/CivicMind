@@ -9,13 +9,14 @@ import { StatusBadge, StatusTimeline, SLARiskBadge, LoadingSpinner, MapPlacehold
 import { useAuth } from '../context/AuthContext.js';
 import { MOCK_ISSUES } from '../data/mockData.js';
 import type { IssueDetail } from '../../../shared/src/api-client.js';
-import { CATEGORY_LABELS } from '@civicmind/shared';
+import { useI18n } from '../context/I18nContext.js';
 
 export default function ConfirmationStatusScreen() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { state } = useLocation() as { state?: { issueId: string; merged?: boolean; photoPreview?: string | null } };
   const { token, isGuest } = useAuth();
+  const { t } = useI18n();
 
   const issueId = id ?? state?.issueId ?? 'ISS-DEMO';
 
@@ -142,7 +143,7 @@ export default function ConfirmationStatusScreen() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
               <div>
                 <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', marginBottom: '4px' }}>
-                  {(CATEGORY_LABELS as Record<string, string>)[issue.category] ?? issue.category}
+                  {t(issue.category as any) ?? issue.category}
                 </h2>
                 <div style={{ fontSize: '13px', color: '#64748b' }}>
                   {issue.location?.address_text ?? (typeof issue.location?.lat === 'number' && typeof issue.location?.lng === 'number' ? `${issue.location.lat.toFixed(4)}, ${issue.location.lng.toFixed(4)}` : 'Location unavailable')}

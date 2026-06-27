@@ -7,6 +7,7 @@
 import React from 'react';
 import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { STATUS_LABELS, CATEGORY_ICONS, CATEGORY_LABELS, SEVERITY_LABELS, formatRelativeTime } from '@civicmind/shared';
+import { useI18n } from '../context/I18nContext.js';
 
 
 // ─── StatusBadge ──────────────────────────────────────────────────────────────
@@ -21,7 +22,8 @@ const STATUS_ICONS: Record<string, string> = {
 };
 
 export function StatusBadge({ status, size = 'md' }: { status: string; size?: 'sm' | 'md' }) {
-  const label = (STATUS_LABELS as Record<string, string>)[status] ?? status;
+  const { t } = useI18n();
+  const label = t(status as any) ?? (STATUS_LABELS as Record<string, string>)[status] ?? status;
   return (
     <span
       className="status-badge"

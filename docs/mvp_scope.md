@@ -13,7 +13,7 @@
 - **Admin Console:** Oversight portal for monitoring AI agent logs and system health.
 - **Node.js Backend:** The orchestrator housing the 6 AI agents.
 
-### AI Agent Stack (Gemini 3.1 Flash-Lite via OpenRouter)
+### AI Agent Stack (Gemini 3.1 Flash-Lite via `@google/genai`)
 1. **Reporter Agent:** Extracts category/severity from images.
 2. **Validator Agent:** Checks location/image similarity to prevent duplicates.
 3. **Router Agent:** Maps issues to the correct department.

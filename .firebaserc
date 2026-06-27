@@ -1,5 +1,24 @@
 {
   "projects": {
     "default": "civicsense-ec813"
-  }
+  },
+  "targets": {
+    "civicsense-ec813": {
+      "hosting": {
+        "landing-page": [
+          "civicsense-landing"
+        ],
+        "citizen-app": [
+          "civicsense-citizen"
+        ],
+        "authority-portal": [
+          "civicsense-authority"
+        ],
+        "admin-console": [
+          "civicsense-admin"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

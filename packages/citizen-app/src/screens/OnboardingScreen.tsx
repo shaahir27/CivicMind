@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useI18n } from '../context/I18nContext.js';
+import { useI18n, SUPPORTED_LANGUAGES } from '../context/I18nContext.js';
 
 export default function OnboardingScreen() {
   const [panel, setPanel] = useState(0);
@@ -86,30 +86,24 @@ export default function OnboardingScreen() {
 
       {/* Top bar: Language + Skip */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px', zIndex: 10 }}>
-        <button
-          onClick={() => setLocale(locale === 'en' ? 'ta' : 'en')}
-          style={{
-            background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(0, 0, 0, 0.05)',
-            borderRadius: '24px',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            fontSize: '13px',
-            fontWeight: 600,
-            color: 'hsl(220 20% 25%)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            transition: 'background 0.2s',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 1)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)'}
-        >
-          <span>🌐</span> {t('switchLanguage')}
-        </button>
+        {/* Language Switcher */}
+        <div style={{ position: 'relative' }}>
+          <select
+            value={locale}
+            onChange={(e) => setLocale(e.target.value as any)}
+            style={{
+              appearance: 'none', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(0, 0, 0, 0.05)', borderRadius: '24px',
+              padding: '8px 16px 8px 36px', fontSize: '13px', fontWeight: 600, color: 'hsl(220 20% 25%)',
+              cursor: 'pointer', outline: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', fontFamily: 'var(--font-sans)'
+            }}
+          >
+            {SUPPORTED_LANGUAGES.map(lang => (
+              <option key={lang.code} value={lang.code}>{lang.name}</option>
+            ))}
+          </select>
+          <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', fontSize: '16px' }}>🌐</span>
+        </div>
         
         <button
           onClick={skip}

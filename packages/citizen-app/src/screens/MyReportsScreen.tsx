@@ -10,10 +10,12 @@ import { useAuth } from '../context/AuthContext.js';
 import { MOCK_ISSUES } from '../data/mockData.js';
 import type { IssueSummary } from '../../../shared/src/api-client.js';
 import { CATEGORY_LABELS } from '@civicmind/shared';
+import { useI18n } from '../context/I18nContext.js';
 
 export default function MyReportsScreen() {
   const navigate = useNavigate();
   const { token, isGuest } = useAuth();
+  const { t } = useI18n();
   
   const [issues, setIssues] = useState<IssueSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -118,7 +120,7 @@ export default function MyReportsScreen() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 600, fontSize: '15px', color: '#1e293b' }}>
-                      {(CATEGORY_LABELS as Record<string, string>)[issue.category] ?? issue.category}
+                      {t(issue.category as any) ?? issue.category}
                     </div>
                     <div style={{ fontSize: '12px', color: '#94a3b8' }}>
                       {new Date(issue.created_at).toLocaleDateString()}

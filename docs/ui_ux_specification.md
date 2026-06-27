@@ -52,5 +52,5 @@
 **Form Factor:** Desktop-first dashboard.
 **Key Elements:**
 - **Global Overview:** KPI cards (Total Issues, AI Accuracy, SLA Breaches).
-- **Agent Logs Table:** Raw JSON payload viewer for debugging OpenRouter/Gemini responses.
+- **Agent Logs Table:** Raw JSON payload viewer for debugging Gemini responses.
 - **User Management:** Table to assign departments to registered Authority accounts.

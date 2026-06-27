@@ -26,7 +26,7 @@
 ## 2. Non-Functional Requirements
 
 - **NFR-1 (Architecture):** The system must be structured as a Monorepo to share configurations across the backend and 4 frontend packages.
-- **NFR-2 (AI):** The system must utilize OpenRouter / Gemini 3.1 Flash-Lite for multimodal reasoning.
+- **NFR-2 (AI):** The system must utilize `@google/genai` (Gemini 3.1 Flash-Lite) for multimodal reasoning.
 - **NFR-3 (Database):** The system must use Firebase Firestore for real-time document synchronization.
 - **NFR-4 (Security):** All API endpoints must be secured using Firebase Auth Bearer tokens, with strict role-based access control (Citizen vs Authority vs Admin).
 - **NFR-5 (Hosting):** Frontends must be deployed as static sites to Firebase Hosting. The backend must be containerized and deployed to Google Cloud Run.

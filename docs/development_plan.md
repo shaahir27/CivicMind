@@ -11,7 +11,7 @@
 
 ## Phase 2: Agent Orchestrator & Backend (Completed)
 - **Node.js/Express Setup:** Built the core API gateway.
-- **OpenRouter Integration:** Successfully integrated `google/gemini-3.1-flash-lite` as the central reasoning engine for all 6 agents.
+- **Gemini SDK Integration:** Successfully integrated `@google/genai` (Gemini 3.1 Flash-Lite) as the central reasoning engine for all 6 agents.
 - **Agent Pipelines Built:**
   - **Reporter & Router:** Successfully parsing citizen images and routing to mock departments.
   - **Escalation (Cron):** Node-cron sweeps for SLA breaches.
