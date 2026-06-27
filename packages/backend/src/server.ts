@@ -21,13 +21,6 @@ const app = express();
 // Secure headers
 app.use(helmet());
 
-// CORS configuration — wide open only in non-production environments.
-// Add real deployed frontend origins here once they exist.
-const ALLOWED_PRODUCTION_ORIGINS = (process.env['ALLOWED_ORIGINS'] ?? '')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean);
-
 app.use(cors({
   origin: '*', // Allow all origins for the hackathon (bypasses CORS blocks)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
