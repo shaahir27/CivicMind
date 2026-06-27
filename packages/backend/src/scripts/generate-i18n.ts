@@ -152,7 +152,7 @@ Return ONLY valid JSON. No markdown formatting, no code blocks, just raw JSON.`;
 
       const translatedText = response.text;
       // Ensure it parses correctly
-      const translatedJson = JSON.parse(translatedText);
+      const translatedJson = JSON.parse(translatedText || "{}");
 
       fs.writeFileSync(targetPath, JSON.stringify(translatedJson, null, 2));
       console.log(`✅ Generated ${lang.code}.json`);
