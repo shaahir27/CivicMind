@@ -83,7 +83,7 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
           <a href={CITIZEN_APP_URL} className="btn-primary">
-            Report an Issue <span>→</span>
+            Citizen Login <span>→</span>
           </a>
         </div>
 
@@ -124,7 +124,7 @@ export default function Navbar() {
                 <a href={ADMIN_APP_URL} onClick={() => setMenuOpen(false)}>⚙️ Admin Console</a>
               </div>
               <a href={CITIZEN_APP_URL} onClick={() => setMenuOpen(false)} className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>
-                Report an Issue →
+                Citizen Login →
               </a>
             </motion.div>
           </>

@@ -17,25 +17,24 @@ export default function FooterCTA() {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <p className="section-eyebrow" style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
-          Ready to Begin?
+          Open Civic Data
         </p>
         <h2 className="footer-cta-title">
-          Your city needs<br />
-          <span className="gradient-text">you to speak up.</span>
+          Join the Transparency<br />
+          <span className="gradient-text">Movement.</span>
         </h2>
         <p className="footer-cta-sub">
-          Join thousands of citizens already using CivicSense to hold their city accountable.
-          It takes 30 seconds to file your first report.
+          Whether you are a citizen demanding change, or an official building the future — CivicSense is the bridge. Explore the platform today.
         </p>
         <div className="footer-cta-actions">
           <a href={CITIZEN_APP_URL} className="btn-dark-primary">
-            🏙️ Start Reporting
+            Citizen Login
           </a>
           <a href={AUTHORITY_APP_URL} className="btn-dark-ghost">
-            🏢 Authority Portal →
+            🏢 Authority Portal
           </a>
           <a href={ADMIN_APP_URL} className="btn-dark-ghost">
-            ⚙️ Admin Console →
+            ⚙️ Admin Console
           </a>
         </div>
       </motion.div>
