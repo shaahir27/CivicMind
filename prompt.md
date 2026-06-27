@@ -1,570 +1,260 @@
-# CivicMind — Round 2 Fix Plan: Classification Bug, Full Flow Audit, Security, Login UI
+# CivicSense — Image Upload & AI Processing Pipeline: Root Cause Analysis & Fix
 
-**Audience:** AI coding agent executing these changes directly in the repo.
-**How to use this doc:** Tasks are ordered by dependency, not by importance — do them in
-order top to bottom. Task 1 is the headline bug (hardcoded "pothole 79%"). Run the stated
-verification after each task before moving to the next.
-
-```bash
-npm install && npm run build   # baseline must pass before starting
-```
+**Audited by:** Senior Software Engineer (code review pass)
+**Scope:** `packages/citizen-app` (React/Vite) + `packages/backend` (Express/Node)
+**Bug:** Every citizen report submission with a real captured photo silently fails to complete, regardless of login method (guest / OTP / Google).
 
 ---
 
-## Task 1 — THE BUG: "hardcoded pothole 79% regardless of image"
+## 1. Root Cause (the actual bug)
 
-### Root cause (proven by reading the code, not guessed)
+**The bug is entirely client-side, in `packages/citizen-app/src/screens/ReportCaptureScreen.tsx`, and has nothing to do with auth, Express body limits, or the AI agents themselves** (those were all audited — see §4, "Ruled Out").
 
-This is **not** your Gemini API key, and it's **not really the AI model**. It's two stacked
-frontend bugs that both end in the same place: a hardcoded demo payload that was left in
-the code as a "don't show a broken screen" safety net, and which is now hiding every real
-error from you.
+### The mechanism, step by step
 
-**Bug 1A — Guest sessions never actually authenticate, so every guest request gets a 401.**
-
-`POST /api/v1/auth/guest-session` (`packages/backend/src/routes/auth.ts`) creates a Firebase
-user and returns a **custom token**:
-```ts
-const customToken = await getAuth().createCustomToken(userRecord.uid, { ... });
-res.status(201).json({ session_token: customToken, ... });
-```
-A Firebase **custom token** is not directly usable as a Bearer token — it must first be
-exchanged for an **ID token** via `signInWithCustomToken()`. Compare the two places this
-matters in `packages/citizen-app/src/screens/AuthScreen.tsx`:
-
-```ts
-// handleGuest() — BROKEN: stores the raw custom token directly
-loginAsGuest(data.session_token, data.user_id);
-
-// handleVerifyOtp() — CORRECT: exchanges the custom token for a real ID token first
-const cred = await signInWithCustomToken(auth, data.access_token);
-const idToken = await cred.user.getIdToken();
-loginAsCitizen(idToken, data.user_id);
-```
-
-Every backend route (`packages/backend/src/middleware/authenticate.ts`) does:
-```ts
-const decoded = await getAuth().verifyIdToken(token, true);
-```
-`verifyIdToken()` rejects custom tokens outright. So **every guest's `Authorization: Bearer
-<token>` header fails verification, and every authenticated guest call — including the
-issue-submission call that triggers AI classification — returns `401 UNAUTHENTICATED`,
-100% of the time, for every guest, regardless of what photo they upload.**
-
-**Bug 1B — the frontend hides that 401 (and every other error) behind a hardcoded fake result.**
-
-`packages/citizen-app/src/screens/ReportCaptureScreen.tsx`, in `handleAnalyze()`:
-```ts
-} else {
-  // Demo fallback — simulate AI classification
-  navigate('/report/classify', {
-    state: {
-      issueId: `ISS-DEMO-${Date.now()}`,
-      suggestedCategory: 'pothole',
-      categoryConfidence: 0.87,
-      suggestedSeverity: 'high',
-      severityConfidence: 0.79,
-      ...
-```
-…and the same block again in the `catch` clause right below it. **Any** non-2xx response
-that isn't specifically `400 INVALID_CIVIC_ISSUE` or `422 AI_UNAVAILABLE` — including the
-401 from Bug 1A — lands here and shows this exact hardcoded payload. This is why it's
-always "pothole," always "87%/79%," and always the same regardless of the photo: **the
-real backend response is never being shown to you at all.**
-
-`packages/authority-portal/src/screens/LoginScreen.tsx` and
-`packages/admin-console/src/screens/LoginScreen.tsx` have the identical pattern (silently
-log in as a fake demo identity on any backend error) — same anti-pattern, different screen.
-Not the cause of the pothole bug, but the same root habit, and it needs to go too (see
-Task 1C).
-
-**Why account ("Create Account") users may see the same thing:** the OTP flow's token
-exchange is implemented correctly, so if you see the same hardcoded result there too, it
-means a *different* call in the same pipeline is also failing non-2xx — most likely the
-`POST /api/v1/issues` call itself throwing for an unrelated reason (a backend exception,
-not an auth problem). Once Task 1C below is done, the UI will show you the actual error
-instead of guessing — do Task 1C, reproduce once as an account user, and the real error
-message will tell us exactly what's left to fix if it's still failing after Task 1B/1D.
-
-### Fix 1B — Make the guest flow actually authenticate
-
-**File:** `packages/citizen-app/src/screens/AuthScreen.tsx`
-
-Add the import already used elsewhere in this file (it's already imported — just use it):
-
-```diff
-   const handleGuest = async () => {
-     setLoading(true);
-     try {
-       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000'}/api/v1/auth/guest-session`, {
-         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}',
-       });
-       if (res.ok) {
-         const data = await res.json();
--        loginAsGuest(data.session_token, data.user_id);
-+        // session_token is a Firebase custom token — must be exchanged for an ID
-+        // token before it's usable as a Bearer token against our own backend.
-+        const cred = await signInWithCustomToken(auth, data.session_token);
-+        const idToken = await cred.user.getIdToken();
-+        loginAsGuest(idToken, data.user_id);
-       } else {
--        loginAsGuest('demo-guest-token', 'guest-demo-001');
-+        setError('Could not start a guest session. Please try again.');
-+        setLoading(false);
-+        return;
-       }
-     } catch {
--      loginAsGuest('demo-guest-token', 'guest-demo-001');
-+      setError('Could not reach the server. Please check your connection and try again.');
-+      setLoading(false);
-+      return;
-     }
-     setLoading(false);
-     navigate('/home');
+1. `handleFile()` builds the on-screen photo preview with `FileReader.readAsDataURL(file)`. This encodes the **original, uncompressed** photo (up to the allowed 10MB) as a base64 `data:` URL string. Base64 inflates size by ~33%, so a typical 3–8MB phone photo becomes a **4–11MB string**.
+2. After a successful `POST /api/v1/issues`, the app calls:
+   ```ts
+   navigate('/report/classify', { state: { ..., photoPreview: preview, ... } });
+   ```
+   React Router persists `state` via `window.history.pushState(state, "", url)`.
+3. **Browsers hard-limit the serialized size of `pushState` state.** Firefox throws `NS_ERROR_ILLEGAL_VALUE` above **640KB** (documented on MDN). Chromium-based browsers have their own, similarly small practical ceiling and are known to fail/behave unreliably with multi‑MB state payloads. A multi-megabyte base64 photo blows past this on effectively every real device photo.
+4. React Router's internal history implementation (`node_modules/@remix-run/router/dist/router.js`, `push()`) **catches this exception**, but only re-throws it for `DataCloneError`. A "state too large" error is a different `DOMException`, so the catch block falls through to:
+   ```ts
+   window.location.assign(url);
+   ```
+   This performs a **hard, full-page navigation** — completely losing the `state` payload (`issueId`, AI classification, etc.). No JS exception ever reaches `ReportCaptureScreen`'s own `try/catch`, so nothing visibly "crashes" — the page just reloads.
+5. The freshly-loaded `ClassificationReviewScreen.tsx` reads `useLocation().state`, finds it `null` (because of the hard reload), and falls back to **hardcoded demo data**:
+   ```ts
+   const locationState = state ?? {
+     issueId: 'ISS-DEMO-001',
+     suggestedCategory: 'pothole',
+     ...
    };
+   ```
+6. The citizen now unknowingly reviews/confirms a **fake placeholder issue**, not their real submission. When they tap "Submit Report", the app calls `POST /api/v1/issues/ISS-DEMO-001/confirm`, which 404s on the real backend (no such issue exists) — and `ClassificationReviewScreen`'s `handleSubmit` **silently treats any non-OK response as success** ("Demo fallback" comment) and routes to the confirmation screen anyway.
+7. **Net effect:** The real Issue record *was* created successfully by the backend (Reporter Agent ran, classified the photo, wrote to Firestore) — but it is permanently stuck at `status: submitted`. It is never confirmed, never validated, never routed to a department. The citizen sees what looks like a normal "Reported!" confirmation screen and has no idea anything went wrong.
+
+### Why this matches every symptom in the report
+
+| Symptom | Explanation |
+|---|---|
+| "Every single time" | Virtually all real phone-camera photos exceed the size that survives `pushState`. A tiny test image (e.g., an already-compressed <300KB screenshot) would *not* trigger it — which is almost certainly why the team's own QA notes claimed the photo pipeline was "fully operational." |
+| "Regardless of how they logged in" | The bug fires entirely in client-side navigation code, after authentication is already complete. Guest / OTP / Google sessions all hit the identical `navigate()` call. |
+| "Upload/processing flow breaks or fails to complete" | Literally true: the upload *and* the AI classification both complete successfully on the backend. It's the *result* that never makes it back to the UI, and the issue's lifecycle stalls forever in `submitted`. |
+
+---
+
+## 2. Files Requiring Changes
+
+| # | File | Change |
+|---|---|---|
+| 1 | `packages/citizen-app/src/screens/ReportCaptureScreen.tsx` | **Primary fix.** Stop building the preview with `FileReader.readAsDataURL`; use `URL.createObjectURL` instead (tiny string, no size limit). Also fix a relative-URL bug in `submitManualFallback`. |
+| 2 | `packages/citizen-app/src/screens/ClassificationReviewScreen.tsx` | **Hardening fix.** Stop silently treating failed `/confirm` calls as success. |
+| 3 | `packages/backend/src/middleware/validate.ts` | **Secondary fix.** `confirmIssueSchema` is missing the `description` field, so Zod silently strips it from every confirm request before the route handler ever sees it. |
+
+---
+
+## 3. Exact Fixes
+
+### Fix 1 (PRIMARY) — `packages/citizen-app/src/screens/ReportCaptureScreen.tsx`
+
+**Problem:** `handleFile` base64-encodes the full-resolution original photo for the on-screen preview, and that string is later carried through `navigate(..., { state })`, which is subject to the browser's `pushState` size limit.
+
+**Before:**
+```tsx
+const handleFile = (file: File) => {
+  setError('');
+  // Client-side validation per feature_specifications.md Feature 1
+  if (!file.type.startsWith('image/')) { setError('Please select an image file.'); return; }
+  if (file.size > MAX_PHOTO_SIZE_BYTES) { setError(`File must be under 10MB. Selected: ${(file.size / 1024 / 1024).toFixed(1)}MB`); return; }
+  setPhotoFile(file);
+  const reader = new FileReader();
+  reader.onload = (e) => setPreview(e.target?.result as string);
+  reader.readAsDataURL(file);
+};
 ```
 
-You'll need an `error` state already present in this component (it is — `const [error,
-setError] = useState('')`) and a place to render it on the `'choice'` step (it currently
-only renders `error` inside the `enter-contact`/`enter-otp` steps — add the same
-`{error && <p ...>{error}</p>}` block to the `'choice'` step's JSX so guest-flow errors are
-actually visible).
-
-### Fix 1C — Remove the silent demo-fallback pattern everywhere (this is the priority fix — it's currently hiding *every* error in the app, not just this one)
-
-**File:** `packages/citizen-app/src/screens/ReportCaptureScreen.tsx`
-
-Replace **both** "Demo fallback" blocks (in the `else` branch after `if (res.ok)`, and in
-the `catch` block) with honest error handling:
-
-```diff
-       } else {
-         const errorData = await res.json().catch(() => ({}));
-         if (res.status === 400 && errorData?.error?.code === 'INVALID_CIVIC_ISSUE') {
-           setError(errorData.error.message || 'This image does not appear to be a valid civic issue. Please upload a relevant photo.');
-           setLoading(false);
-           return;
-         }
-         if (res.status === 422 && errorData?.error?.code === 'AI_UNAVAILABLE') {
-           setLoading(false);
-           setIsManualFallback(true);
-           return;
-         }
-
--        // Demo fallback — simulate AI classification
--        navigate('/report/classify', {
--          state: {
--            issueId: `ISS-DEMO-${Date.now()}`,
--            suggestedCategory: 'pothole',
--            categoryConfidence: 0.87,
--            suggestedSeverity: 'high',
--            severityConfidence: 0.79,
--            requiresConfirmation: false,
--            photoPreview: preview,
--            location: location ?? { lat: 12.9716, lng: 77.5946 },
--          },
--        });
-+        // Surface the real error instead of hiding it behind fake data.
-+        const message = errorData?.error?.message || `Something went wrong (HTTP ${res.status}). Please try again.`;
-+        setError(message);
-+        setLoading(false);
-+        return;
-       }
-     } catch (err: any) {
-       if (err.message && err.message.includes('AI_UNAVAILABLE')) {
-         setLoading(false);
-         setIsManualFallback(true);
-         return; // Wait for manual submission
-       }
--
--      // Demo fallback
--      navigate('/report/classify', {
--        state: {
--          issueId: `ISS-DEMO-${Date.now()}`,
--          suggestedCategory: 'pothole',
--          categoryConfidence: 0.87,
--          suggestedSeverity: 'high',
--          severityConfidence: 0.79,
--          requiresConfirmation: false,
--          photoPreview: preview,
--          location: location ?? { lat: 12.9716, lng: 77.5946 },
--        },
--      });
-+      console.error('[ReportCaptureScreen] Submission failed:', err);
-+      setError('Could not reach the server. Please check your connection and try again.');
-     }
-     setLoading(false);
-   };
+**After:**
+```tsx
+const handleFile = (file: File) => {
+  setError('');
+  // Client-side validation per feature_specifications.md Feature 1
+  if (!file.type.startsWith('image/')) { setError('Please select an image file.'); return; }
+  if (file.size > MAX_PHOTO_SIZE_BYTES) { setError(`File must be under 10MB. Selected: ${(file.size / 1024 / 1024).toFixed(1)}MB`); return; }
+  setPhotoFile(file);
+  // IMPORTANT: do NOT use FileReader.readAsDataURL here. A base64 data: URL of
+  // a full-resolution phone photo is several MB and is later passed through
+  // navigate(path, { state }), which serializes via window.history.pushState.
+  // Browsers hard-limit pushState state size (Firefox: 640KB, throws
+  // NS_ERROR_ILLEGAL_VALUE; Chromium browsers are similarly unreliable above
+  // a few hundred KB). Exceeding it makes react-router silently fall back to
+  // a hard window.location.assign() reload, wiping out the navigation state
+  // and breaking the entire report flow. URL.createObjectURL produces a tiny
+  // string reference instead and has no such limit.
+  if (preview) URL.revokeObjectURL(preview);
+  setPreview(URL.createObjectURL(file));
+};
 ```
 
-Do the same removal for the two equivalent `LoginScreen.tsx` files:
+Also add a cleanup effect so blob URLs are released when the component unmounts or a new photo replaces an old one (prevents a memory leak introduced by `createObjectURL`):
 
-**Files:** `packages/authority-portal/src/screens/LoginScreen.tsx`,
-`packages/admin-console/src/screens/LoginScreen.tsx`
+```tsx
+useEffect(() => {
+  return () => {
+    if (preview) URL.revokeObjectURL(preview);
+  };
+}, [preview]);
+```//* place this alongside the existing geolocation `useEffect` near the top of the component */
 
-```diff
-       } else {
--        // Demo fallback
--        if (email.includes('@civicmind.gov')) {
--          login('demo-authority-token', { ... });
--          navigate('/dashboard');
--        } else {
--          setError('Invalid credentials. (Demo: use any @civicmind.gov email)');
--        }
-+        const errorData = await res.json().catch(() => ({}));
-+        setError(errorData?.error?.message || 'Invalid email or password.');
-       }
-     } catch {
--      // Demo fallback
--      if (email.includes('@civicmind.gov')) {
--        login('demo-authority-token', { ... });
--        navigate('/dashboard');
--      } else {
--        setError('Login failed. Ensure backend is running.');
--      }
-+      setError('Could not reach the server. Please check your connection and try again.');
-     }
-```
+**Problem 2 in the same file — `submitManualFallback` calls the API with a relative URL:**
 
-If you still want a way to demo the portals without a live backend, do it explicitly and
-visibly (e.g. a clearly-labeled "Use Demo Account" button that's only rendered when
-`import.meta.env.MODE !== 'production'`), never as a silent fallback triggered by an error
-the user can't see.
-
-### Fix 1D — verify the Gemini call itself works once 1B/1C are in (don't skip this — do it even if 1B/1C alone resolve the symptom)
-
-The Gemini JS SDK this project uses, `@google/generative-ai` (`packages/backend/package.json`),
-**reached end-of-life on 2025-08-31** — Google has stopped maintaining it entirely and
-recommends migrating to the new unified `@google/genai` package. It may still work against
-`gemini-3.1-flash-lite` since both ultimately hit the same REST surface, but it's
-unsupported and is the most likely candidate if Task 1B/1C reveal a *different* real error
-(e.g. account-flow users still see a failure after the auth/masking fixes). Two options:
-
-**Option A (quick, low-risk): just confirm it works.**
-After Task 1B/1C, submit a real report as a logged-in citizen and check the backend
-console output for `[ReporterAgent] Gemini call failed:` — if you see that log line, the
-SDK/model combination is the problem and you should do Option B.
-
-**Option B (recommended, ~30 min): migrate `reporterAgent.ts` to `@google/genai`.**
-```bash
-npm uninstall @google/generative-ai -w packages/backend
-npm install @google/genai -w packages/backend
-```
-In `packages/backend/src/agents/reporterAgent.ts`, replace:
-```ts
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
-...
-const genai = new GoogleGenerativeAI(apiKey);
-const model = genai.getGenerativeModel({ model: config.genai.modelVision, safetySettings: [...] });
-...
-const result = await generateContentWithRetry(model, { contents: [{ role: 'user', parts }] });
-const text = result.response.text().trim();
-```
-with the new SDK's client-object pattern:
-```ts
-import { GoogleGenAI } from '@google/genai';
-...
-const ai = new GoogleGenAI({ apiKey });
-const result = await ai.models.generateContent({
-  model: config.genai.modelVision,
-  contents: [{ role: 'user', parts }],
+**Before:**
+```tsx
+const res = await fetch('/api/v1/issues', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  },
+  body: JSON.stringify({ ... }),
 });
-const text = result.text.trim();
 ```
-You'll need to similarly update `packages/backend/src/services/ai.ts`
-(`generateContentWithRetry`'s type signature references `GenerativeModel` /
-`GenerateContentResult` from the old package) and wherever `routerAgent.ts` /
-`validatorAgent.ts` / `verifierAgent.ts` / `predictorAgent.ts` import from
-`@google/generative-ai` — grep for it:
-```bash
-grep -rl "@google/generative-ai" packages/backend/src
-```
-and migrate each call site the same way. This is a bigger diff — if Option A shows Gemini
-calls are succeeding fine on the old SDK, you can defer this and just track it as tech debt.
 
-### Verify Task 1
-
-```bash
-npm run build -w packages/citizen-app
-npm run build -w packages/authority-portal
-npm run build -w packages/admin-console
-npm run build -w packages/backend
+**After** (match the pattern already used in `handleAnalyze`):
+```tsx
+const base = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
+const res = await fetch(`${base}/api/v1/issues`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  },
+  body: JSON.stringify({ ... }),
+});
 ```
-Then manually: continue as guest → upload two *different* photos of clearly different
-things (e.g. a streetlight, then a garbage pile) → confirm you get two *different*
-classifications, not "pothole 87%/79%" both times. Repeat once more as a logged-in
-("Create Account") user.
+*(Without this, the AI-unavailable manual-fallback submission path 404s whenever the frontend dev server and backend run on different ports/origins — `/api/v1/issues` resolves against the Vite dev server, not the Express API.)*
 
 ---
 
-## Task 2 — Full user-flow audit against `docs/user_flows.md`, in order
+### Fix 2 (HARDENING) — `packages/citizen-app/src/screens/ClassificationReviewScreen.tsx`
 
-Going section by section, exactly as the doc is structured. Each numbered item below
-corresponds to a flow section; "OK" means I traced the code and it matches the spec,
-"BUG" means a fix is needed.
+**Problem:** `handleSubmit` treats *any* non-OK response from `/confirm` (404, 409, 422, 500 — anything) as a silent success and still navigates to the confirmation screen. This is what let step 6 of the root-cause chain go completely unnoticed by the citizen. Even after Fix 1 eliminates the main trigger, this should be hardened so any *other* failure mode doesn't hide itself the same way.
 
-### 2.1 — Citizen Onboarding Flow
-- Step 4 (Guest vs Create Account choice): **BUG — see Task 1B.** Fixed there.
-- Everything else in this section (location permission prompt, explainer screens,
-  landing on Home): present and matches spec. No further action.
-
-### 2.2 — Core Workflow: Citizen Reports an Issue
-- Steps 1–3 (upload zone, GPS capture, manual pin fallback): present and correct.
-- Step 4–5 (send to Reporter Agent, show suggestion within ~5s): **BUG — see Task 1.**
-  Once fixed, this becomes real instead of fake.
-- Step 8 (Issue created with `status: submitted`, Validator Agent triggered): **OK** —
-  confirmed in `orchestrator.ts`, the batch-written issue doc plus immediate validator
-  invocation is present.
-- Step 9 (duplicate/corroboration branching, ≥0.8 auto-merge / 0.5–0.8 prompt / unique):
-  **OK** — confirmed in `validatorAgent.ts`, thresholds match the spec exactly.
-- Step 10 (Router Agent assigns department, drafts complaint): **OK**, with one caveat
-  already flagged previously and confirmed still present:
-
-  **BUG 2.2a:** `packages/backend/src/agents/routerAgent.ts` computes a
-  `hasRequiredFields` validation check on the AI-drafted complaint text and logs a warning
-  if it fails — but never actually substitutes the template fallback it warns about. Fix:
-
-  **File:** `packages/backend/src/agents/routerAgent.ts`
-  ```diff
--  const hasRequiredFields =
-+  let draftedComplaintText = await draftComplaintText(input, departmentName); // change `const` to `let` at the original declaration site above
-+  const hasRequiredFields =
-     draftedComplaintText.includes(input.issueId) &&
-     draftedComplaintText.length >= 100;
-
-   if (!hasRequiredFields) {
-     console.warn('[RouterAgent] Drafted complaint missing required fields — using template fallback');
-+    draftedComplaintText = buildTemplateFallback(input, departmentName, formattedDate, corroborationNote);
-   }
-  ```
-  Find the original `const draftedComplaintText = await draftComplaintText(...)` line
-  above this block and change it to `let`. `formattedDate` and `corroborationNote` are
-  currently computed only inside `draftComplaintText()` — either export them from that
-  function alongside the text (refactor it to return `{ text, formattedDate,
-  corroborationNote }`), or recompute the same two lines in the caller. Refactor is
-  cleaner; do that if time allows, otherwise recompute.
-
-  **Verify:** `npm run build -w packages/backend`. Temporarily force
-  `hasRequiredFields = false` and confirm `buildTemplateFallback`'s output is what
-  actually gets stored/sent, not the broken AI text.
-
-- Steps 11–13 (confirmation screen, notifications on every state change, "My Reports"
-  live timeline): **OK** structurally — `notificationService.ts` is invoked from the
-  relevant status-transition points in `orchestrator.ts`. I did not trace actual
-  push/SMS/email delivery (out of scope — there's no real provider wired in yet per
-  `Notification.delivery_status` always landing as `pending` in the seed/demo build,
-  which is expected for this stage and not a bug, just an MVP gap worth knowing about).
-
-### 2.3 — Authority Resolves an Issue
-- Steps 1–2 (login, dashboard sorted "At Risk"/escalated first): login itself has the
-  demo-fallback issue fixed in Task 1C. Dashboard sort order: **OK**, confirmed in
-  `authority.ts`'s `GET /issues` query ordering.
-- Step 3 (issue detail view — photo, AI-drafted text, history): **OK**.
-- Step 4 (`in_progress` transition, citizen notified): **OK**.
-- Steps 5–6 (after-photo required before "Mark Resolved," blocked inline if missing):
-  **OK** — confirmed server-side enforcement in `authority.ts`'s status-update handler,
-  not just a UI nicety.
-- Step 7 (auto-transition `resolved` → `verifying`): **OK**.
-- Step 8–9 (Verifier Agent before/after comparison, 3-way branch): **OK**, confirmed
-  thresholds in `verifierAgent.ts` match `verified_resolved` / `inconclusive` /
-  `disputed_resolution` exactly as documented, including the re-routing back to the same
-  authority on dispute.
-
-### 2.4 — Escalation Flow
-- **OK overall.** `escalationAgent.ts` correctly computes elapsed-vs-SLA accounting for
-  `in_progress` grace pauses, tier reassignment, and the final-tier → `publicly_escalated`
-  transition. Idempotency (step 5, "same breach never triggers duplicate escalation"): confirmed via the `escalation_tier_current` field gate before reassigning — re-running the
-  cycle on an already-escalated-this-tier issue is a no-op. No bug found here.
-
-### 2.5 — Error Scenarios
-- **5.1 (upload retry / idempotency):** `idempotency_key` is generated client-side and
-  checked server-side in the orchestrator before creating a new issue doc — **OK**.
-- **5.2 (outside service area → blocked):** This depends entirely on
-  `SERVICE_AREA_LAT_MIN/MAX`/`LNG_MIN/MAX` in `.env` being real city bounds, not the whole
-  planet. Already corrected to real Bengaluru bounds in your current `.env` — **OK now**,
-  but worth a regression check: confirm `isWithinServiceArea()` in
-  `packages/shared/src/utils.ts` is actually being called before issue creation (it is,
-  in `issues.ts`'s `POST /` handler) — **OK**.
-- **5.3 (low confidence on all categories → "other," still requires confirmation):**
-  **OK** — confirmed the citizen-app's classification review screen always requires a tap
-  to proceed regardless of confidence; nothing auto-submits silently.
-- **5.4 (illegal status transition rejected):** **OK** — confirmed
-  `transitionIssueStatus()` in `orchestrator.ts` validates against the canonical state
-  machine and throws before any write.
-- **5.5 (inconclusive verification on poor image quality):** **OK**, matches spec.
-- **5.6 (citizen disputes a verified resolution):** **OK** — confirmed distinct logging
-  (`actor_type: 'citizen'` vs agent-initiated) per the spec's accountability requirement.
-- **5.7 (SLA config missing → system default + internal flag):** **OK**.
-- **5.8 (non-civic image → 400 INVALID_CIVIC_ISSUE, no record created):** **OK** —
-  confirmed in `orchestrator.ts`; this is the one error code the frontend's old
-  demo-fallback correctly excluded, and it stays correctly handled after Task 1C's changes.
-
-### 2.6 — Admin Workflow
-- **OK overall.** SLA config, jurisdiction mapping, audit log, impact reports, user
-  management, and predictive review screens all call real backend endpoints with no
-  fallback-to-fake-data pattern found in this package (admin-console's screens were
-  clean on this specific anti-pattern — only its `LoginScreen.tsx` had it, fixed in 1C).
-
-**Summary of new bugs found in this flow audit beyond Task 1:** just 2.2a (router agent
-dead validation). Everything else in `user_flows.md` is implemented as documented.
-
----
-
-## Task 3 — Database & storage audit against `docs/database_design.md`
-
-- **User, Issue, IssuePhoto, IssueStatusHistory, Corroboration, AgentDecisionLog,
-  SLAConfig, EscalationTier, HeroPointsLedger, HotspotForecast, ImpactReport
-  collections:** field names and types in `packages/shared/src/types/entities.ts` match
-  the schema doc 1:1 — **OK**.
-- **`IssueStatusHistory` append-only constraint (§2.6):** confirmed — no `.update()` or
-  `.delete()` call against this collection anywhere in the backend; every write is a new
-  `.set()` with a fresh `history_id`. **OK**.
-- **`Corroboration` uniqueness constraint** (one corroboration per registered user per
-  issue): confirmed enforced in `orchestrateCorroborationDecision()` before insert — **OK**.
-- **`HeroPointsLedger` uniqueness constraint** (no duplicate point awards per event):
-  confirmed via a pre-insert existence check — **OK**.
-- **Storage paths vs `storage.rules`:** previously broken, already fixed in your current
-  `storage.rules` (paths now match what `ReportCaptureScreen.tsx` and
-  `IssueDetailScreen.tsx` actually write to) — **OK now**.
-- **New finding — secrets folder shipped inside the project zip (see Task 4, this is a
-  security item, not a database-schema item, but it lives in this same area of the repo
-  so flagging it here too for visibility).**
-- **New finding — duplicate credential file:** `secrets/` contains both
-  `firebase-service-account.json` **and** `firebase-service-account.json.json` — the
-  second is almost certainly a duplicate created by a download/rename mistake. Delete the
-  extra one once you've confirmed which one `.env`'s `GOOGLE_APPLICATION_CREDENTIALS`
-  actually points to (currently `../../secrets/firebase-service-account.json` — the
-  correctly-named one, so the `.json.json` file is dead weight, not in use, but should not
-  be sitting there either):
-  ```bash
-  rm secrets/firebase-service-account.json.json
-  ```
-
-No other discrepancies found between the implemented schema and `database_design.md`.
-
----
-
-## Task 4 — Security vulnerabilities found in this pass
-
-**4.1 — CRITICAL: your real Firebase service-account private key is sitting inside the
-project zip you shared, in `secrets/firebase-service-account.json` (and its accidental
-duplicate).** This is your actual Firebase Admin credential — whoever has it has full
-admin read/write access to your Firestore and Storage, bypassing all security rules
-entirely. Treat it as already compromised:
-1. In Firebase Console → Project Settings → Service Accounts, **delete this service
-   account key** and generate a new one.
-2. Update `GOOGLE_APPLICATION_CREDENTIALS` to point at the new key file.
-3. Add `secrets/` to `.gitignore` if it isn't already there, and make sure future zip
-   exports for sharing/review exclude it (`zip -x 'secrets/*'` or similar).
-4. Do the same rotation for the Gemini and Google Maps API keys from the `.env` reviewed
-   in the previous round — if they haven't been rotated yet, do it now.
-
-**4.2 — Demo-identity login fallback bypasses real authentication when the backend errors
-(Task 1C).** Already fixed by Task 1C above — flagging here too because it's a real
-security issue, not just a UX one: anyone typing `anything@civicmind.gov` into the
-authority login, or `admin@civicmind.gov` into the admin login, gets full staff/admin
-access **whenever the real login call fails for any reason** (backend down, network
-blip, CORS misconfig) — no password check happens on that path at all.
-
-**4.3 — Guest accounts get full, unexpiring Firebase user records.** `POST
-/api/v1/auth/guest-session` calls `getAuth().createUser()` — a real, permanent Firebase
-Auth user — for every single guest visit, with no cleanup path. This isn't a security
-hole exactly, but it's an unbounded-growth and quota-cost issue: a script hitting this
-endpoint in a loop creates unlimited real user records. Combine `strictRateLimit` (already
-applied to issue submission) onto this route too:
-```diff
-- router.post('/guest-session', asyncHandler(async (_req: Request, res: Response) => {
-+ router.post('/guest-session', strictRateLimit, asyncHandler(async (_req: Request, res: Response) => {
+**Before:**
+```tsx
+if (res.ok) {
+  const data = await res.json();
+  if (data.duplicate_candidate) {
+    navigate('/report/duplicate', { state: { ... } });
+  } else {
+    navigate('/report/confirmation', { state: { ... } });
+  }
+} else {
+  // Demo fallback
+  navigate('/report/confirmation', {
+    state: { issueId: locationState.issueId, category, severity, photoPreview: locationState.photoPreview },
+  });
+}
 ```
-(import `strictRateLimit` from `../middleware/rateLimiter.js` at the top of `auth.ts`).
 
-**4.4 — Storage rule for citizen photo uploads can't verify ownership of the
-`idempotencyKey` path segment** (carried over from the previous review — still true, not
-newly introduced, and not practically exploitable beyond minor storage-quota abuse since
-the backend only ever reads back the exact path it itself generated for a given issue).
-No action required unless you want to add a second Firestore lookup at write time, which
-costs a read on every upload — not worth it for an MVP.
-
-**4.5 — `NODE_ENV` gates a lot of risk (demo-token auth bypass, magic OTP `123456`, dev
-seed routes).** Your current `.env` correctly has `NODE_ENV=development` for local work —
-just make sure whatever you deploy to (Render, Railway, a VM, Cloud Run, etc.) has it
-explicitly set to `production`, and that `ALLOWED_ORIGINS` is set there too (CORS is
-already correctly gated on this in `server.ts`).
-
-No SQL injection / NoSQL injection vectors found (Firestore's typed client SDK + the
-`validate.js` schema middleware on all write routes rules this class of bug out by
-construction). No XSS sinks found — no `dangerouslySetInnerHTML` or raw HTML injection
-anywhere in the three frontend packages (`grep -rn "dangerouslySetInnerHTML" packages/*/src`
-returns nothing).
-
----
-
-## Task 5 — Authority & Admin login page redesign
-
-Current state (both `LoginScreen.tsx` files): a single centered white card, emoji icon,
-two inputs, one button, inline styles, no visual distinction between the two portals
-beyond the icon. Functional but generic — looks like a placeholder, not a finished
-product, and the two portals are visually indistinguishable from a screenshot.
-
-### Design direction
-Give each portal a distinct identity while sharing a layout system, since they're
-different audiences (field/department officers vs. system administrators) doing
-different jobs:
-
-- **Authority Portal** — operational, on-the-ground tone. Color anchor: blue
-  (`hsl(220 87% 53%)`, already used elsewhere in the citizen app — reuse it for brand
-  consistency across the whole product). Icon/illustration: a simple line-art of a city
-  department badge or a road/streetlight motif instead of a generic 🛡️ emoji.
-- **Admin Console** — oversight/control tone. Color anchor: a darker slate/indigo to
-  visually signal "higher privilege, fewer people should be here." Icon: a dashboard/gauge
-  motif instead of an emoji.
-- Split-screen layout instead of a centered card on white: left half a brand panel (color
-  field + 2–3 lines of context — "Sign in to manage civic issues for your department" /
-  "Sign in to configure CivicMind citywide" — plus 2–3 stat chips like "₿ wards covered,"
-  "Avg. resolution time" pulled from a real impact-report endpoint if you want it to feel
-  alive rather than static); right half the actual form. This single change does the most
-  to make it look like a real product instead of a demo placeholder.
-- Real inline validation states (red border + message under the specific field, not just
-  a generic error line under the button).
-- A visible, explicit "Demo mode" toggle/button (see Task 1C) instead of a silent
-  fallback — if you want reviewers/judges to be able to skip real login, make it a real
-  feature, not an error-triggered accident.
-- Loading state: replace the plain "Authenticating…" button text with a small inline
-  spinner + disabled state styling (you already have `LoadingSpinner` in
-  `packages/citizen-app/src/components/shared.tsx` — consider promoting it to
-  `packages/shared` so authority-portal and admin-console can reuse the same component
-  instead of each having ad hoc inline styles).
-
-### Implementation note for the agent
-This is a visual/UX task, not a logic task — once Task 1C's logic changes are in
-`LoginScreen.tsx` for both portals, treat the JSX/styling as free to fully rewrite. Don't
-reintroduce the demo-fallback pattern while restyling. Suggested approach: build one
-shared `<AuthCard>` layout primitive in `packages/shared` (brand panel + form panel +
-slots for icon/color/copy), then have each portal's `LoginScreen.tsx` pass in its own
-color/icon/copy — this avoids two diverging copies of the same layout logic going forward.
-
-**Verify:** `npm run build -w packages/authority-portal && npm run build -w packages/admin-console`,
-then visually check both at `/login` side by side.
-
----
-
-## Task 6 — Final re-verification
-
-```bash
-npm run build         # all 6 packages
-npm run dev:backend   # terminal 1
+**After:**
+```tsx
+if (res.ok) {
+  const data = await res.json();
+  if (data.duplicate_candidate) {
+    navigate('/report/duplicate', { state: { ... } });
+  } else {
+    navigate('/report/confirmation', { state: { ... } });
+  }
+} else {
+  const errorData = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    setError('Session expired. Please log in again.');
+    localStorage.removeItem('civicmind_citizen_auth');
+    setTimeout(() => navigate('/auth'), 2000);
+  } else {
+    setError(errorData?.error?.message || 'Could not confirm your report. Please try again.');
+  }
+  setLoading(false);
+  return;
+}
 ```
-Then manually, in order, matching the flow doc exactly:
-1. Guest → upload a photo of a streetlight → confirm real (non-pothole, non-79%)
-   classification appears, or a real visible error if something's still wrong.
-2. Create Account (OTP `123456` in dev) → repeat step 1 → confirm same.
-3. Authority login with a real seeded account → confirm dashboard loads, no demo banner.
-4. Admin login with a real seeded account → confirm console loads, no demo banner.
-5. Submit an issue, then as authority mark it resolved without an after-photo → confirm
-   it's blocked with the inline message (Error Scenario per `user_flows.md` §3.6).
-6. Submit a clearly non-civic photo (e.g. a selfie) → confirm `400 INVALID_CIVIC_ISSUE`
-   is shown to the citizen, not the old hardcoded fallback.
+*(Apply the same change to the `catch` block below it — show `setError(...)` instead of silently navigating to the confirmation screen.)*
 
-If guest classification is still wrong after Task 1B+1C, check the backend console for the
-real error message now being surfaced (Task 1D explains what to do if it's a Gemini SDK
-error specifically).
+---
+
+### Fix 3 (SECONDARY) — `packages/backend/src/middleware/validate.ts`
+
+**Problem:** `ReportCaptureScreen.submitManualFallback` and the general confirm flow send an optional `description` field to `POST /issues/:id/confirm`, and the route handler (`routes/issues.ts`) reads it and tries to persist it:
+```ts
+if (description !== undefined && description !== null && description.trim().length > 0) {
+  await db.collection(COLLECTIONS.ISSUES).doc(issue_id).update({ description: description.trim().slice(0, 500), ... });
+}
+```
+But `validate(confirmIssueSchema)` runs *before* the handler and replaces `req.body` with the Zod-parsed object (`req.body = result.data`). Zod object schemas strip unrecognized keys by default, and `confirmIssueSchema` does not declare a `description` field — so `description` is always `undefined` by the time the handler runs. The citizen's optional description text entered at the classification step is silently discarded on every submission.
+
+**Before:**
+```ts
+export const confirmIssueSchema = z.object({
+  confirmed_category: z.enum(Object.values(IssueCategory) as [string, ...string[]], {
+    required_error: 'confirmed_category is required',
+    invalid_type_error: 'confirmed_category must be a valid IssueCategory',
+  }),
+  confirmed_severity: z.enum(Object.values(IssueSeverity) as [string, ...string[]], {
+    required_error: 'confirmed_severity is required',
+    invalid_type_error: 'confirmed_severity must be a valid IssueSeverity',
+  }),
+});
+```
+
+**After:**
+```ts
+export const confirmIssueSchema = z.object({
+  confirmed_category: z.enum(Object.values(IssueCategory) as [string, ...string[]], {
+    required_error: 'confirmed_category is required',
+    invalid_type_error: 'confirmed_category must be a valid IssueCategory',
+  }),
+  confirmed_severity: z.enum(Object.values(IssueSeverity) as [string, ...string[]], {
+    required_error: 'confirmed_severity is required',
+    invalid_type_error: 'confirmed_severity must be a valid IssueSeverity',
+  }),
+  description: z
+    .string()
+    .max(2000, 'description must be 2000 characters or fewer')
+    .optional()
+    .nullable(),
+});
+```
+
+No changes are needed in `routes/issues.ts` — its handler already reads and persists `description` correctly; it was only ever receiving `undefined` because of the schema gap above.
+
+---
+
+## 4. Ruled Out (audited, found correct)
+
+Per the request, these were specifically inspected and are **not** the cause:
+
+- **`routerAgent.ts`, `verifierAgent.ts`, `validatorAgent.ts`, `reporterAgent.ts`** — every Gemini call is wrapped in `try/catch` with a deterministic template/neutral-score fallback (`buildFallback`, `buildTemplateFallback`, inconclusive defaults). None of these can throw an unhandled exception that escapes the agent function.
+- **Express body size limits** — `express.json({ limit: '10mb' })` in `server.ts` is irrelevant here: photos are uploaded directly to Firebase Storage from the browser via `uploadBytes`, never as base64 inside a JSON request body to Express. The actual base64-size problem is the browser's `history.pushState`, not Express (see §1).
+- **Firebase Storage permissions** — `storage.rules` correctly allows authenticated writes to `photos/{idempotencyKey}/{photoFile}` under 10MB with an `image/.*` content type, which matches what `ReportCaptureScreen` uploads (`new File([blob], 'compressed.jpg', { type: 'image/jpeg' })`).
+- **Auth / RBAC** — `authenticate.ts` and `rbac.ts` correctly derive `role: citizen` for all three citizen login paths (guest, OTP, Google) via the claims passed into `createCustomToken`; `requireCitizen` passes for all of them identically.
+- **`INVALID_CIVIC_ISSUE` / `AI_UNAVAILABLE` error codes** — the orchestrator (`orchestrator.ts`) and `ReportCaptureScreen.handleAnalyze`'s status-code checks (`400`/`422`) are consistent with each other end-to-end.
+
+---
+
+## 5. Verification Steps
+
+1. Apply Fix 1, 2, and 3 above.
+2. In `packages/citizen-app`, run the app and submit a report using a **real, unedited phone-camera photo** (3MB+) — previously this is the exact condition that triggered the bug; a small test image would not have reproduced it.
+3. Confirm the URL bar shows a normal client-side route transition to `/report/classify` (no full-page flash/reload).
+4. Confirm `ClassificationReviewScreen` shows the *actual* AI-suggested category/severity for the photo you uploaded, not `pothole / 87% / 79%` (the hardcoded demo fallback values).
+5. Submit the report and confirm in Firestore that the Issue document progresses past `submitted` (`validating` → `routing` → `routed`), rather than staying stuck.
+6. Optionally, simulate a backend failure (stop the backend) and confirm `ClassificationReviewScreen` now surfaces a visible error instead of silently proceeding to the confirmation screen.
+
+---
+
+## 6. Minor Notes (not blocking, FYI only)
+
+- `packages/shared/package.json` points `main`/`exports`/`types` at `./dist/*`, but `dist/` is not committed (correctly gitignored). The frontends bypass this via a Vite alias straight to `shared/src`, but the **backend** (plain Node/`tsx`, no alias) will fail to resolve `@civicmind/shared` until `npm run build -w packages/shared` has been run at least once. Worth adding as a `postinstall`/`prepare` script so a fresh clone doesn't appear broken before the first build.
+- `feature_specifications.md` Feature 1 says "up to 3 images"; `reportIssueSchema` in `validate.ts` allows up to 5. Cosmetic mismatch only — the citizen app only ever uploads one photo per report today.

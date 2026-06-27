@@ -221,12 +221,14 @@ export interface MapPin {
 export function MapPlaceholder({
   pins = [],
   onPinClick,
+  onMapClick,
   height = '100%',
   interactive = true,
   userLocation,
 }: {
   pins?: MapPin[];
   onPinClick?: (pin: MapPin) => void;
+  onMapClick?: (e: any) => void;
   height?: string;
   interactive?: boolean;
   userLocation?: { lat: number; lng: number } | null;
@@ -254,6 +256,7 @@ export function MapPlaceholder({
           mapId={mapId}
           gestureHandling={interactive ? 'auto' : 'none'}
           disableDefaultUI={!interactive}
+          onClick={(e) => onMapClick && onMapClick(e)}
         >
           {validPins.map((pin) => {
             const color = CAT_COLORS[pin.category] ?? '#6b7280';

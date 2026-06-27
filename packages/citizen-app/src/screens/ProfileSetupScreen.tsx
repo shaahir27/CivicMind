@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useI18n } from '../context/I18nContext.js';
 import { useAuth } from '../context/AuthContext.js';
 
@@ -8,6 +8,9 @@ export default function ProfileSetupScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnTo = location.state?.returnTo;
+  const returnState = location.state?.returnState;
   useI18n();
   const { token } = useAuth();
 
@@ -30,7 +33,7 @@ export default function ProfileSetupScreen() {
       });
 
       if (res.ok) {
-        navigate('/home');
+        navigate(returnTo || '/home', returnTo ? { state: returnState } : undefined);
       } else {
         const data = await res.json();
         setError(data.error?.message || 'Failed to save profile.');

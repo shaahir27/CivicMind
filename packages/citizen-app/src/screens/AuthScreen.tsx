@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useI18n } from '../context/I18nContext.js';
 import { auth } from '../config/firebase.js';
@@ -23,6 +23,9 @@ export default function AuthScreen() {
   const { loginAsGuest, loginAsCitizen } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnTo = location.state?.returnTo;
+  const returnState = location.state?.returnState;
 
   const handleGuest = async () => {
     setLoading(true);
@@ -46,7 +49,7 @@ export default function AuthScreen() {
       return;
     }
     setLoading(false);
-    navigate('/home');
+    navigate(returnTo || '/home', returnTo ? { state: returnState } : undefined);
   };
 
   const handleRequestOtp = async () => {
@@ -85,12 +88,12 @@ export default function AuthScreen() {
         const cred = await signInWithCustomToken(auth, data.access_token);
         const idToken = await cred.user.getIdToken();
         loginAsCitizen(idToken, data.user_id);
-        navigate(data.is_new_user ? '/profile-setup' : '/home');
+        navigate(data.is_new_user ? '/profile-setup' : (returnTo || '/home'), data.is_new_user ? { state: { returnTo, returnState } } : (returnTo ? { state: returnState } : undefined));
         return;
       } else {
         if (otpCode.length >= 4) {
           loginAsCitizen('demo-citizen-token', 'citizen-demo-001');
-          navigate('/home');
+          navigate(returnTo || '/home', returnTo ? { state: returnState } : undefined);
           return;
         } else {
           setError('Invalid code.');
@@ -100,7 +103,7 @@ export default function AuthScreen() {
     } catch {
       if (otpCode.length >= 4) {
         loginAsCitizen('demo-citizen-token', 'citizen-demo-001');
-        navigate('/home');
+        navigate(returnTo || '/home', returnTo ? { state: returnState } : undefined);
       } else { 
         setError('Invalid code.'); setLoading(false); return; 
       }
@@ -121,7 +124,7 @@ export default function AuthScreen() {
       if (res.ok) {
         const data = await res.json();
         loginAsCitizen(idToken, data.user_id);
-        navigate(data.is_new_user ? '/profile-setup' : '/home');
+        navigate(data.is_new_user ? '/profile-setup' : (returnTo || '/home'), data.is_new_user ? { state: { returnTo, returnState } } : (returnTo ? { state: returnState } : undefined));
       } else {
         setError('Google sync failed.');
       }
@@ -304,7 +307,7 @@ export default function AuthScreen() {
               >
                 <div style={{ fontSize: '28px', background: 'rgba(255,255,255,0.2)', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px' }}>✨</div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '16px', color: 'white', marginBottom: '4px' }}>{t('createAccount')}</div>
+                  <div style={{ fontWeight: 600, fontSize: '16px', color: 'white', marginBottom: '4px' }}>Sign In / Sign Up</div>
                   <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', lineHeight: 1.4 }}>{t('accountDesc')}</div>
                 </div>
               </button>
@@ -352,8 +355,8 @@ export default function AuthScreen() {
               </button>
               
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'hsl(220 20% 12%)', marginBottom: '8px' }}>{t('createAccount')}</h2>
-                <p style={{ color: 'hsl(220 20% 40%)', fontSize: '14px' }}>Choose how you want to sign in.</p>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'hsl(220 20% 12%)', marginBottom: '8px' }}>Sign In / Sign Up</h2>
+                <p style={{ color: 'hsl(220 20% 40%)', fontSize: '14px' }}>Choose how you want to sign in or create an account.</p>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.04)', padding: '6px', borderRadius: '14px' }}>

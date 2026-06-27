@@ -11,6 +11,8 @@ import { useAuth } from '../context/AuthContext.js';
 import { generateId } from '@civicmind/shared';
 import { storage } from '../config/firebase.js';
 import { ref, uploadBytes } from 'firebase/storage';
+import exifr from 'exifr';
+import { MapPlaceholder } from '../components/shared.js';
 
 export default function ReportCaptureScreen() {
   const navigate = useNavigate();
@@ -57,15 +59,39 @@ export default function ReportCaptureScreen() {
     }
   }, []);
 
-  const handleFile = (file: File) => {
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  const handleFile = async (file: File) => {
     setError('');
     // Client-side validation per feature_specifications.md Feature 1
     if (!file.type.startsWith('image/')) { setError('Please select an image file.'); return; }
     if (file.size > MAX_PHOTO_SIZE_BYTES) { setError(`File must be under 10MB. Selected: ${(file.size / 1024 / 1024).toFixed(1)}MB`); return; }
     setPhotoFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => setPreview(e.target?.result as string);
-    reader.readAsDataURL(file);
+    if (preview) URL.revokeObjectURL(preview);
+    setPreview(URL.createObjectURL(file));
+
+    try {
+      const gps = await exifr.gps(file);
+      if (gps && typeof gps.latitude === 'number' && typeof gps.longitude === 'number') {
+        const lat = gps.latitude;
+        const lng = gps.longitude;
+        setLocation({ lat, lng });
+        const apiKey = import.meta.env.VITE_GOOGLE_MAPS_CLIENT_API_KEY;
+        if (apiKey) {
+          const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
+          const data = await res.json();
+          if (data.results && data.results.length > 0) {
+            setAddressText(data.results[0].formatted_address);
+          }
+        }
+      }
+    } catch (e) {
+      console.log('EXIF extraction failed or not available');
+    }
   };
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,7 +226,8 @@ export default function ReportCaptureScreen() {
       
       const loc = location ?? { lat: 12.9716, lng: 77.5946 };
       
-      const res = await fetch('/api/v1/issues', {
+      const base = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
+      const res = await fetch(`${base}/api/v1/issues`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -267,14 +294,34 @@ export default function ReportCaptureScreen() {
         {/* Location chip */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {location ? (
-            <div style={{ background: 'white', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: '20px' }}>📍</span>
-              <span style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontWeight: 700 }}>Location</span>
-                <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)' }}>
-                  {addressText || 'Fetching address...'}
-                </span>
-              </span>
+            <div style={{ width: '100%', height: '220px', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)', position: 'relative', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+              <MapPlaceholder
+                userLocation={location}
+                pins={[{ id: 'current', lat: location.lat, lng: location.lng, category: 'other', status: 'submitted', severity: 'medium' }]}
+                interactive={true}
+                onMapClick={async (e) => {
+                  if (e.detail?.latLng) {
+                    const lat = e.detail.latLng.lat;
+                    const lng = e.detail.latLng.lng;
+                    setLocation({ lat, lng });
+                    try {
+                      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_CLIENT_API_KEY;
+                      if (apiKey) {
+                        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
+                        const data = await res.json();
+                        if (data.results && data.results.length > 0) {
+                          setAddressText(data.results[0].formatted_address);
+                        }
+                      }
+                    } catch (err) {}
+                  }
+                }}
+              />
+              <div style={{ position: 'absolute', top: '8px', left: '8px', right: '8px', background: 'rgba(255,255,255,0.95)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', color: '#1e293b', zIndex: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', backdropFilter: 'blur(4px)' }}>
+                <div style={{ fontWeight: 700, marginBottom: '2px' }}>Location:</div>
+                <div style={{ color: '#64748b', fontSize: '12px' }}>{addressText || 'Fetching address...'}</div>
+                <div style={{ color: '#3b82f6', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>Tap map to adjust exact issue location</div>
+              </div>
             </div>
           ) : (
             <div style={{ background: 'hsl(36 100% 97%)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid hsl(36 100% 80%)' }}>

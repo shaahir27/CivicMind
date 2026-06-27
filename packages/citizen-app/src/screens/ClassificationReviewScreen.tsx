@@ -27,7 +27,7 @@ interface LocationState {
 export default function ClassificationReviewScreen() {
   const navigate = useNavigate();
   const { state } = useLocation() as { state: LocationState };
-  const { token } = useAuth();
+  const { token, isGuest, isLoggedIn } = useAuth();
 
   // Fallback if navigated directly without state
   const locationState = state ?? {
@@ -55,6 +55,16 @@ export default function ClassificationReviewScreen() {
   const severityChanged = severity !== locationState.suggestedSeverity;
 
   const handleSubmit = async () => {
+    if (isGuest || !isLoggedIn) {
+      navigate('/auth', {
+        state: {
+          returnTo: '/report/classify',
+          returnState: locationState
+        }
+      });
+      return;
+    }
+
     setLoading(true); setError('');
     try {
       const base = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
@@ -84,15 +94,21 @@ export default function ClassificationReviewScreen() {
           });
         }
       } else {
-        // Demo fallback
-        navigate('/report/confirmation', {
-          state: { issueId: locationState.issueId, category, severity, photoPreview: locationState.photoPreview },
-        });
+        const errorData = await res.json().catch(() => ({}));
+        if (res.status === 401) {
+          setError('Session expired. Please log in again.');
+          localStorage.removeItem('civicmind_citizen_auth');
+          setTimeout(() => navigate('/auth'), 2000);
+        } else {
+          setError(errorData?.error?.message || 'Could not confirm your report. Please try again.');
+        }
+        setLoading(false);
+        return;
       }
     } catch {
-      navigate('/report/confirmation', {
-        state: { issueId: locationState.issueId, category, severity, photoPreview: locationState.photoPreview },
-      });
+      setError('Could not confirm your report. Please try again.');
+      setLoading(false);
+      return;
     }
     setLoading(false);
   };

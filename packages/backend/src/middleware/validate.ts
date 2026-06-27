@@ -84,6 +84,11 @@ export const confirmIssueSchema = z.object({
     required_error: 'confirmed_severity is required',
     invalid_type_error: 'confirmed_severity must be a valid IssueSeverity',
   }),
+  description: z
+    .string()
+    .max(2000, 'description must be 2000 characters or fewer')
+    .optional()
+    .nullable(),
 });
 
 /** POST /api/v1/authority/issues/:id/status — Authority status update */

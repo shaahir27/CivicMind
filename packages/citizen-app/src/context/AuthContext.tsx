@@ -10,6 +10,7 @@ export interface AuthState {
   userId: string | null;
   isGuest: boolean;
   isLoggedIn: boolean;
+  loginTimestamp?: number;
 }
 
 interface AuthContextValue extends AuthState {
@@ -26,7 +27,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<AuthState>(() => {
     try {
       const stored = localStorage.getItem(LS_KEY);
-      if (stored) return JSON.parse(stored) as AuthState;
+      if (stored) {
+        const parsed = JSON.parse(stored) as AuthState;
+        // 7 days expiry
+        if (parsed.loginTimestamp && Date.now() - parsed.loginTimestamp > 7 * 24 * 60 * 60 * 1000) {
+          localStorage.removeItem(LS_KEY);
+          return { token: null, userId: null, isGuest: false, isLoggedIn: false };
+        }
+        return parsed;
+      }
     } catch { /* ignore */ }
     return { token: null, userId: null, isGuest: false, isLoggedIn: false };
   });
@@ -36,10 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [auth]);
 
   const loginAsGuest = (token: string, userId: string) =>
-    setAuth({ token, userId, isGuest: true, isLoggedIn: true });
+    setAuth({ token, userId, isGuest: true, isLoggedIn: true, loginTimestamp: Date.now() });
 
   const loginAsCitizen = (token: string, userId: string) =>
-    setAuth({ token, userId, isGuest: false, isLoggedIn: true });
+    setAuth({ token, userId, isGuest: false, isLoggedIn: true, loginTimestamp: Date.now() });
 
   const logout = () => {
     localStorage.removeItem(LS_KEY);

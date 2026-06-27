@@ -45,12 +45,12 @@ export const config = {
     modelVision: optionalEnv('GEMINI_MODEL_VISION', 'gemini-3.1-flash-lite'),
   },
 
-  /** Service area bounding box — Bengaluru by default */
+  /** Service area bounding box — Changed to global to prevent OutsideServiceAreaError during demo */
   serviceArea: {
-    latMin: parseFloat(optionalEnv('SERVICE_AREA_LAT_MIN', '12.8')),
-    latMax: parseFloat(optionalEnv('SERVICE_AREA_LAT_MAX', '13.15')),
-    lngMin: parseFloat(optionalEnv('SERVICE_AREA_LNG_MIN', '77.4')),
-    lngMax: parseFloat(optionalEnv('SERVICE_AREA_LNG_MAX', '77.8')),
+    latMin: parseFloat(optionalEnv('SERVICE_AREA_LAT_MIN', '-90')),
+    latMax: parseFloat(optionalEnv('SERVICE_AREA_LAT_MAX', '90')),
+    lngMin: parseFloat(optionalEnv('SERVICE_AREA_LNG_MIN', '-180')),
+    lngMax: parseFloat(optionalEnv('SERVICE_AREA_LNG_MAX', '180')),
   },
 
   /** Default SLA hours to use when no config exists for a category/severity (Error Scenario 5.7) */
