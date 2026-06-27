@@ -91,7 +91,7 @@ app.use((_req, res) => {
 app.use(globalErrorHandler);
 
 // Start server
-app.listen(config.port, () => {
+app.listen(config.port, '0.0.0.0', () => {
   console.log(`[SERVER] CivicMind backend API running on port ${config.port} in ${config.nodeEnv} mode`);
   console.log(`[SERVER] Phase 2 agents active: Reporter, Validator, Router, Verifier, Escalation`);
 });
