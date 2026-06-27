@@ -98,11 +98,11 @@ export default function ClassificationReviewScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', background: 'white', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #f1f5f9' }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
-        <span style={{ fontWeight: 700, fontSize: '16px', color: '#1e293b' }}>Review Classification</span>
+      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+        <span style={{ fontWeight: 800, fontSize: '18px', color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>Review Classification</span>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
@@ -111,7 +111,7 @@ export default function ClassificationReviewScreen() {
           <img
             src={locationState.photoPreview}
             alt="Captured issue"
-            style={{ width: '100%', aspectRatio: '4/3', maxHeight: '40vh', objectFit: 'contain', backgroundColor: '#f8fafc', borderRadius: '12px', marginBottom: '16px' }}
+            style={{ width: '100%', aspectRatio: '4/3', maxHeight: '40vh', objectFit: 'contain', backgroundColor: 'white', borderRadius: '16px', marginBottom: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.05)' }}
           />
         )}
         {!locationState.photoPreview && (
@@ -234,12 +234,12 @@ export default function ClassificationReviewScreen() {
       </div>
 
       {/* Bottom action */}
-      <div style={{ padding: '12px 16px 24px', borderTop: '1px solid #f1f5f9' }}>
+      <div style={{ padding: '16px 20px 32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderTop: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 -10px 40px rgba(0,0,0,0.05)' }}>
         <button
           className="btn-primary"
           onClick={handleSubmit}
           disabled={loading}
-          style={{ height: '56px', fontSize: '16px' }}
+          style={{ height: '56px', fontSize: '16px', width: '100%', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}
         >
           {loading ? (
             <><LoadingSpinner size={20} /> Submitting…</>

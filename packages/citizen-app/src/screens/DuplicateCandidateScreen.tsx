@@ -72,30 +72,30 @@ export default function DuplicateCandidateScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', background: 'white', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #f1f5f9' }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
-        <span style={{ fontWeight: 700, fontSize: '16px', color: '#1e293b' }}>Similar Issue Found</span>
+      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+        <span style={{ fontWeight: 800, fontSize: '18px', color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>Similar Issue Found</span>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
         {/* Explanation — per ui_ux_spec §8 trust signals */}
-        <div style={{ background: 'hsl(270 100% 97%)', border: '1px solid hsl(270 67% 80%)', borderRadius: '12px', padding: '12px 16px', marginBottom: '20px' }}>
-          <div style={{ fontWeight: 600, fontSize: '14px', color: '#5b21b6', marginBottom: '4px' }}>
-            🔗 Possible Duplicate Detected
+        <div style={{ background: 'hsl(270 100% 98%)', border: '1px solid hsl(270 67% 85%)', borderRadius: '16px', padding: '16px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.05)' }}>
+          <div style={{ fontWeight: 700, fontSize: '15px', color: '#5b21b6', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '18px' }}>🔗</span> Possible Duplicate Detected
           </div>
-          <div style={{ fontSize: '13px', color: '#6d28d9', lineHeight: 1.5 }}>
-            AI found a similar issue {Math.round(s.matchConfidence * 100)}% confidence match. Is this the same problem?
+          <div style={{ fontSize: '14px', color: '#6d28d9', lineHeight: 1.5 }}>
+            AI found a similar issue with {Math.round(s.matchConfidence * 100)}% confidence match. Is this the same problem?
             Your report can confirm it's still unresolved, which helps prioritize the fix.
           </div>
         </div>
 
         {/* Side-by-side comparison */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           {/* Existing issue */}
-          <div style={{ border: '2px solid hsl(270 67% 52%)', borderRadius: '12px', overflow: 'hidden' }}>
-            <div style={{ background: 'hsl(270 100% 97%)', padding: '8px 12px', fontSize: '11px', fontWeight: 600, color: '#5b21b6', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ border: '2px solid hsl(270 67% 60%)', borderRadius: '16px', overflow: 'hidden', background: 'white', boxShadow: '0 4px 20px rgba(139, 92, 246, 0.1)' }}>
+            <div style={{ background: 'hsl(270 100% 97%)', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: '#5b21b6', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid hsl(270 67% 90%)' }}>
               Existing Report
             </div>
             {candidate.photos[0] ? (
@@ -103,20 +103,20 @@ export default function DuplicateCandidateScreen() {
             ) : (
               <div style={{ aspectRatio: '1', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>📌</div>
             )}
-            <div style={{ padding: '8px 12px' }}>
-              <div style={{ fontWeight: 600, fontSize: '13px', color: '#1e293b' }}>{candidate.category}</div>
-              <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
+            <div style={{ padding: '12px' }}>
+              <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{candidate.category}</div>
+              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>
                 {candidate.location.address_text?.split(',')[0] ?? 'Location'}
               </div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                {candidate.corroboration_count} reports
+              <div style={{ fontSize: '12px', color: '#8b5cf6', fontWeight: 600, marginTop: '6px', background: 'hsl(270 100% 97%)', padding: '4px 8px', borderRadius: '8px', display: 'inline-block' }}>
+                👥 {candidate.corroboration_count} reports
               </div>
             </div>
           </div>
 
           {/* Your report */}
-          <div style={{ border: '2px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden' }}>
-            <div style={{ background: '#f8fafc', padding: '8px 12px', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ border: '2px solid rgba(0,0,0,0.05)', borderRadius: '16px', overflow: 'hidden', background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ background: 'hsl(220 100% 98%)', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
               Your Report
             </div>
             {s.photoPreview ? (
@@ -124,17 +124,19 @@ export default function DuplicateCandidateScreen() {
             ) : (
               <div style={{ aspectRatio: '1', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>📷</div>
             )}
-            <div style={{ padding: '8px 12px' }}>
-              <div style={{ fontWeight: 600, fontSize: '13px', color: '#1e293b' }}>{candidate.category}</div>
-              <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>Just captured</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>New report</div>
+            <div style={{ padding: '12px' }}>
+              <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{candidate.category}</div>
+              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Just captured</div>
+              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '6px', background: 'hsl(220 100% 97%)', padding: '4px 8px', borderRadius: '8px', display: 'inline-block' }}>
+                New report
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Decision buttons */}
-      <div style={{ padding: '16px', borderTop: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ padding: '16px 20px 32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderTop: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 -10px 40px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {decisionError && (
           <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '10px', padding: '10px 14px', fontSize: '13px', color: '#dc2626' }}>
             ⚠️ {decisionError}
@@ -144,24 +146,26 @@ export default function DuplicateCandidateScreen() {
           onClick={() => handleDecision(true)}
           disabled={loading}
           style={{
-            height: '56px', border: 'none', borderRadius: '14px', cursor: 'pointer',
-            background: 'hsl(270 67% 52%)', color: 'white',
-            fontFamily: 'var(--font-sans)', fontSize: '16px', fontWeight: 600,
+            height: '56px', border: 'none', borderRadius: '16px', cursor: 'pointer',
+            background: 'hsl(270 67% 60%)', color: 'white',
+            fontFamily: 'var(--font-sans)', fontSize: '16px', fontWeight: 700,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            boxShadow: '0 10px 25px -5px rgba(139, 92, 246, 0.4)'
           }}
         >
-          {loading ? <LoadingSpinner size={20} /> : '✅ Yes, same issue — Add my confirmation'}
+          {loading ? <LoadingSpinner size={20} /> : '✅ Yes, same issue'}
         </button>
         <button
           onClick={() => handleDecision(false)}
           disabled={loading}
           style={{
-            height: '52px', border: '1px solid #e2e8f0', borderRadius: '14px', cursor: 'pointer',
-            background: 'white', color: '#1e293b',
-            fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 500,
+            height: '52px', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px', cursor: 'pointer',
+            background: 'white', color: 'hsl(220 20% 12%)',
+            fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 600,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
           }}
         >
-          ❌ No, different issue — Submit as new
+          ❌ No, different issue
         </button>
       </div>
     </div>

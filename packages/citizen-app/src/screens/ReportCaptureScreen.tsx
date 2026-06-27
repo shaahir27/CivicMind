@@ -162,6 +162,13 @@ export default function ReportCaptureScreen() {
           setLoading(false);
           return;
         }
+        if (res.status === 401) {
+          setError('Session expired. Please log in again.');
+          localStorage.removeItem('civicmind_citizen_auth');
+          setTimeout(() => navigate('/auth'), 2000);
+          setLoading(false);
+          return;
+        }
         if (res.status === 422 && errorData?.error?.code === 'AI_UNAVAILABLE') {
           setLoading(false);
           setIsManualFallback(true);
@@ -209,7 +216,16 @@ export default function ReportCaptureScreen() {
         }),
       });
 
-      if (!res.ok) throw new Error('Submission failed');
+      if (!res.ok) {
+        if (res.status === 401) {
+          setError('Session expired. Please log in again.');
+          localStorage.removeItem('civicmind_citizen_auth');
+          setTimeout(() => navigate('/auth'), 2000);
+          setLoading(false);
+          return;
+        }
+        throw new Error('Submission failed');
+      }
       const data = await res.json();
       
       navigate('/report/classify', {
@@ -233,10 +249,10 @@ export default function ReportCaptureScreen() {
   if (preview) {
     // Photo selected — show preview with analyze button
     return (
-      <div className="screen" style={{ height: '100dvh', background: '#0f172a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
+      <div className="screen" style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button onClick={() => { setPreview(null); setPhotoFile(null); }} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
-          <span style={{ color: 'white', fontWeight: 600, fontSize: '16px', fontFamily: 'var(--font-sans)' }}>Photo Captured</span>
+          <button onClick={() => { setPreview(null); setPhotoFile(null); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+          <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>Photo Captured</span>
           <div style={{ width: '44px' }} />
         </div>
 
@@ -251,26 +267,26 @@ export default function ReportCaptureScreen() {
         {/* Location chip */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {location ? (
-            <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>📍</span>
-              <span style={{ color: 'white', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontWeight: 600 }}>Location</span>
-                <span style={{ fontSize: '12px', opacity: 0.9 }}>
+            <div style={{ background: 'white', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)' }}>
+              <span style={{ fontSize: '20px' }}>📍</span>
+              <span style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontWeight: 700 }}>Location</span>
+                <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)' }}>
                   {addressText || 'Fetching address...'}
                 </span>
               </span>
             </div>
           ) : (
-            <div style={{ background: 'rgba(245,158,11,0.15)', borderRadius: '10px', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(245,158,11,0.3)' }}>
-              <span>⚠️</span>
-              <span style={{ color: '#fbbf24', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>
+            <div style={{ background: 'hsl(36 100% 97%)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid hsl(36 100% 80%)' }}>
+              <span style={{ fontSize: '20px' }}>⚠️</span>
+              <span style={{ color: '#92400e', fontSize: '13px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
                 {locationError || 'Detecting location…'}
               </span>
             </div>
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <label style={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px', fontFamily: 'var(--font-sans)', paddingLeft: '4px' }}>
+            <label style={{ color: 'hsl(220 20% 40%)', fontSize: '13px', fontWeight: 600, fontFamily: 'var(--font-sans)', paddingLeft: '4px' }}>
               Additional Details & Exact Address
             </label>
             <textarea
@@ -279,11 +295,13 @@ export default function ReportCaptureScreen() {
               onChange={(e) => setDescription(e.target.value)}
               className="text-input"
               style={{
-                background: 'rgba(255,255,255,0.05)',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'white',
+                color: 'hsl(220 20% 12%)',
+                border: '1px solid rgba(0,0,0,0.08)',
+                borderRadius: '16px',
                 minHeight: '80px',
-                fontSize: '14px'
+                fontSize: '14px',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)'
               }}
             />
           </div>
@@ -295,9 +313,9 @@ export default function ReportCaptureScreen() {
           )}
 
           {isManualFallback ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <div style={{ color: '#fca5a5', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>AI analysis unavailable. Please provide details manually.</div>
-              <select value={manualCategory} onChange={(e) => setManualCategory(e.target.value)} style={{ padding: '12px', borderRadius: '8px', background: '#1e293b', color: 'white', border: '1px solid #334155' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'white', padding: '16px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+              <div style={{ color: '#dc2626', fontSize: '13px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>AI analysis unavailable. Please provide details manually.</div>
+              <select value={manualCategory} onChange={(e) => setManualCategory(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'hsl(220 100% 97%)', color: 'hsl(220 20% 12%)', border: '1px solid hsl(220 87% 90%)', outline: 'none' }}>
                 <option value="pothole">Pothole</option>
                 <option value="streetlight">Broken Streetlight</option>
                 <option value="garbage">Garbage Overflow</option>
@@ -307,13 +325,13 @@ export default function ReportCaptureScreen() {
                 <option value="traffic_signal">Traffic Signal</option>
                 <option value="other">Other</option>
               </select>
-              <select value={manualSeverity} onChange={(e) => setManualSeverity(e.target.value)} style={{ padding: '12px', borderRadius: '8px', background: '#1e293b', color: 'white', border: '1px solid #334155' }}>
+              <select value={manualSeverity} onChange={(e) => setManualSeverity(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'hsl(220 100% 97%)', color: 'hsl(220 20% 12%)', border: '1px solid hsl(220 87% 90%)', outline: 'none' }}>
                 <option value="low">Low Severity</option>
                 <option value="medium">Medium Severity</option>
                 <option value="high">High Severity</option>
                 <option value="critical">Critical Severity</option>
               </select>
-              <button className="btn-primary" onClick={submitManualFallback} disabled={loading} style={{ height: '50px', fontSize: '15px', borderRadius: '10px' }}>
+              <button className="btn-primary" onClick={submitManualFallback} disabled={loading} style={{ height: '50px', fontSize: '15px', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}>
                 {loading ? <LoadingSpinner size={20} /> : 'Submit Report'}
               </button>
             </div>
@@ -322,7 +340,7 @@ export default function ReportCaptureScreen() {
               className="btn-primary"
               onClick={handleAnalyze}
               disabled={loading}
-              style={{ height: '56px', fontSize: '16px', borderRadius: '14px' }}
+              style={{ height: '56px', fontSize: '16px', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}
             >
               {loading ? (
                 <><LoadingSpinner size={20} /> Analyzing with AI…</>
@@ -332,7 +350,7 @@ export default function ReportCaptureScreen() {
             </button>
           )}
 
-          <button onClick={() => { setPreview(null); setPhotoFile(null); setIsManualFallback(false); }} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '12px', padding: '14px', color: 'white', fontFamily: 'var(--font-sans)', fontSize: '14px', cursor: 'pointer' }}>
+          <button onClick={() => { setPreview(null); setPhotoFile(null); setIsManualFallback(false); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px', padding: '16px', color: 'hsl(220 20% 12%)', fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
             Retake Photo
           </button>
         </div>
@@ -342,11 +360,11 @@ export default function ReportCaptureScreen() {
 
   // Camera / gallery picker
   return (
-    <div className="screen" style={{ height: '100dvh', background: '#0f172a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px', width: '100%' }}>
+    <div className="screen" style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px', width: '100%' }}>
       {/* Header */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
-        <span style={{ color: 'white', fontWeight: 600, fontSize: '16px', fontFamily: 'var(--font-sans)' }}>Upload Photo</span>
+        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+        <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>Upload Photo</span>
         <div style={{ width: '44px' }} />
       </div>
 
@@ -359,48 +377,51 @@ export default function ReportCaptureScreen() {
           width: '100%',
           maxWidth: '380px',
           aspectRatio: '4/3',
-          border: '2px dashed rgba(255,255,255,0.2)',
+          border: '2px dashed hsl(220 87% 73%)',
           borderRadius: '24px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          background: 'rgba(255,255,255,0.03)',
+          background: 'rgba(255,255,255,0.7)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
           transition: 'all 0.2s ease',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'hsl(220 87% 53%)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.7)'; e.currentTarget.style.borderColor = 'hsl(220 87% 73%)'; }}
       >
         <div style={{ 
-          width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(59,130,246,0.2)', 
-          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' 
+          width: '72px', height: '72px', borderRadius: '50%', background: 'hsl(220 100% 97%)', border: '1px solid hsl(220 87% 90%)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
         }}>
-          <span style={{ fontSize: '28px', color: '#60a5fa' }}>📤</span>
+          <span style={{ fontSize: '32px', color: 'hsl(220 87% 53%)' }}>📤</span>
         </div>
-        <div style={{ color: 'white', fontSize: '16px', fontWeight: 500, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
+        <div style={{ color: 'hsl(220 20% 12%)', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
           Tap to Upload or Drag & Drop
         </div>
-        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
+        <div style={{ color: 'hsl(220 20% 40%)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
           Please upload a clear photo of the civic issue.
         </div>
       </div>
 
       {/* Location status */}
       {location ? (
-        <div style={{ background: 'rgba(34,197,94,0.15)', borderRadius: '10px', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(34,197,94,0.3)', width: '100%', maxWidth: '380px' }}>
-          <span>📍</span>
-          <span style={{ color: '#86efac', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <span style={{ fontWeight: 600 }}>Location</span>
-            <span style={{ fontSize: '12px', opacity: 0.9 }}>
+        <div style={{ background: 'white', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid rgba(0,0,0,0.05)', width: '100%', maxWidth: '380px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+          <span style={{ fontSize: '20px' }}>📍</span>
+          <span style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span style={{ fontWeight: 700 }}>Location</span>
+            <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)' }}>
               {addressText || 'Fetching address...'}
             </span>
           </span>
         </div>
       ) : (
-        <div style={{ background: 'rgba(245,158,11,0.1)', borderRadius: '10px', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '8px', width: '100%', maxWidth: '380px' }}>
-          <LoadingSpinner size={14} />
-          <span style={{ color: '#fbbf24', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>Detecting location…</span>
+        <div style={{ background: 'hsl(36 100% 97%)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', width: '100%', maxWidth: '380px', border: '1px solid hsl(36 100% 80%)' }}>
+          <LoadingSpinner size={16} />
+          <span style={{ color: '#92400e', fontSize: '13px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>Detecting location…</span>
         </div>
       )}
 

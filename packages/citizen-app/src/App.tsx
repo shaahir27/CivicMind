@@ -43,7 +43,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
           ☰
         </button>
-        <h1 className="mobile-title">CivicMind</h1>
+        <h1 className="mobile-title" onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>CivicMind</h1>
         <div style={{ width: '40px' }} /> {/* Spacer for centering */}
       </header>
 
@@ -55,7 +55,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <div className="sidebar-logo">🏙️ CivicMind</div>
+          <div className="sidebar-logo" onClick={() => { navigate('/home'); setSidebarOpen(false); }} style={{ cursor: 'pointer' }}>🏙️ CivicMind</div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>✕</button>
         </div>
         

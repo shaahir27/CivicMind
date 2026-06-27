@@ -226,13 +226,13 @@ export default function HomeScreen() {
       </div>
 
       {/* List Container */}
-      <div className="home-list-container">
+      <div className="home-list-container" style={{ background: 'hsl(220 100% 98%)' }}>
 
         {/* Header inside Panel */}
         <div style={{ padding: '0 4px 16px', background: 'transparent', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '18px' }}>🏙️</span>
-          <span style={{ fontWeight: 700, fontSize: '18px', color: '#1e293b', flex: 1 }}>Report Logs</span>
-          <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 600, marginRight: '8px' }}>{filtered.length} logs</span>
+          <span style={{ fontSize: '20px' }}>🏙️</span>
+          <span style={{ fontWeight: 800, fontSize: '20px', color: 'hsl(220 20% 12%)', flex: 1, letterSpacing: '-0.02em' }}>Report Logs</span>
+          <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', fontWeight: 600, marginRight: '8px', background: 'rgba(0,0,0,0.04)', padding: '4px 10px', borderRadius: '12px' }}>{filtered.length} logs</span>
           <AppSwitcher currentApp="citizen" userRole={UserRole.Citizen} />
         </div>
 
@@ -270,9 +270,9 @@ export default function HomeScreen() {
               {forecasts.map((fc) => (
                 <div
                   key={fc.forecast_id}
-                  style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '14px 16px', borderRadius: '12px', border: '1px solid hsl(268 83% 50% / 0.2)', background: 'hsl(268 83% 50% / 0.05)', cursor: 'default' }}
+                  style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '16px', border: '1px solid hsl(268 83% 50% / 0.15)', background: 'white', cursor: 'default', boxShadow: '0 4px 20px rgba(167, 139, 250, 0.05)' }}
                 >
-                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'hsl(268 83% 50% / 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', flexShrink: 0 }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'hsl(268 83% 50% / 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>
                     {CATEGORY_ICONS[fc.predicted_category as keyof typeof CATEGORY_ICONS] ?? '⚠️'}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -304,9 +304,9 @@ export default function HomeScreen() {
                   key={issue.issue_id}
                   className="issue-card"
                   onClick={() => navigate(`/issue/${issue.issue_id}`)}
-                  style={{ all: 'unset', display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '12px', border: '1px solid var(--color-border)', cursor: 'pointer', background: 'white', transition: 'all 0.2s', width: '100%', boxSizing: 'border-box' }}
+                  style={{ all: 'unset', display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)', cursor: 'pointer', background: 'white', transition: 'all 0.2s', width: '100%', boxSizing: 'border-box', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}
                 >
-                  <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: 'var(--color-neutral-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>
+                  <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'hsl(220 100% 97%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', flexShrink: 0, border: '1px solid hsl(220 87% 90%)' }}>
                     {CATEGORY_ICONS[issue.category as keyof typeof CATEGORY_ICONS] ?? '📌'}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>

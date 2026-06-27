@@ -133,143 +133,394 @@ export default function AuthScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, hsl(220 100% 97%) 0%, white 60%)', position: 'relative' }}>
-      <a 
-        href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'} 
-        style={{ position: 'absolute', top: '24px', left: '24px', textDecoration: 'none', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '14px', fontFamily: 'var(--font-sans, sans-serif)' }}
-      >
-        ← Back to Landing Page
-      </a>
-      <div style={{ padding: '40px 24px 24px', textAlign: 'center', marginTop: '30px' }}>
-        <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🏙️</div>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#1e293b', marginBottom: '8px' }}>{t('appName')}</h1>
-        <p style={{ color: '#64748b', fontSize: '14px' }}>{t('appTagline')}</p>
+    <div className="auth-split-view" style={{ 
+      background: 'hsl(220 100% 98%)',
+      position: 'relative',
+      overflow: 'hidden',
+      color: 'hsl(220 20% 12%)',
+      fontFamily: 'var(--font-sans)',
+    }}>
+      {/* Background Animated Blobs for mobile or right pane */}
+      <div style={{
+        position: 'absolute',
+        top: '-15%',
+        right: '-15%',
+        width: '60vw',
+        height: '60vw',
+        borderRadius: '50%',
+        background: 'hsla(220, 87%, 53%, 0.15)',
+        filter: 'blur(80px)',
+        zIndex: 0
+      }} />
+      <div style={{
+        position: 'absolute',
+        bottom: '-10%',
+        right: '-20%',
+        width: '70vw',
+        height: '70vw',
+        borderRadius: '50%',
+        background: 'hsla(260, 87%, 53%, 0.15)',
+        filter: 'blur(100px)',
+        zIndex: 0
+      }} />
+
+      {/* Left Pane (Desktop Only) */}
+      <div className="auth-left-pane">
+        <div style={{ fontSize: '5rem', marginBottom: '24px', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))' }}>🏙️</div>
+        <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '16px' }}>{t('appName')}</h1>
+        <p style={{ fontSize: '1.25rem', opacity: 0.9, maxWidth: '400px', lineHeight: 1.5 }}>
+          {t('appTagline')}
+        </p>
       </div>
 
-      <div style={{ flex: 1, padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '16px', justifyContent: 'center', maxWidth: '400px', margin: '0 auto', width: '100%' }}>
+      {/* Right Pane */}
+      <div className="auth-right-pane">
+        {/* Top Bar inside right pane */}
+        <div style={{ width: '100%', paddingBottom: '24px', zIndex: 10, display: 'flex' }}>
+          <a 
+            href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'} 
+            style={{ 
+              textDecoration: 'none', 
+              color: 'hsl(220 20% 40%)', 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '8px', 
+              fontWeight: 500, 
+              fontSize: '14px',
+              background: 'rgba(255, 255, 255, 0.7)',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.2s',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'hsl(220 20% 12%)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'hsl(220 20% 40%)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
+            }}
+          >
+            <span>←</span> Back to Landing Page
+          </a>
+        </div>
 
-        {step === 'choice' && (
-          <>
-            {error && <p style={{ color: '#ef4444', fontSize: '13px', textAlign: 'center', marginBottom: '8px' }}>{error}</p>}
-            <button
-              onClick={handleGuest}
-              disabled={loading}
-              style={{
-                background: 'white', border: '1px solid #e2e8f0', borderRadius: '16px',
-                padding: '20px 24px', cursor: 'pointer', textAlign: 'left',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)', transition: 'all 0.15s',
-                fontFamily: 'var(--font-sans)',
-              }}
-            >
-              <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>👤</div>
-              <div style={{ fontWeight: 600, fontSize: '16px', color: '#1e293b', marginBottom: '4px' }}>
-                {t('continueAsGuest')}
-              </div>
-              <div style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.5 }}>
-                {t('guestDesc')}
-              </div>
-            </button>
+        {/* Mobile Header (Hidden on Desktop via CSS maybe? Or just keep it small) */}
+        <div className="mobile-only-header" style={{ textAlign: 'center', marginBottom: '24px', zIndex: 10, animation: 'fadeInDown 0.6s ease' }}>
+          <div style={{ 
+            fontSize: '3rem', 
+            marginBottom: '16px',
+            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.1))'
+          }}>🏙️</div>
+          <h1 style={{ 
+            fontSize: '2rem', 
+            fontWeight: 800, 
+            marginBottom: '8px',
+            background: 'linear-gradient(180deg, hsl(220 20% 12%) 0%, hsl(220 20% 30%) 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            {t('appName')}
+          </h1>
+          <p style={{ color: 'hsl(220 20% 40%)', fontSize: '15px' }}>{t('appTagline')}</p>
+        </div>
 
-            {/* Account card */}
-            <button
-              onClick={() => setStep('enter-contact')}
-              style={{
-                background: 'hsl(220 87% 53%)', border: 'none', borderRadius: '16px',
-                padding: '20px 24px', cursor: 'pointer', textAlign: 'left',
-                boxShadow: '0 4px 16px hsl(220 87% 53% / 0.3)', transition: 'all 0.15s',
-                fontFamily: 'var(--font-sans)',
-              }}
-            >
-              <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>✨</div>
-              <div style={{ fontWeight: 600, fontSize: '16px', color: 'white', marginBottom: '4px' }}>
-                {t('createAccount')}
-              </div>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>
-                {t('accountDesc')}
-              </div>
-            </button>
+        {/* Form Container */}
+        <div style={{ 
+          width: '100%',
+          maxWidth: '420px', 
+          zIndex: 10 
+        }}>
 
-            {/* Google Sign-In */}
-            <button
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              style={{
-                background: 'white', border: '1px solid #e2e8f0', borderRadius: '16px',
-                padding: '16px 24px', cursor: 'pointer', textAlign: 'center',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)', transition: 'all 0.15s',
-                fontFamily: 'var(--font-sans)', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', gap: '10px', fontWeight: 500, fontSize: '15px', color: '#374151',
-              }}
-            >
-              <span style={{ fontSize: '1.2rem' }}>🔵</span>
-              Continue with Google
-            </button>
-          </>
-        )}
-
-        {step === 'enter-contact' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <button onClick={() => setStep('choice')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-sans)', fontSize: '14px' }}>
-              ← {t('back' as any)}
-            </button>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b' }}>{t('createAccount')}</h2>
-            <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.8)',
+          borderRadius: '24px',
+          padding: '32px 24px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.08)',
+          animation: 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}>
+          
+          {step === 'choice' && (
+            <>
+              {error && (
+                <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#EF4444', padding: '12px', borderRadius: '12px', fontSize: '13px', textAlign: 'center' }}>
+                  {error}
+                </div>
+              )}
+              
+              {/* Guest Card */}
               <button
-                onClick={() => setContactType('phone')}
-                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: `2px solid ${contactType === 'phone' ? '#3b82f6' : '#e2e8f0'}`, background: contactType === 'phone' ? 'hsl(220 100% 97%)' : 'white', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontWeight: 500, color: contactType === 'phone' ? '#1e40af' : '#64748b' }}
+                onClick={handleGuest}
+                disabled={loading}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.8)', 
+                  border: '1px solid rgba(0, 0, 0, 0.05)', 
+                  borderRadius: '16px',
+                  padding: '20px', 
+                  cursor: 'pointer', 
+                  textAlign: 'left',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  gap: '16px',
+                  alignItems: 'center',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 1)'; e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)'; e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.05)'; }}
               >
-                📱 {t('phone')}
+                <div style={{ fontSize: '28px', background: 'hsl(220 100% 97%)', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px', border: '1px solid hsl(220 87% 90%)' }}>👤</div>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '16px', color: 'hsl(220 20% 12%)', marginBottom: '4px' }}>{t('continueAsGuest')}</div>
+                  <div style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', lineHeight: 1.4 }}>{t('guestDesc')}</div>
+                </div>
               </button>
+
+              {/* Account Card */}
               <button
-                onClick={() => setContactType('email')}
-                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: `2px solid ${contactType === 'email' ? '#3b82f6' : '#e2e8f0'}`, background: contactType === 'email' ? 'hsl(220 100% 97%)' : 'white', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontWeight: 500, color: contactType === 'email' ? '#1e40af' : '#64748b' }}
+                onClick={() => setStep('enter-contact')}
+                style={{
+                  background: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)', 
+                  border: 'none', 
+                  borderRadius: '16px',
+                  padding: '20px', 
+                  cursor: 'pointer', 
+                  textAlign: 'left',
+                  boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.3)', 
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  gap: '16px',
+                  alignItems: 'center',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 15px 30px -5px rgba(59, 130, 246, 0.4)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(59, 130, 246, 0.3)'; }}
               >
-                ✉️ {t('email')}
+                <div style={{ fontSize: '28px', background: 'rgba(255,255,255,0.2)', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px' }}>✨</div>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '16px', color: 'white', marginBottom: '4px' }}>{t('createAccount')}</div>
+                  <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', lineHeight: 1.4 }}>{t('accountDesc')}</div>
+                </div>
+              </button>
+
+              {/* Divider */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '8px 0' }}>
+                <div style={{ flex: 1, height: '1px', background: 'rgba(0, 0, 0, 0.05)' }} />
+                <span style={{ color: 'hsl(220 20% 60%)', fontSize: '12px', fontWeight: 500 }}>OR</span>
+                <div style={{ flex: 1, height: '1px', background: 'rgba(0, 0, 0, 0.05)' }} />
+              </div>
+
+              {/* Google Sign-In */}
+              <button
+                onClick={handleGoogleLogin}
+                disabled={loading}
+                style={{
+                  background: 'white', 
+                  border: '1px solid rgba(0,0,0,0.1)', 
+                  borderRadius: '16px',
+                  padding: '16px', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  justifyContent: 'center', 
+                  gap: '12px', 
+                  fontWeight: 600, 
+                  fontSize: '15px', 
+                  color: '#1E293B',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#F8FAFC'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; }}
+              >
+                <span style={{ fontSize: '1.2rem' }}>🔵</span>
+                Continue with Google
+              </button>
+            </>
+          )}
+
+          {step === 'enter-contact' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+              <button onClick={() => setStep('choice')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: 'hsl(220 20% 50%)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', padding: 0 }}>
+                ← {t('back' as any)}
+              </button>
+              
+              <div>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'hsl(220 20% 12%)', marginBottom: '8px' }}>{t('createAccount')}</h2>
+                <p style={{ color: 'hsl(220 20% 40%)', fontSize: '14px' }}>Choose how you want to sign in.</p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.04)', padding: '6px', borderRadius: '14px' }}>
+                <button
+                  onClick={() => setContactType('phone')}
+                  style={{ 
+                    flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
+                    background: contactType === 'phone' ? 'white' : 'transparent', 
+                    cursor: 'pointer', fontWeight: 600, 
+                    color: contactType === 'phone' ? 'hsl(220 87% 53%)' : 'hsl(220 20% 50%)',
+                    transition: 'all 0.2s',
+                    boxShadow: contactType === 'phone' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+                  }}
+                >
+                  📱 {t('phone')}
+                </button>
+                <button
+                  onClick={() => setContactType('email')}
+                  style={{ 
+                    flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
+                    background: contactType === 'email' ? 'white' : 'transparent', 
+                    cursor: 'pointer', fontWeight: 600, 
+                    color: contactType === 'email' ? 'hsl(220 87% 53%)' : 'hsl(220 20% 50%)',
+                    transition: 'all 0.2s',
+                    boxShadow: contactType === 'email' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+                  }}
+                >
+                  ✉️ {t('email')}
+                </button>
+              </div>
+
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={contactType === 'phone' ? 'tel' : 'email'}
+                  placeholder={contactType === 'phone' ? '+91 98765 43210' : 'you@example.com'}
+                  value={contactValue}
+                  onChange={(e) => setContactValue(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRequestOtp()}
+                  style={{
+                    width: '100%',
+                    padding: '16px 20px',
+                    borderRadius: '14px',
+                    background: 'white',
+                    border: '1px solid rgba(0,0,0,0.1)',
+                    color: 'hsl(220 20% 12%)',
+                    fontSize: '16px',
+                    outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'hsl(220 87% 53%)';
+                    e.currentTarget.style.boxShadow = '0 0 0 3px hsla(220, 87%, 53%, 0.15)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                />
+              </div>
+
+              {error && <p style={{ color: '#EF4444', fontSize: '13px', margin: 0 }}>{error}</p>}
+              
+              <button 
+                onClick={handleRequestOtp} 
+                disabled={loading}
+                style={{
+                  background: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)',
+                  color: 'white', border: 'none', borderRadius: '14px',
+                  padding: '16px', fontSize: '16px', fontWeight: 600,
+                  cursor: 'pointer', boxShadow: '0 10px 20px -5px rgba(59, 130, 246, 0.3)',
+                  transition: 'transform 0.1s',
+                  marginTop: '8px'
+                }}
+                onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                {loading ? t('sending') : t('sendCode')}
               </button>
             </div>
-            <input
-              className="text-input"
-              type={contactType === 'phone' ? 'tel' : 'email'}
-              placeholder={contactType === 'phone' ? '+91 98765 43210' : 'you@example.com'}
-              value={contactValue}
-              onChange={(e) => setContactValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleRequestOtp()}
-            />
-            {error && <p style={{ color: '#ef4444', fontSize: '13px' }}>{error}</p>}
-            <button className="btn-primary" onClick={handleRequestOtp} disabled={loading}>
-              {loading ? t('sending') : t('sendCode')}
-            </button>
-          </div>
-        )}
+          )}
 
-        {step === 'enter-otp' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <button onClick={() => setStep('enter-contact')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-sans)', fontSize: '14px' }}>
-              ← {t('back' as any)}
-            </button>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b' }}>{t('enterVerificationCode' as any)}</h2>
-            <p style={{ color: '#64748b', fontSize: '14px' }}>A code was sent to {contactValue}. For demo, enter 123456.</p>
-            <input
-              className="text-input"
-              type="number"
-              inputMode="numeric"
-              placeholder="123456"
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp()}
-              style={{ fontSize: '24px', letterSpacing: '0.3em', textAlign: 'center' }}
-            />
-            {error && <p style={{ color: '#ef4444', fontSize: '13px' }}>{error}</p>}
-            <button className="btn-primary" onClick={handleVerifyOtp} disabled={loading}>
-              {loading ? t('verifying') : t('verifyAndContinue')}
-            </button>
-          </div>
-        )}
+          {step === 'enter-otp' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+              <button onClick={() => setStep('enter-contact')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: 'hsl(220 20% 50%)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', padding: 0 }}>
+                ← {t('back' as any)}
+              </button>
+              
+              <div>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'hsl(220 20% 12%)', marginBottom: '8px' }}>{t('enterVerificationCode' as any)}</h2>
+                <p style={{ color: 'hsl(220 20% 40%)', fontSize: '14px', lineHeight: 1.5 }}>
+                  We sent a code to <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 600 }}>{contactValue}</span>. For the demo, enter 123456.
+                </p>
+              </div>
+
+              <input
+                type="number"
+                inputMode="numeric"
+                placeholder="123456"
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp()}
+                style={{
+                  width: '100%', padding: '16px', borderRadius: '14px',
+                  background: 'white', border: '1px solid rgba(0,0,0,0.1)',
+                  color: 'hsl(220 20% 12%)', fontSize: '24px', letterSpacing: '0.3em', textAlign: 'center',
+                  outline: 'none', transition: 'border-color 0.2s, box-shadow 0.2s', boxSizing: 'border-box'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'hsl(220 87% 53%)';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px hsla(220, 87%, 53%, 0.15)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              />
+              
+              {error && <p style={{ color: '#EF4444', fontSize: '13px', margin: 0, textAlign: 'center' }}>{error}</p>}
+              
+              <button 
+                onClick={handleVerifyOtp} 
+                disabled={loading}
+                style={{
+                  background: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)',
+                  color: 'white', border: 'none', borderRadius: '14px',
+                  padding: '16px', fontSize: '16px', fontWeight: 600,
+                  cursor: 'pointer', boxShadow: '0 10px 20px -5px rgba(59, 130, 246, 0.3)',
+                  transition: 'transform 0.1s', marginTop: '8px'
+                }}
+                onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                {loading ? t('verifying') : t('verifyAndContinue')}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* End Right Pane */}
       </div>
 
-      <div style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '12px' }}>
-        CivicMind © 2026 — Demo Build
-      </div>
+      <style>{`
+        @media (min-width: 768px) {
+          .mobile-only-header { display: none; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+      `}</style>
     </div>
   );
 }

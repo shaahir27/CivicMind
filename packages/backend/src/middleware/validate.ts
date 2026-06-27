@@ -63,12 +63,15 @@ export const reportIssueSchema = z.object({
   description: z
     .string()
     .max(2000, 'description must be 2000 characters or fewer')
-    .optional(),
+    .optional()
+    .nullable(),
   photo_refs: z
     .array(z.string().max(2048))
     .min(1, 'At least one photo_ref is required (BR-1.1)')
     .max(5, 'Maximum 5 photos per submission')
     .optional(),
+  manual_category_override: z.string().optional().nullable(),
+  manual_severity_override: z.string().optional().nullable(),
 });
 
 /** POST /api/v1/issues/:id/confirm — Citizen confirms AI suggestions */

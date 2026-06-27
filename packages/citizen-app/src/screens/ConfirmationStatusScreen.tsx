@@ -69,11 +69,11 @@ export default function ConfirmationStatusScreen() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', background: '#f8fafc' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', background: 'hsl(220 100% 98%)' }}>
       {/* Header */}
-      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'white', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 10 }}>
-        <button onClick={() => navigate('/home')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-        <span style={{ fontWeight: 700, fontSize: '16px', color: '#1e293b' }}>
+      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <button onClick={() => navigate('/home')} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>✕</button>
+        <span style={{ fontWeight: 800, fontSize: '18px', color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>
           {state?.merged ? 'Successfully Corroborated' : 'Report Submitted'}
         </span>
       </div>
@@ -110,7 +110,7 @@ export default function ConfirmationStatusScreen() {
         )}
 
         {/* Report Card */}
-        <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: '24px' }}>
+        <div style={{ background: 'white', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', overflow: 'hidden', marginBottom: '24px' }}>
           {(!imageFailed && (state?.photoPreview || issue.photos?.[0]?.url)) ? (
             <img
               src={state?.photoPreview ?? issue.photos[0]?.url}
@@ -183,15 +183,15 @@ export default function ConfirmationStatusScreen() {
         </div>
 
         {/* Timeline */}
-        <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '20px', marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#1e293b', marginBottom: '20px' }}>Live Tracking</h3>
+        <div style={{ background: 'white', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', padding: '20px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em', marginBottom: '20px' }}>Live Tracking</h3>
           <StatusTimeline currentStatus={issue.status} history={issue.status_history} />
         </div>
 
         {/* Location Map Box */}
         {(typeof issue.location?.lat === 'number' && typeof issue.location?.lng === 'number') && (
-          <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#1e293b', margin: '20px 20px 12px' }}>Location</h3>
+          <div style={{ background: 'white', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', overflow: 'hidden', marginBottom: '24px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em', margin: '20px 20px 12px' }}>Location</h3>
             <div style={{ height: '200px' }}>
               <MapPlaceholder
                 pins={[{ id: issue.issue_id, lat: issue.location.lat, lng: issue.location.lng, category: issue.category, status: issue.status, severity: issue.severity }]}
