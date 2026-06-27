@@ -1,5 +1,5 @@
 import React from 'react';
-import { CITIZEN_APP_URL, AUTHORITY_APP_URL } from '../config.js';
+import { CITIZEN_APP_URL, AUTHORITY_APP_URL, ADMIN_APP_URL } from '../config.js';
 
 export default function Footer() {
   return (
@@ -20,6 +20,7 @@ export default function Footer() {
             <li><a href="#features">Features</a></li>
             <li><a href={CITIZEN_APP_URL}>Citizen App</a></li>
             <li><a href={AUTHORITY_APP_URL}>Authority Portal</a></li>
+            <li><a href={ADMIN_APP_URL}>Admin Console</a></li>
           </ul>
         </div>
 

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { CITIZEN_APP_URL, AUTHORITY_APP_URL } from '../config.js';
+import { CITIZEN_APP_URL, AUTHORITY_APP_URL, ADMIN_APP_URL } from '../config.js';
 
 export default function FooterCTA() {
   const ref = useRef<HTMLElement>(null);
@@ -32,7 +32,10 @@ export default function FooterCTA() {
             🏙️ Start Reporting
           </a>
           <a href={AUTHORITY_APP_URL} className="btn-dark-ghost">
-            Official Login →
+            🏢 Authority Portal →
+          </a>
+          <a href={ADMIN_APP_URL} className="btn-dark-ghost">
+            ⚙️ Admin Console →
           </a>
         </div>
       </motion.div>
