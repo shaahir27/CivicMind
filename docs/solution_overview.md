@@ -13,7 +13,7 @@ CivicSense introduces **Agentic Automation** to civic governance. It is a dual-e
 2. **The Authority Portal:** An intelligent, prioritized workflow for municipal workers.
 3. **The Admin Console:** System-wide AI oversight.
 
-Instead of human dispatchers, CivicSense employs a stack of 6 purpose-built AI Agents running on the backend (powered by Gemini 2.5 Pro). These agents take ownership of the entire lifecycle of a complaint.
+Instead of human dispatchers, CivicSense employs a stack of 6 purpose-built AI Agents running on the backend (powered by Gemini 3.1 Flash-Lite). These agents take ownership of the entire lifecycle of a complaint.
 
 ## 3. The 6-Agent Stack
 - **Reporter:** Translates a raw citizen photo into structured data (category, severity).

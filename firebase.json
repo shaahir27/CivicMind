@@ -1,6 +1,14 @@
 {
   "hosting": [
     {
+      "target": "landing-page",
+      "public": "packages/landing-page/dist",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
       "target": "citizen-app",
       "public": "packages/citizen-app/dist",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],

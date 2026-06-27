@@ -14,7 +14,9 @@ A citizen reports a civic issue (pothole, broken streetlight, garbage overflow, 
 
 ## Screenshots
 
-*(Placeholder for 2-3 high-quality GIFs/Screenshots of the Citizen App flow and Authority Portal before final submission)*
+![Citizen photo capture → AI classification screen]()
+![Authority dashboard with live SLA countdown]()
+![Escalation event OR before/after verification comparison]()
 
 ---
 
@@ -51,11 +53,15 @@ CivicSense is built as a modern TypeScript monorepo using npm workspaces. It con
 | **Styling & UI** | Pure CSS (Variables, Flexbox, Grid), Framer Motion, React-Toastify |
 | **Maps & Geo** | `@vis.gl/react-google-maps` (Google Maps Platform) |
 | **Backend API** | Node.js, Express, TypeScript |
-| **AI Orchestration** | `@google/genai` (Google's Native SDK using Gemini 2.5 Pro multimodal models) |
+| **AI Orchestration** | `@google/genai` (Google's Native SDK using Gemini 3.1 Flash-Lite for low-latency multimodal agent inference) |
 | **Database** | Firebase Firestore (NoSQL Document Store) |
 | **Storage (Photos)** | Firebase Cloud Storage |
 | **Authentication** | Firebase Auth (Email/Password, Anonymous) |
 | **Job Scheduling** | Node `node-cron` for Escalaration & Predictive sweeps |
+
+---
+
+**Google AI Studio**: Gemini API access for all agents is provisioned via Google AI Studio (aistudio.google.com).
 
 ---
 

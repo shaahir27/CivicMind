@@ -12,7 +12,7 @@ CivicSense is composed of a unified monorepo containing five distinct packages:
 2. **`packages/citizen-app` (Frontend)** — Mobile-first PWA for citizen report submission (photo, location, description).
 3. **`packages/authority-portal` (Frontend)** — Desktop-first dashboard for department officials to manage and resolve issues.
 4. **`packages/admin-console` (Frontend)** — System oversight portal for monitoring AI logs, users, and overall health.
-5. **`packages/backend` (Backend)** — A Node.js/Express server housing the **Agent Orchestrator** (powered by OpenRouter & Gemini 2.5 Pro) that coordinates downstream agents, manages issue state, and handles API requests.
+5. **`packages/backend` (Backend)** — A Node.js/Express server housing the **Agent Orchestrator** (powered by OpenRouter & Gemini 3.1 Flash-Lite) that coordinates downstream agents, manages issue state, and handles API requests.
 
 **Architectural principle:** The backend orchestrator is the *only* component that talks to the LLM and the database. The frontends communicate exclusively with the backend via REST API.
 
@@ -47,7 +47,7 @@ CivicSense is composed of a unified monorepo containing five distinct packages:
 ### 3.1 Orchestration Service
 - A central Express server responsible for:
   - Receiving frontend requests.
-  - Sequencing agent invocations via OpenRouter (Gemini 2.5 Pro).
+  - Sequencing agent invocations via OpenRouter (Gemini 3.1 Flash-Lite).
   - Persisting state transitions in Firebase Firestore.
 
 ### 3.2 Agent Services
@@ -79,7 +79,7 @@ Each agent is implemented as a functional module within the backend:
 
 | Service | Purpose | Notes |
 |---|---|---|
-| OpenRouter (Gemini 2.5 Pro) | Orchestrator reasoning, Vision analysis | Handles both text reasoning and multimodal image analysis |
+| OpenRouter (Gemini 3.1 Flash-Lite) | Orchestrator reasoning, Vision analysis | Handles both text reasoning and multimodal image analysis |
 | Google Maps Platform | Geocoding, map rendering | Used by frontends for interactive maps |
 | Firebase Auth | Authentication | Handles Email/Password and Anonymous sign-ins |
 | Firebase Admin SDK | Backend DB access | Secures all database transactions |
