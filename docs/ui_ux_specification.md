@@ -29,7 +29,7 @@
 **Target Audience:** General public.
 **Form Factor:** Mobile-first PWA.
 **Key Elements:**
-- **Map View:** Leaflet map showing recent issues in the neighborhood.
+- **Map View:** Google Maps view showing recent issues in the neighborhood.
 - **Camera FAB:** Large floating action button to instantly report a problem.
 - **Upload Flow:** Stripped down to minimize friction. User selects a photo, and the AI handles the rest.
 - **Timeline View:** A clean, vertical timeline showing exactly what stage the issue is in (e.g., "Routed to Sanitation").

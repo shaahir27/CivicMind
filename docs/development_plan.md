@@ -18,7 +18,7 @@
   - **Verifier:** Image comparison pipeline built and tested.
 
 ## Phase 3: Frontend Implementation (Completed)
-- **Citizen App:** Built the mobile PWA with Leaflet maps and camera integrations.
+- **Citizen App:** Built the mobile PWA with Google Maps and camera integrations.
 - **Authority Portal:** Built the desktop queue, resolution modal, and SLA indicators.
 - **Admin Console:** Built the oversight logs and user management screens.
 - **Landing Page:** Designed the central bridge to direct traffic and highlight the dual ecosystem.

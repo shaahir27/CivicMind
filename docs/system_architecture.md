@@ -80,7 +80,7 @@ Each agent is implemented as a functional module within the backend:
 | Service | Purpose | Notes |
 |---|---|---|
 | OpenRouter (Gemini 2.5 Pro) | Orchestrator reasoning, Vision analysis | Handles both text reasoning and multimodal image analysis |
-| Google Maps Platform / Leaflet | Geocoding, map rendering | Used by frontends for interactive maps |
+| Google Maps Platform | Geocoding, map rendering | Used by frontends for interactive maps |
 | Firebase Auth | Authentication | Handles Email/Password and Anonymous sign-ins |
 | Firebase Admin SDK | Backend DB access | Secures all database transactions |
 
