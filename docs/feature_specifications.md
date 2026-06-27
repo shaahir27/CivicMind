@@ -1,3 +1,10 @@
+> **[ARCHIVE NOTICE: PLEASE READ]**
+> This document was generated during the initial design phase of CivicSense (formerly CivicMind). As the project was actively developed, the architecture evolved into a robust TypeScript monorepo with dedicated packages (Landing Page, Admin Console, etc.) and replaced some proposed technologies (e.g., BigQuery, Cloud Scheduler) with Firebase and internal cron jobs. 
+> 
+> **For the current, live architecture and deployment instructions, please refer to the main [`README.md`](../README.md) at the root of the repository.**
+
+---
+
 # CivicMind — Feature Specifications
 
 > Each feature below maps to one or more functional requirements in `product_requirements.md` and to one agent in the architecture defined in `system_architecture.md`. Priorities use MoSCoW (Must Have / Should Have / Nice to Have) and are reconciled with `mvp_scope.md` — if a conflict is found, `mvp_scope.md` is authoritative for scope, this document is authoritative for behavioral detail.

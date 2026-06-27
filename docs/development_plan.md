@@ -1,3 +1,10 @@
+> **[ARCHIVE NOTICE: PLEASE READ]**
+> This document was generated during the initial design phase of CivicSense (formerly CivicMind). As the project was actively developed, the architecture evolved into a robust TypeScript monorepo with dedicated packages (Landing Page, Admin Console, etc.) and replaced some proposed technologies (e.g., BigQuery, Cloud Scheduler) with Firebase and internal cron jobs. 
+> 
+> **For the current, live architecture and deployment instructions, please refer to the main [`README.md`](../README.md) at the root of the repository.**
+
+---
+
 # CivicMind — Development Plan
 
 > Practical implementation roadmap for a hackathon timeline (assumed 5–7 days). Phases are sequenced by dependency, not strictly by calendar day — teams with more parallel capacity can run some phases concurrently as noted. No code included; this is a planning document for coordinating AI coding agents and human developers together.

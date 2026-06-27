@@ -1,3 +1,10 @@
+> **[ARCHIVE NOTICE: PLEASE READ]**
+> This document was generated during the initial design phase of CivicSense (formerly CivicMind). As the project was actively developed, the architecture evolved into a robust TypeScript monorepo with dedicated packages (Landing Page, Admin Console, etc.) and replaced some proposed technologies (e.g., BigQuery, Cloud Scheduler) with Firebase and internal cron jobs. 
+> 
+> **For the current, live architecture and deployment instructions, please refer to the main [`README.md`](../README.md) at the root of the repository.**
+
+---
+
 # CivicMind — Solution Overview
 
 > **Document purpose:** This is the single source of truth for the CivicMind product concept. It is intended to be read first by any AI coding agent (Claude Code, Cursor, Windsurf, Cline, GPT, etc.) before any implementation work begins. All other documents in this package (`product_requirements.md`, `feature_specifications.md`, `system_architecture.md`, etc.) must remain consistent with the definitions established here.

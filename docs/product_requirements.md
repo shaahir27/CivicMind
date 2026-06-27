@@ -1,3 +1,10 @@
+> **[ARCHIVE NOTICE: PLEASE READ]**
+> This document was generated during the initial design phase of CivicSense (formerly CivicMind). As the project was actively developed, the architecture evolved into a robust TypeScript monorepo with dedicated packages (Landing Page, Admin Console, etc.) and replaced some proposed technologies (e.g., BigQuery, Cloud Scheduler) with Firebase and internal cron jobs. 
+> 
+> **For the current, live architecture and deployment instructions, please refer to the main [`README.md`](../README.md) at the root of the repository.**
+
+---
+
 # CivicMind — Product Requirements Document (PRD)
 
 > Consistent with `solution_overview.md`. This document defines what must be built, not how. Implementation detail belongs in `system_architecture.md`, `database_design.md`, `api_specification.md`, and `feature_specifications.md`.

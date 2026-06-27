@@ -1,3 +1,10 @@
+> **[ARCHIVE NOTICE: PLEASE READ]**
+> This document was generated during the initial design phase of CivicSense (formerly CivicMind). As the project was actively developed, the architecture evolved into a robust TypeScript monorepo with dedicated packages (Landing Page, Admin Console, etc.) and replaced some proposed technologies (e.g., BigQuery, Cloud Scheduler) with Firebase and internal cron jobs. 
+> 
+> **For the current, live architecture and deployment instructions, please refer to the main [`README.md`](../README.md) at the root of the repository.**
+
+---
+
 # CivicMind — User Flows
 
 > All flows below must remain consistent with the issue status state machine defined here, which is the canonical reference for `feature_specifications.md`, `api_specification.md`, and `database_design.md`.

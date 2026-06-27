@@ -1,3 +1,10 @@
+> **[ARCHIVE NOTICE: PLEASE READ]**
+> This document was generated during the initial design phase of CivicSense (formerly CivicMind). As the project was actively developed, the architecture evolved into a robust TypeScript monorepo with dedicated packages (Landing Page, Admin Console, etc.) and replaced some proposed technologies (e.g., BigQuery, Cloud Scheduler) with Firebase and internal cron jobs. 
+> 
+> **For the current, live architecture and deployment instructions, please refer to the main [`README.md`](../README.md) at the root of the repository.**
+
+---
+
 # CivicMind — Database Design
 
 > Schema is described in implementation-agnostic relational terms (entities, fields, relationships, constraints) for clarity, even though the recommended physical store is a document database (Firestore) per `system_architecture.md`. Each entity below maps to one Firestore collection (or one BigQuery table for analytical entities) unless noted otherwise. No code/queries included — this is a blueprint only.
