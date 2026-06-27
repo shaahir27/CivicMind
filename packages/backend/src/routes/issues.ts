@@ -48,35 +48,43 @@ router.use(authenticate as any);
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Resolves the ward_or_area_id from coordinates by matching against seeded
- * jurisdiction mappings. Falls back to "ward_UNKNOWN" if outside all known wards.
- * Assumption: each seeded ward in jurisdiction_mappings has a unique ward_or_area_id.
+ * Resolves the ward_or_area_id from coordinates by calling the Google Geocoding API.
+ * This ensures the routing dynamically supports any global location for live demos.
  */
 async function resolveWardFromCoordinates(
-  _lat: number,
-  _lng: number
+  lat: number,
+  lng: number
 ): Promise<string> {
-  // For the hackathon MVP, we approximate ward resolution using nearest-ward-center
-  // (no ward boundary data exists in the schema today).
-  const centers = [
-    { id: 'ward-101-indiranagar', lat: 12.9784, lng: 77.6408 },
-    { id: 'ward-102-koramangala', lat: 12.9352, lng: 77.6245 },
-    { id: 'ward-103-hsrlayout', lat: 12.9141, lng: 77.6361 },
-  ];
-
-  let nearest = centers[0]!;
-  let minDistance = Infinity;
-
-  for (const c of centers) {
-    // Simple Euclidean distance is sufficient for small city bounds
-    const d = Math.pow(c.lat - _lat, 2) + Math.pow(c.lng - _lng, 2);
-    if (d < minDistance) {
-      minDistance = d;
-      nearest = c;
+  try {
+    const apiKey = config.googleMaps.serverApiKey;
+    if (!apiKey) return 'ward-unknown';
+    
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+    const response = await fetch(url);
+    const data = (await response.json()) as any;
+    
+    if (data.status === 'OK' && data.results.length > 0) {
+      const result = data.results[0];
+      
+      // Prefer sublocality (neighborhood) or administrative_area_level_2 (city/county)
+      for (const component of result.address_components) {
+        if (component.types.includes('sublocality_level_1') || component.types.includes('administrative_area_level_2')) {
+          return `ward-${component.long_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        }
+      }
+      
+      // Fallback to locality
+      for (const component of result.address_components) {
+        if (component.types.includes('locality')) {
+          return `ward-${component.long_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        }
+      }
     }
+  } catch (err) {
+    console.error('[Geocoding] Error resolving ward:', err);
   }
-
-  return nearest.id;
+  
+  return 'ward-unknown';
 }
 
 /** Fetches a signed URL for a storage path (public expiry: 15 min) */

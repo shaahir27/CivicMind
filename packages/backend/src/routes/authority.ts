@@ -104,7 +104,10 @@ router.get('/issues', asyncHandler(async (req: Request, res: Response) => {
   allDocs = allDocs.filter(issue => issue.is_canonical === true);
   
   const scope = user.jurisdictionScope ?? [];
-  if (user.role === UserRole.Authority && scope.length > 0) {
+  const isDemoAccount = user.email === 'officer.bescom@civicmind.gov';
+  // Demo hack: Bypass jurisdiction filter for the main demo account so it can see 
+  // live geocoded tickets from anywhere in the world.
+  if (user.role === UserRole.Authority && scope.length > 0 && !isDemoAccount) {
     allDocs = allDocs.filter(issue => scope.includes(issue.ward_or_area_id));
   }
   

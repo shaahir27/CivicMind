@@ -34,6 +34,9 @@ import {
 } from '@civicmind/shared';
 import type { Issue, HotspotForecast } from '@civicmind/shared';
 import { v4 as uuidv4 } from 'uuid';
+import { GoogleGenAI } from '@google/genai';
+import { config } from '../config/env.js';
+import { generateContentWithRetry } from '../services/ai.js';
 
 const AGENT_VERSION = '1.0.0';
 
@@ -157,6 +160,7 @@ export async function runPredictorAgent(): Promise<PredictorAgentResult> {
     // Best-effort; don't fail the whole cycle
   }
 
+  const allForecasts: HotspotForecast[] = [];
   for (const [key, members] of groups) {
     if (members.length < MIN_ISSUES_FOR_FORECAST) {
       areasWithInsufficientData++;
@@ -190,16 +194,44 @@ export async function runPredictorAgent(): Promise<PredictorAgentResult> {
       db.collection(COLLECTIONS.HOTSPOT_FORECASTS).doc(forecastId),
       forecast
     );
+    allForecasts.push(forecast);
     forecastsGenerated++;
   }
 
   await batch.commit();
+
+  // ─── AI LLM Integration (Agentic Depth) ──────────────────────────────────
+  let aiSummary = 'Insufficient data to generate AI risk summary.';
+  if (allForecasts.length > 0 && config.genai.apiKey) {
+    try {
+      const top3 = allForecasts
+        .sort((a, b) => b.risk_score - a.risk_score)
+        .slice(0, 3);
+      
+      const prompt = `You are an expert civic intelligence agent. Based on our statistical model, here are the top ${top3.length} highest-risk issue hotspots right now:
+${JSON.stringify(top3, null, 2)}
+Generate a concise, 2-3 sentence natural-language risk summary explaining the contextual risk of these hotspots for the city administrator. Focus on what needs immediate attention based on the category and severity. Do not include markdown formatting like asterisks.`;
+      
+      const genAI = new GoogleGenAI({ apiKey: config.genai.apiKey });
+      const response = await generateContentWithRetry(genAI, {
+        model: config.genai.modelText,
+        contents: prompt,
+      });
+      if (response && response.text) {
+        aiSummary = response.text.trim();
+      }
+    } catch (e) {
+      console.error('[PredictorAgent] Failed to generate AI summary:', e);
+      aiSummary = 'AI summary generation failed due to an error.';
+    }
+  }
 
   const outputSummary = JSON.stringify({
     forecasts_generated: forecastsGenerated,
     areas_insufficient: areasWithInsufficientData,
     total_groups: groups.size,
     issues_analysed: allIssues.length,
+    ai_risk_summary: aiSummary,
   });
 
   // ─── 5. Audit log ─────────────────────────────────────────────────────────

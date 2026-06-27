@@ -12,6 +12,12 @@ A citizen reports a civic issue (pothole, broken streetlight, garbage overflow, 
 
 ---
 
+## Screenshots
+
+*(Placeholder for 2-3 high-quality GIFs/Screenshots of the Citizen App flow and Authority Portal before final submission)*
+
+---
+
 ## Key Features
 
 | Feature | What It Does |
@@ -43,9 +49,9 @@ CivicSense is built as a modern TypeScript monorepo using npm workspaces. It con
 |---|---|
 | **Frontend Framework** | React 18, TypeScript, Vite |
 | **Styling & UI** | Pure CSS (Variables, Flexbox, Grid), Framer Motion, React-Toastify |
-| **Maps & Geo** | Leaflet, React-Leaflet |
+| **Maps & Geo** | `@vis.gl/react-google-maps` (Google Maps Platform) |
 | **Backend API** | Node.js, Express, TypeScript |
-| **AI Orchestration** | OpenRouter SDK (using Google Gemini 2.5 Pro multimodal models) |
+| **AI Orchestration** | `@google/genai` (Google's Native SDK using Gemini 2.5 Pro multimodal models) |
 | **Database** | Firebase Firestore (NoSQL Document Store) |
 | **Storage (Photos)** | Firebase Cloud Storage |
 | **Authentication** | Firebase Auth (Email/Password, Anonymous) |
@@ -58,7 +64,7 @@ CivicSense is built as a modern TypeScript monorepo using npm workspaces. It con
 ### 1. Prerequisites
 - Node.js (v18 or higher)
 - A Firebase Project (with Firestore, Storage, and Auth enabled)
-- An OpenRouter API Key
+- A Google Gemini API Key
 
 ### 2. Installation
 Clone the repository and install all dependencies from the root:
@@ -85,7 +91,7 @@ VITE_FIREBASE_APP_ID=your_app_id
 ```env
 PORT=4000
 FRONTEND_URL=http://localhost:5173
-OPENROUTER_API_KEY=your_openrouter_key
+GOOGLE_GENAI_API_KEY=your_gemini_key
 # Firebase Admin SDK credentials
 FIREBASE_PROJECT_ID=your_id
 FIREBASE_CLIENT_EMAIL=your_service_account_email
