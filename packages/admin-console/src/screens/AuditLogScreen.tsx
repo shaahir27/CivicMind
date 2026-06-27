@@ -169,7 +169,7 @@ export default function AuditLogScreen() {
       const res = await fetch(`${BASE}/api/v1/admin/agent-decision-log${params}`, { headers: authHeaders });
       if (res.ok) {
         const data = await res.json();
-        setLogs(data.logs?.length ? data.logs : MOCK_LOGS);
+        setLogs(data.logs && data.logs.length > 0 ? data.logs : MOCK_LOGS);
       } else {
         setLogs(MOCK_LOGS);
       }

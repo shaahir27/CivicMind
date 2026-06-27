@@ -247,8 +247,6 @@
   border-radius: var(--radius-2xl);
   border: 1px solid var(--glass-border-light);
   box-shadow: var(--shadow-xl);
-  position: sticky;
-  top: calc(80px + var(--space-8));
 }
 
 .table-responsive {

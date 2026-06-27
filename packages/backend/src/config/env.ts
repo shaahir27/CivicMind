@@ -31,6 +31,7 @@ export const config = {
   firebase: {
     projectId: requireEnv('FIREBASE_PROJECT_ID'),
     storageBucket: requireEnv('FIREBASE_STORAGE_BUCKET'),
+    publicApiKey: optionalEnv('VITE_FIREBASE_API_KEY', 'AIzaSyCmQNVVai3JD20dEbiWfF_JBxrUb38Qeuo'),
   },
 
   internalServiceSecret: requireEnv('INTERNAL_SERVICE_SECRET'),

@@ -1,10 +1,10 @@
 {
-  "appName": "CivicMind",
+  "appName": "CivicSense",
   "appTagline": "Empowering communities through transparent civic participation",
   "onboarding1Title": "Report in Seconds",
   "onboarding1Sub": "Just take a photo. Our AI identifies the issue and severity automatically — no forms required.",
   "onboarding2Title": "We Route It Automatically",
-  "onboarding2Sub": "CivicMind's AI finds the right department and drafts a formal complaint on your behalf.",
+  "onboarding2Sub": "CivicSense's AI finds the right department and drafts a formal complaint on your behalf.",
   "onboarding3Title": "We Verify It's Actually Fixed",
   "onboarding3Sub": "Our AI compares before/after photos to confirm real resolution — not just a status change.",
   "skip": "Skip →",

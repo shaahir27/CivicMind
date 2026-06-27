@@ -8,6 +8,8 @@ import { seedDepartments } from './seed-departments.js';
 import { seedJurisdiction } from './seed-jurisdiction.js';
 import { seedSLA } from './seed-sla.js';
 import { seedDemoAccounts } from './seed-demo-accounts.js';
+import { seedImpactReports } from './seed-impact-reports.js';
+import { seedForecasts } from './seed-forecasts.js';
 
 export async function runAllSeeds() {
   console.log('====================================================');
@@ -29,6 +31,14 @@ export async function runAllSeeds() {
 
     // 4. User/Demo Accounts
     await seedDemoAccounts();
+    console.log('');
+
+    // 5. Impact Reports
+    await seedImpactReports();
+    console.log('');
+
+    // 6. Forecasts
+    await seedForecasts();
     console.log('');
 
     console.log('====================================================');

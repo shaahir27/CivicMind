@@ -37,7 +37,7 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: bool
       <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
           <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>⚙️</span> CivicMind Admin
+            <span>⚙️</span> CivicSense Admin Console
           </h2>
         </div>
         <nav className="admin-sidebar-nav">

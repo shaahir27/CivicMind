@@ -76,7 +76,7 @@ export default function LoginScreen() {
         <div style={{ maxWidth: '480px' }}>
           <div style={{ fontSize: '3rem', marginBottom: '24px' }}>⚙️</div>
           <h1 style={{ fontSize: '36px', fontWeight: 800, marginBottom: '16px', lineHeight: 1.2 }}>
-            Configure CivicMind Citywide
+            Configure CivicSense Citywide
           </h1>
           <p style={{ fontSize: '18px', color: 'rgba(255,255,255,0.8)', marginBottom: '48px', lineHeight: 1.5 }}>
             Sign in to access system configuration, manage SLA policies, view impact reports, and oversee global operations.
@@ -118,7 +118,7 @@ export default function LoginScreen() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@civicmind.gov"
+                placeholder="admin@civicsense.gov"
                 style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '15px' }}
               />
             </div>

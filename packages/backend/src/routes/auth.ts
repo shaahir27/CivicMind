@@ -10,6 +10,7 @@ import { UserRole } from '@civicmind/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { authenticate, AuthRequest } from '../middleware/authenticate.js';
 import { strictRateLimit } from '../middleware/rateLimiter.js';
+import { config } from '../config/env.js';
 import type { Request, Response } from 'express';
 
 const router = Router();
@@ -274,15 +275,15 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
 
   // Firebase Admin SDK doesn't support email/password verification directly.
   // We verify by calling Firebase Auth REST API.
-  const apiKey = process.env['VITE_FIREBASE_API_KEY'];
-  if (!apiKey) {
+  const FIREBASE_API_KEY = config.firebase.publicApiKey;
+  if (!FIREBASE_API_KEY) {
     res.status(500).json({
       error: { code: 'INTERNAL_ERROR', message: 'Firebase API key not configured.' },
     });
     return;
   }
 
-  const signInUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`;
+  const signInUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`;
   const response = await fetch(signInUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

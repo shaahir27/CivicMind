@@ -56,8 +56,8 @@ const MOCK_USERS: AdminUser[] = [
   },
   {
     user_id: 'admin-001',
-    email: 'admin@civicmind.io',
-    display_name: 'CivicMind Admin',
+    email: 'admin@civicsense.io',
+    display_name: 'CivicSense Admin',
     role: 'admin',
     department_id: null,
     jurisdiction_scope: [],
@@ -295,7 +295,7 @@ export default function UserManagementScreen() {
       const res = await fetch(`${BASE}/api/v1/admin/users`, { headers: authHeaders });
       if (res.ok) {
         const data = await res.json();
-        setUsers(data.users?.length ? data.users : MOCK_USERS);
+        setUsers(data.users && data.users.length > 0 ? data.users : MOCK_USERS);
       } else {
         setUsers(MOCK_USERS);
       }

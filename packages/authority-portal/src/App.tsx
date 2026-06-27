@@ -25,7 +25,7 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
       <aside className={`portal-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="portal-sidebar-header">
           <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-primary-700)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>🛡️</span> CivicMind Authority
+            <span>🛡️</span> CivicSense Authority
           </h2>
         </div>
         <nav className="portal-sidebar-nav">

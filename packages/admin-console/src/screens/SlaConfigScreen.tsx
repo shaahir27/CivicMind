@@ -31,8 +31,10 @@ export default function SlaConfigScreen() {
         });
         if (res.ok && active) {
           const data = await res.json();
-          setConfigs(data.configs ?? MOCK_SLA);
-        } else if (active) setConfigs(MOCK_SLA);
+          setConfigs(data.configs && data.configs.length > 0 ? data.configs : MOCK_SLA);
+        } else if (active) {
+          setConfigs(MOCK_SLA);
+        }
       } catch {
         if (active) setConfigs(MOCK_SLA);
       }

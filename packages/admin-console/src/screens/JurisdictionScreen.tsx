@@ -29,8 +29,10 @@ export default function JurisdictionScreen() {
         });
         if (res.ok && active) {
           const data = await res.json();
-          setMappings(data.mappings ?? MOCK_MAPPINGS);
-        } else if (active) setMappings(MOCK_MAPPINGS);
+          setMappings(data.mappings && data.mappings.length > 0 ? data.mappings : MOCK_MAPPINGS);
+        } else if (active) {
+          setMappings(MOCK_MAPPINGS);
+        }
       } catch {
         if (active) setMappings(MOCK_MAPPINGS);
       }

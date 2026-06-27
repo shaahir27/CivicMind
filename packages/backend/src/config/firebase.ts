@@ -82,4 +82,5 @@ export const COLLECTIONS = {
   HERO_POINTS_LEDGER:     'hero_points_ledger',
   HOTSPOT_FORECASTS:      'hotspot_forecasts',
   IMPACT_REPORTS:         'impact_reports',
+  FORECASTS:              'forecasts',
 } as const;
