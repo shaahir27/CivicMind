@@ -29,7 +29,7 @@ const ALLOWED_PRODUCTION_ORIGINS = (process.env['ALLOWED_ORIGINS'] ?? '')
   .filter(Boolean);
 
 app.use(cors({
-  origin: config.nodeEnv === 'production' ? ALLOWED_PRODUCTION_ORIGINS : '*',
+  origin: '*', // Allow all origins for the hackathon (bypasses CORS blocks)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-internal-secret'],
 }));
