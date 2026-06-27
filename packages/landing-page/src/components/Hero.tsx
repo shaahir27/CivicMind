@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { motion } from 'framer-motion';
+import { CITIZEN_APP_URL } from '../config.js';
 
 const ParticleGlobe = React.lazy(() => import('./ParticleGlobe'));
 
@@ -41,7 +42,7 @@ export default function Hero() {
         </motion.p>
 
         <motion.div className="hero-actions" variants={itemVariants}>
-          <a href="http://localhost:5173" className="btn-hero-primary">
+          <a href={CITIZEN_APP_URL} className="btn-hero-primary">
             Start Reporting <span>→</span>
           </a>
           <a href="#how-it-works" className="btn-hero-secondary">

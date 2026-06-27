@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { CITIZEN_APP_URL, AUTHORITY_APP_URL } from '../config.js';
 
 export default function FooterCTA() {
   const ref = useRef<HTMLElement>(null);
@@ -27,10 +28,10 @@ export default function FooterCTA() {
           It takes 30 seconds to file your first report.
         </p>
         <div className="footer-cta-actions">
-          <a href="http://localhost:5173" className="btn-dark-primary">
+          <a href={CITIZEN_APP_URL} className="btn-dark-primary">
             🏙️ Start Reporting
           </a>
-          <a href="http://localhost:5174" className="btn-dark-ghost">
+          <a href={AUTHORITY_APP_URL} className="btn-dark-ghost">
             Official Login →
           </a>
         </div>

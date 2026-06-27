@@ -1,4 +1,5 @@
 import React from 'react';
+import { CITIZEN_APP_URL, AUTHORITY_APP_URL } from '../config.js';
 
 export default function Footer() {
   return (
@@ -17,8 +18,8 @@ export default function Footer() {
           <ul>
             <li><a href="#how-it-works">How it Works</a></li>
             <li><a href="#features">Features</a></li>
-            <li><a href="http://localhost:5173">Citizen App</a></li>
-            <li><a href="http://localhost:5174">Authority Portal</a></li>
+            <li><a href={CITIZEN_APP_URL}>Citizen App</a></li>
+            <li><a href={AUTHORITY_APP_URL}>Authority Portal</a></li>
           </ul>
         </div>
 

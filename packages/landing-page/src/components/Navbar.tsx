@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CITIZEN_APP_URL, AUTHORITY_APP_URL } from '../config.js';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -30,8 +31,8 @@ export default function Navbar() {
         </ul>
 
         <div className="nav-actions">
-          <a href="http://localhost:5174" className="btn-ghost">Official Login</a>
-          <a href="http://localhost:5173" className="btn-primary">
+          <a href={AUTHORITY_APP_URL} className="btn-ghost">Official Login</a>
+          <a href={CITIZEN_APP_URL} className="btn-primary">
             Report an Issue <span>→</span>
           </a>
         </div>
@@ -67,8 +68,8 @@ export default function Navbar() {
               <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it Works</a>
               <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
               <a href="#for-officials" onClick={() => setMenuOpen(false)}>For Officials</a>
-              <a href="http://localhost:5174" onClick={() => setMenuOpen(false)}>Official Login</a>
-              <a href="http://localhost:5173" onClick={() => setMenuOpen(false)} className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>
+              <a href={AUTHORITY_APP_URL} onClick={() => setMenuOpen(false)}>Official Login</a>
+              <a href={CITIZEN_APP_URL} onClick={() => setMenuOpen(false)} className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>
                 Report an Issue →
               </a>
             </motion.div>
