@@ -1,0 +1,47 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getRole() {
+      return request.auth.token.role;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getRole() == 'admin';
+    }
+
+    // ─── Issue photos (before images) ───────────────────────────────────────
+    // Path matches what ReportCaptureScreen.tsx actually writes to:
+    // photos/{idempotencyKey}/before.jpg
+    match /photos/{idempotencyKey}/{photoFile} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated()
+        && request.resource.size < 10 * 1024 * 1024  // max 10MB per spec
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // ─── Resolution evidence (after images) ─────────────────────────────────
+    // Path matches what IssueDetailScreen.tsx (authority portal) actually
+    // writes to: resolutions/{issueId}/after_{timestamp}.jpg
+    match /resolutions/{issueId}/{photoFile} {
+      allow read: if isAuthenticated();
+      // Authority-role uploads only; size/type enforced same as before photos
+      allow write: if isAuthenticated()
+        && (getRole() == 'authority' || isAdmin())
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // ─── Impact report exports ───────────────────────────────────────────────
+    match /reports/{reportId}/{fileName} {
+      allow read: if true;  // Public reports are publicly readable
+      allow write: if isAdmin();
+    }
+  }
+}

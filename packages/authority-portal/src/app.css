@@ -1,0 +1,258 @@
+/**
+ * Authority Portal Premium CSS
+ * Leverages the overhauled CivicMind design system.
+ */
+
+.portal-layout {
+  display: flex;
+  min-height: 100dvh;
+  /* Premium animated gradient mesh background */
+  background: 
+    radial-gradient(at 0% 0%, hsl(230 100% 97%) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsl(210 100% 95%) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsl(240 100% 96%) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsl(200 100% 94%) 0px, transparent 50%);
+  background-color: hsl(220 20% 98%);
+  font-family: var(--font-sans);
+}
+
+.portal-sidebar {
+  width: var(--sidebar-width);
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--glass-border-light);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: 4px 0 24px hsl(220 14% 19% / 0.02);
+  z-index: calc(var(--z-sticky) + 10);
+  transition: transform var(--transition-base);
+}
+
+.portal-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-sticky);
+}
+
+@media (max-width: 768px) {
+  .portal-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+  }
+  .portal-sidebar.open {
+    transform: translateX(0);
+  }
+  .portal-sidebar-overlay.open {
+    display: block;
+  }
+}
+
+.portal-sidebar-header {
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.portal-sidebar-nav {
+  flex: 1;
+  padding: var(--space-4) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: hsl(220 16% 94% / 0.5);
+  color: var(--color-text-primary);
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  background: var(--gradient-brand);
+  color: white;
+  font-weight: var(--font-bold);
+  box-shadow: var(--shadow-glow-brand);
+}
+
+.portal-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.portal-header {
+  height: 80px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border-light);
+}
+
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: var(--space-2);
+  margin-right: var(--space-4);
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .portal-header {
+    padding: 0 var(--space-4);
+  }
+  .hamburger-btn {
+    display: block;
+  }
+}
+
+.portal-content {
+  padding: var(--space-8);
+  flex: 1;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .portal-content {
+    padding: var(--space-4);
+  }
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Metric Cards (Glassmorphism) ────────────────────────────────────────── */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.metric-card {
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: all var(--transition-bounce);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 4px;
+  background: var(--gradient-brand);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.metric-card:hover::before {
+  opacity: 1;
+}
+
+.metric-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: 3rem;
+  font-weight: var(--font-bold);
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+  line-height: 1;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* ─── Dashboard Rows Animation ───────────────────────────────────────────── */
+
+.data-table tbody tr {
+  animation: fade-in-up 0.5s ease-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.data-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.data-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.data-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.data-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.data-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes fade-in-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Action Panel ───────────────────────────────────────────────────────── */
+
+.action-panel {
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--glass-blur);
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--shadow-xl);
+  position: sticky;
+  top: calc(80px + var(--space-8));
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
