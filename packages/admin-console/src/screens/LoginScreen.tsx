@@ -118,7 +118,7 @@ export default function LoginScreen() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@civicsense.gov"
+                placeholder="admin@civicmind.gov"
                 style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '15px' }}
               />
             </div>

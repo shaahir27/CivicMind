@@ -58,6 +58,8 @@ export interface GuestSessionResponse {
 export interface LoginResponse {
   access_token: string;
   user_id: string;
+  email?: string;
+  name?: string;
   role: 'citizen' | 'authority' | 'admin';
   department_id: string | null;
   jurisdiction_scope: string[];

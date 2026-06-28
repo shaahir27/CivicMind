@@ -167,8 +167,8 @@ export default function ImpactReportsScreen() {
         headers: authHeaders,
         body: JSON.stringify({
           ward_or_area_id: form.ward_or_area_id,
-          period_start: new Date(form.period_start).toISOString(),
-          period_end: new Date(form.period_end).toISOString(),
+          period_start: (form.period_start && !isNaN(new Date(form.period_start).getTime())) ? new Date(form.period_start).toISOString() : new Date().toISOString(),
+          period_end: (form.period_end && !isNaN(new Date(form.period_end).getTime())) ? new Date(form.period_end).toISOString() : new Date().toISOString(),
         }),
       });
       if (res.ok) {
@@ -207,8 +207,8 @@ export default function ImpactReportsScreen() {
         {
           report_id: `rpt-demo-${Date.now()}`,
           ward_or_area_id: form.ward_or_area_id,
-          period_start: new Date(form.period_start).toISOString(),
-          period_end: new Date(form.period_end).toISOString(),
+          period_start: (form.period_start && !isNaN(new Date(form.period_start).getTime())) ? new Date(form.period_start).toISOString() : new Date().toISOString(),
+          period_end: (form.period_end && !isNaN(new Date(form.period_end).getTime())) ? new Date(form.period_end).toISOString() : new Date().toISOString(),
           total_issues: 12,
           resolution_rate: 0.833,
           avg_resolution_hours: 36,
@@ -250,6 +250,13 @@ export default function ImpactReportsScreen() {
           backdropFilter: 'blur(12px)',
         }}
       >
+        <div style={{ marginBottom: '24px', padding: '16px', background: 'hsl(230 84% 54% / 0.1)', borderLeft: '4px solid hsl(230 84% 67%)', borderRadius: '4px 8px 8px 4px' }}>
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'hsl(230 84% 75%)' }}>💡 What does this do?</h3>
+          <p style={{ margin: 0, fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+            This tool aggregates resolved issues for a ward, calculating real-world metrics like <strong>Resolution Speed</strong>, <strong>Escalation Rates</strong>, and estimated <strong>Financial Savings</strong>. It computes a final <strong>Civic Health Score (0-100)</strong> to help city managers measure departmental efficiency and ROI.
+          </p>
+        </div>
+
         <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#e2e8f0', marginBottom: '20px' }}>
           Generate New Report
         </h2>

@@ -53,14 +53,26 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: bool
           ))}
         </nav>
         <div style={{ padding: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 600, color: '#94a3b8', marginBottom: '8px' }}>
-            {user?.user_id}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #818cf8, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '14px' }}>
+              {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'A')}
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#f8fafc' }}>
+                {user?.name || (user?.email ? user.email.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Administrator')}
+              </div>
+              <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                {user?.role === 'admin' ? 'System Administrator' : 'Authorized User'}
+              </div>
+            </div>
           </div>
           <button
             onClick={() => { logout(); navigate('/login'); }}
-            style={{ width: '100%', padding: '8px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 500, color: '#e2e8f0' }}
+            style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: '#e2e8f0', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+            onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
           >
-            Sign Out
+            <span style={{ fontSize: '16px' }}>🚪</span> Sign Out
           </button>
         </div>
       </aside>

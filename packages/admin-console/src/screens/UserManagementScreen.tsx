@@ -29,7 +29,7 @@ const MOCK_USERS: AdminUser[] = [
     email: 'roads.officer@bbmp.gov.in',
     display_name: 'Rajesh Kumar',
     role: 'authority',
-    department_id: 'dept-roads-001',
+    department_id: 'd5ef3db1-e1cf-41cb-b3ec-332d1f7c81d3',
     jurisdiction_scope: ['ward-101-indiranagar', 'ward-102-koramangala'],
     is_guest: false,
     created_at: new Date(Date.now() - 30 * 86400 * 1000).toISOString(),
@@ -39,7 +39,7 @@ const MOCK_USERS: AdminUser[] = [
     email: 'bescom.engineer@bescom.gov.in',
     display_name: 'Priya Sharma',
     role: 'authority',
-    department_id: 'dept-elec-001',
+    department_id: 'de7af73e-324c-4740-9a3d-c11df5b91b92',
     jurisdiction_scope: ['ward-109-btm', 'ward-103-hsrlayout'],
     is_guest: false,
     created_at: new Date(Date.now() - 25 * 86400 * 1000).toISOString(),
@@ -49,14 +49,14 @@ const MOCK_USERS: AdminUser[] = [
     email: 'sanitation@bbmp.gov.in',
     display_name: 'Ananya Reddy',
     role: 'authority',
-    department_id: 'dept-swm-001',
+    department_id: 'd688cf0c-444a-4c2f-ad34-6014e7a83d3e',
     jurisdiction_scope: ['ward-104-jayanagar'],
     is_guest: false,
     created_at: new Date(Date.now() - 20 * 86400 * 1000).toISOString(),
   },
   {
     user_id: 'admin-001',
-    email: 'admin@civicsense.io',
+    email: 'admin@civicmind.gov',
     display_name: 'CivicSense Admin',
     role: 'admin',
     department_id: null,
@@ -74,11 +74,13 @@ const WARDS = [
   'ward-109-btm',
 ];
 
-const DEPARTMENTS: Record<string, string> = {
-  'dept-roads-001': 'BBMP — Roads & Infrastructure',
-  'dept-elec-001': 'BESCOM — Electrical',
-  'dept-swm-001': 'BBMP — Solid Waste Management',
-  'dept-water-001': 'BWSSB — Water Supply',
+export const DEPARTMENTS: Record<string, string> = {
+  'de7af73e-324c-4740-9a3d-c11df5b91b92': 'BESCOM — Electricity & Streetlights',
+  'df7cf500-bf64-44b4-8461-8cc5c7df7cbf': 'BWSSB — Water Supply & Sewerage',
+  'd688cf0c-444a-4c2f-ad34-6014e7a83d3e': 'BBMP — Sanitation & Waste Management',
+  'd5ef3db1-e1cf-41cb-b3ec-332d1f7c81d3': 'BBMP — Road Infrastructure & Potholes',
+  'da31b40c-2dfd-4be9-813c-0e78c4391fa8': 'Bangalore Traffic Police — Signals',
+  'dffcc31b-563b-4860-9bc8-ee2cf3ff1b5f': 'BBMP — General Fallback Administration',
 };
 
 function RoleBadge({ role }: { role: string }) {

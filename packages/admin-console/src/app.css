@@ -214,12 +214,76 @@
   background: hsl(0 0% 0% / 0.4);
 }
 
+select.form-input {
+  color: #f8fafc;
+  background-color: hsl(220 30% 12%);
+}
+
+select.form-input option {
+  background-color: hsl(220 30% 12%);
+  color: #f8fafc;
+}
+
+input[type="date"].form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+input[type="date"].form-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 .table-responsive {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────── */
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-brand-400);
+  border: 1px solid var(--color-brand-500);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: hsl(230 84% 54% / 0.15);
+  color: var(--color-brand-300);
+  border-color: var(--color-brand-300);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--gradient-brand);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px hsl(230 84% 54% / 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-brand);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ─── Premium Scrollbar ──────────────────────────────────────────────── */

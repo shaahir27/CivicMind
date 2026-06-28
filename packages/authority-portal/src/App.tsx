@@ -37,14 +37,26 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
           </Link>
         </nav>
         <div style={{ padding: 'var(--space-4)', borderTop: '1px solid var(--color-border)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
-            {user?.department_id}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '14px' }}>
+              {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'O')}
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
+                {user?.name || (user?.email ? user.email.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Officer')}
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)' }}>
+                {user?.role === 'admin' ? 'Administrator' : 'Authority Agent'}
+              </div>
+            </div>
           </div>
           <button 
             onClick={() => { logout(); navigate('/login'); }}
-            style={{ width: '100%', padding: '8px', background: 'var(--color-neutral-100)', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)' }}
+            style={{ width: '100%', padding: '10px', background: 'var(--color-neutral-100)', border: '1px solid var(--color-neutral-200)', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            onMouseOver={(e) => (e.currentTarget.style.background = 'var(--color-neutral-200)')}
+            onMouseOut={(e) => (e.currentTarget.style.background = 'var(--color-neutral-100)')}
           >
-            Sign Out
+            <span style={{ fontSize: '16px' }}>🚪</span> Sign Out
           </button>
         </div>
       </aside>

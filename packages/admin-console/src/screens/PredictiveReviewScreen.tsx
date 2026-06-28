@@ -141,7 +141,7 @@ export default function PredictiveReviewScreen() {
     try {
       const res = await fetch(`${BASE}/internal/v1/agents/predictor/run-cycle`, {
         method: 'POST',
-        headers: { ...authHeaders, 'x-internal-service-secret': import.meta.env.VITE_INTERNAL_SECRET ?? 'demo-secret' },
+        headers: { ...authHeaders, 'x-internal-secret': import.meta.env.VITE_INTERNAL_SECRET ?? 'dev-internal-secret-token-123456' },
       });
       if (res.ok) {
         const data = await res.json();
@@ -228,6 +228,13 @@ export default function PredictiveReviewScreen() {
         </div>
 
         {/* Run cycle button */}
+        <div style={{ marginBottom: '24px', padding: '16px', background: 'hsl(280 84% 54% / 0.1)', borderLeft: '4px solid hsl(280 84% 67%)', borderRadius: '4px 8px 8px 4px' }}>
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'hsl(280 84% 75%)' }}>💡 What does this do?</h3>
+          <p style={{ margin: 0, fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+            Manually triggers the <strong>AI Predictor Agent</strong>. The AI scans historical civic data (issue frequency, location, and resolution times) using geo-clustering to forecast future problem hotspots (e.g., predicting potholes before they happen). This allows the city to shift from reactive maintenance to proactive planning.
+          </p>
+        </div>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
           <button
             onClick={handleRunCycle}

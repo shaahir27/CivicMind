@@ -318,6 +318,8 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({
     access_token: firebaseResponse.idToken,
     user_id: uid,
+    email: userRecord.email,
+    name: userRecord.displayName,
     role,
     department_id: claims['department_id'] ?? null,
     jurisdiction_scope: claims['jurisdiction_scope'] ?? [],

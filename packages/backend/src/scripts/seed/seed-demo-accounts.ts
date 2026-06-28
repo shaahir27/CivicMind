@@ -38,7 +38,7 @@ export const DEMO_ACCOUNTS: Record<string, DemoAccount> = {
     user_id: 'e0e0e0e0-e0e0-40e0-e0e0-e0e0e0e0e0e0',
     role: UserRole.Authority,
     display_name: 'Officer BESCOM',
-    email: 'officer@civicsense.gov',
+    email: 'officer.bescom@civicmind.gov',
     auth_provider_id: 'e0e0e0e0-e0e0-40e0-e0e0-e0e0e0e0e0e0',
     department_id: DEPARTMENTS.BESCOM.department_id,
     jurisdiction_scope: ['ward-101-indiranagar', 'ward-102-koramangala'],
@@ -49,7 +49,7 @@ export const DEMO_ACCOUNTS: Record<string, DemoAccount> = {
     user_id: 'a0a0a0a0-a0a0-40a0-a0a0-a0a0a0a0a0a0',
     role: UserRole.Admin,
     display_name: 'System Administrator',
-    email: 'admin@civicsense.gov',
+    email: 'admin@civicmind.gov',
     auth_provider_id: 'a0a0a0a0-a0a0-40a0-a0a0-a0a0a0a0a0a0',
     is_guest: false,
     password: 'password123', // For auth testing
@@ -67,7 +67,8 @@ export async function seedDemoAccounts() {
     let userRecord;
     try {
       userRecord = await auth.getUser(account.user_id);
-      console.log(` - User ${key} (${account.email}) already exists in Firebase Auth.`);
+      await auth.updateUser(account.user_id, { password: account.password });
+      console.log(` - User ${key} (${account.email}) already exists. Forced password update.`);
     } catch {
       // Create user
       userRecord = await auth.createUser({

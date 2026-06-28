@@ -6,11 +6,12 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { CATEGORY_LABELS } from '@civicmind/shared';
 import type { JurisdictionMappingEntry } from '../../../shared/src/api-client.js';
+import { DEPARTMENTS } from './UserManagementScreen.js';
 
 const MOCK_MAPPINGS: JurisdictionMappingEntry[] = [
-  { mapping_id: '1', ward_or_area_id: 'ward-101-indiranagar', category: 'pothole', department_id: 'dept-bbmp-roads', is_fallback: false },
-  { mapping_id: '2', ward_or_area_id: 'ward-101-indiranagar', category: 'streetlight', department_id: 'dept-bescom', is_fallback: false },
-  { mapping_id: '3', ward_or_area_id: 'DEFAULT', category: 'pothole', department_id: 'dept-bbmp-central', is_fallback: true },
+  { mapping_id: '1', ward_or_area_id: 'ward-101-indiranagar', category: 'pothole', department_id: 'd5ef3db1-e1cf-41cb-b3ec-332d1f7c81d3', is_fallback: false },
+  { mapping_id: '2', ward_or_area_id: 'ward-101-indiranagar', category: 'streetlight', department_id: 'de7af73e-324c-4740-9a3d-c11df5b91b92', is_fallback: false },
+  { mapping_id: '3', ward_or_area_id: 'DEFAULT', category: 'pothole', department_id: 'dffcc31b-563b-4860-9bc8-ee2cf3ff1b5f', is_fallback: true },
 ];
 
 export default function JurisdictionScreen() {
@@ -114,15 +115,18 @@ function MappingRow({ mapping, onSave, isSaving }: { mapping: JurisdictionMappin
       <td>{(CATEGORY_LABELS as Record<string, string>)[mapping.category] ?? mapping.category}</td>
       <td>
         {editing ? (
-          <input 
-            type="text" 
+          <select 
             value={val} 
             onChange={(e) => setVal(e.target.value)} 
             className="form-input" 
-            style={{ width: '200px', padding: '6px' }}
-          />
+            style={{ width: '250px', padding: '6px' }}
+          >
+            {Object.entries(DEPARTMENTS).map(([id, name]) => (
+              <option key={id} value={id}>{name}</option>
+            ))}
+          </select>
         ) : (
-          <span style={{ fontWeight: 500, color: 'var(--color-primary-700)' }}>{mapping.department_id}</span>
+          <span style={{ fontWeight: 500, color: 'var(--color-primary-700)' }}>{DEPARTMENTS[mapping.department_id] ?? mapping.department_id}</span>
         )}
       </td>
       <td>{mapping.is_fallback ? 'Yes' : 'No'}</td>
