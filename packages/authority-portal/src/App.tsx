@@ -36,9 +36,9 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
             <span>📊</span> SLA Compliance
           </Link>
         </nav>
-        <div style={{ padding: 'var(--space-4)', borderTop: '1px solid var(--color-border)' }}>
+        <div style={{ padding: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '14px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-brand-500), var(--color-brand-700))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '14px' }}>
               {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'O')}
             </div>
             <div>
@@ -85,7 +85,7 @@ function PortalLayout({ children }: { children: React.ReactNode }) {
             <div style={{ fontWeight: 600, color: 'var(--color-text-secondary)' }}>Officer Portal</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500, marginRight: '16px' }}>System Status: <span style={{ color: 'var(--color-success)' }}>Active</span></span>
+            <span className="hide-on-mobile" style={{ fontSize: '14px', fontWeight: 500, marginRight: '16px' }}>System Status: <span style={{ color: 'var(--color-success)' }}>Active</span></span>
             <AppSwitcher currentApp="authority" userRole={user?.role as UserRole} />
           </div>
         </header>

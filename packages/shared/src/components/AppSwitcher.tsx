@@ -31,15 +31,16 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
       <button 
         onClick={() => setIsOpen(!isOpen)} 
         className="btn btn-secondary"
-        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem', background: 'transparent', border: '1px solid var(--color-border)' }}
+        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '6px 12px', background: 'white', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', cursor: 'pointer', fontWeight: 500, fontSize: '14px' }}
         aria-label="Switch Applications"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="3" width="7" height="7"></rect>
           <rect x="14" y="3" width="7" height="7"></rect>
           <rect x="14" y="14" width="7" height="7"></rect>
           <rect x="3" y="14" width="7" height="7"></rect>
         </svg>
+        <span style={{ display: 'inline-block' }}>Apps</span>
       </button>
 
       {isOpen && (
@@ -50,27 +51,27 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
             top: '100%', 
             right: 0, 
             marginTop: '0.5rem', 
-            background: 'var(--color-surface)', 
-            border: '1px solid var(--color-border)', 
-            borderRadius: 'var(--border-radius-md)', 
-            boxShadow: 'var(--shadow-md)',
+            background: 'white', 
+            border: '1px solid #e2e8f0', 
+            borderRadius: '8px', 
+            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
             zIndex: 1000,
-            minWidth: '200px',
+            minWidth: '220px',
             overflow: 'hidden'
           }}
         >
-          <div style={{ padding: '0.75rem', borderBottom: '1px solid var(--color-border)', background: 'var(--color-background)' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-light)', textTransform: 'uppercase' }}>Switch App</span>
+          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Switch App</span>
           </div>
           
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
             {currentApp !== 'citizen' && (
               <li>
                 <a 
-                  href="http://localhost:5173" 
-                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)' }}
+                  href={(import.meta as any).env.VITE_CITIZEN_APP_URL || 'http://localhost:5173'} 
+                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: '#0f172a', borderBottom: '1px solid #f1f5f9', fontWeight: 500 }}
                 >
-                  Citizen App
+                  🏙️ Citizen App
                 </a>
               </li>
             )}
@@ -78,10 +79,10 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
             {(userRole === UserRole.Authority || userRole === UserRole.Admin) && currentApp !== 'authority' && (
               <li>
                 <a 
-                  href="http://localhost:5174" 
-                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)' }}
+                  href={(import.meta as any).env.VITE_AUTHORITY_APP_URL || 'http://localhost:5174'} 
+                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: '#0f172a', borderBottom: '1px solid #f1f5f9', fontWeight: 500 }}
                 >
-                  Authority Portal
+                  🛡️ Authority Portal
                 </a>
               </li>
             )}
@@ -89,10 +90,10 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
             {userRole === UserRole.Admin && currentApp !== 'admin' && (
               <li>
                 <a 
-                  href="http://localhost:5175" 
-                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--color-text)' }}
+                  href={(import.meta as any).env.VITE_ADMIN_CONSOLE_URL || 'http://localhost:5175'} 
+                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: '#0f172a', fontWeight: 500 }}
                 >
-                  Admin Console
+                  ⚙️ Admin Console
                 </a>
               </li>
             )}

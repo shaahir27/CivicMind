@@ -54,10 +54,10 @@ export default function LoginScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', display: 'flex', background: 'var(--color-bg-secondary)' }}>
+    <div style={{ minHeight: '100dvh', display: 'flex', flexWrap: 'wrap', background: 'var(--color-bg-secondary)' }}>
       {/* Brand Panel - Left Side */}
       <div style={{ 
-        flex: 1, 
+        flex: '1 1 400px', 
         background: '#0f172a', // Admin Slate
         color: 'white',
         padding: '60px',
@@ -97,7 +97,7 @@ export default function LoginScreen() {
 
       {/* Form Panel - Right Side */}
       <div style={{ 
-        flex: 1, 
+        flex: '1 1 400px', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',

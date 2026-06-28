@@ -207,6 +207,7 @@ export default function ConfirmationStatusScreen() {
           </div>
         )}
 
+        <div style={{ height: '130px', flexShrink: 0 }} /> {/* Nav spacer */}
       </div>
     </div>
   );

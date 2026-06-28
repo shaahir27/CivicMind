@@ -27,7 +27,7 @@
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100dvh;
   box-shadow: 4px 0 24px hsl(220 14% 19% / 0.02);
   z-index: calc(var(--z-sticky) + 10);
   transition: transform var(--transition-base);
@@ -64,10 +64,12 @@
 
 .portal-sidebar-nav {
   flex: 1;
+  min-height: 0;
   padding: var(--space-4) var(--space-3);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  overflow-y: auto;
 }
 
 .nav-item {
@@ -254,3 +256,41 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ─── Mobile Responsive Overrides ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .portal-header {
+    height: 60px;
+    padding: 0 var(--space-4);
+  }
+  .portal-content {
+    padding: var(--space-4);
+  }
+  .metric-card {
+    padding: var(--space-4);
+    gap: var(--space-1);
+    border-radius: var(--radius-xl);
+  }
+  .metric-value {
+    font-size: 2rem;
+  }
+  .metrics-grid {
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .action-panel {
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+  }
+  .data-table th, .data-table td {
+    padding: var(--space-2) var(--space-3) !important;
+    font-size: var(--text-sm) !important;
+  }
+  h1 {
+    font-size: var(--text-xl) !important;
+  }
+  h2 {
+    font-size: var(--text-lg) !important;
+  }
+}
+

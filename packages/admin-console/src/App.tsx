@@ -52,7 +52,7 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: bool
             </Link>
           ))}
         </nav>
-        <div style={{ padding: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ padding: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #818cf8, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '14px' }}>
               {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'A')}
@@ -109,7 +109,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500, marginRight: '16px' }}>
+            <span className="hide-on-mobile" style={{ fontSize: '14px', fontWeight: 500, marginRight: '16px' }}>
               System Status: <span style={{ color: 'var(--color-success)' }}>Active</span>
             </span>
             <AppSwitcher currentApp="admin" userRole={user?.role as UserRole} />

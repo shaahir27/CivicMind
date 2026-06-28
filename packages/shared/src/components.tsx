@@ -123,14 +123,17 @@ const TIMELINE_STAGES: Array<{ status: string; label: string }> = [
 export function StatusTimeline({ currentStatus, history, compact = false }: StatusTimelineProps) {
   // Build which stages are completed
   const completedStatuses = new Set(history.map((h) => h.to_status));
-  const steps: TimelineStep[] = TIMELINE_STAGES.map((stage) => {
+  const currentStageIndex = TIMELINE_STAGES.findIndex(s => s.status === currentStatus);
+
+  const steps: TimelineStep[] = TIMELINE_STAGES.map((stage, index) => {
     const historyEntry = history.find((h) => h.to_status === stage.status);
+    const logicallyCompleted = currentStageIndex > -1 && index < currentStageIndex;
     return {
       status: stage.status,
       label: stage.label,
       timestamp: historyEntry?.created_at,
       reason: historyEntry?.reason,
-      isCompleted: completedStatuses.has(stage.status) && stage.status !== currentStatus,
+      isCompleted: (completedStatuses.has(stage.status) || logicallyCompleted) && stage.status !== currentStatus,
       isActive: stage.status === currentStatus,
     };
   });
@@ -170,6 +173,7 @@ export function StatusTimeline({ currentStatus, history, compact = false }: Stat
       {/* Escalation / Dispute special state banner */}
       {(isEscalated || isDisputed) && (
         <div
+          className="status-timeline__banner"
           style={{
             padding: '8px 12px',
             borderRadius: 'var(--radius-md)',
@@ -184,65 +188,30 @@ export function StatusTimeline({ currentStatus, history, compact = false }: Stat
           {isDisputed ? '❌ Resolution Disputed — Issue Reopened' : '⚠️ Escalated — Elevated for Priority Response'}
         </div>
       )}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-        {steps.map((step, idx) => (
-          <div key={step.status} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-            {/* Dot + line */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '20px' }}>
-              <div
-                style={{
-                  width: '20px', height: '20px', borderRadius: '50%', flexShrink: 0,
-                  backgroundColor: step.isActive
-                    ? 'var(--color-brand-500)'
-                    : step.isCompleted
-                    ? 'var(--color-success)'
-                    : 'var(--color-neutral-200)',
-                  border: step.isActive ? '2px solid var(--color-brand-300)' : 'none',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '10px', color: 'white',
-                  boxShadow: step.isActive ? '0 0 0 3px hsl(220 87% 53% / 0.2)' : 'none',
-                  transition: 'all 0.2s',
-                }}
-              >
-                {step.isCompleted ? '✓' : step.isActive ? '●' : ''}
+      <div className="status-timeline">
+        {steps.map((step) => {
+          let stepClass = 'status-timeline__step';
+          if (step.isCompleted) stepClass += ' status-timeline__step--done';
+          if (step.isActive) stepClass += ' status-timeline__step--active';
+          if (!step.isCompleted && !step.isActive) stepClass += ' status-timeline__step--pending';
+
+          return (
+            <div key={step.status} className={stepClass}>
+              <div className="status-timeline__dot">
+                {step.isCompleted ? <span style={{ color: 'white', fontSize: '10px' }}>✓</span> : step.isActive ? <span style={{ color: 'white', fontSize: '10px' }}>●</span> : null}
               </div>
-              {idx < steps.length - 1 && (
-                <div
-                  style={{
-                    width: '2px', height: '32px',
-                    backgroundColor: step.isCompleted ? 'var(--color-success)' : 'var(--color-neutral-200)',
-                  }}
-                />
-              )}
-            </div>
-            {/* Content */}
-            <div style={{ paddingBottom: idx < steps.length - 1 ? '0' : '0', paddingTop: '2px', minHeight: '52px' }}>
-              <div
-                style={{
-                  fontWeight: step.isActive ? 'var(--font-semibold)' : 'var(--font-normal)',
-                  fontSize: 'var(--text-sm)',
-                  color: step.isActive
-                    ? 'var(--color-text-primary)'
-                    : step.isCompleted
-                    ? 'var(--color-text-secondary)'
-                    : 'var(--color-text-muted)',
-                }}
-              >
-                {step.label}
+              <div className="status-timeline__content">
+                <div className="status-timeline__label">{step.label}</div>
+                {step.timestamp && (
+                  <div className="status-timeline__timestamp">{formatRelativeTime(step.timestamp)}</div>
+                )}
+                {step.reason && (
+                  <div className="status-timeline__reason">{step.reason}</div>
+                )}
               </div>
-              {step.timestamp && (
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                  {formatRelativeTime(step.timestamp)}
-                </div>
-              )}
-              {step.reason && (
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: '2px', fontStyle: 'italic' }}>
-                  {step.reason}
-                </div>
-              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

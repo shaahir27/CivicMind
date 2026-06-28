@@ -146,7 +146,7 @@ export default function MyReportsScreen() {
             </button>
           ))
         )}
-        <div style={{ height: '80px' }} /> {/* Nav spacer */}
+        <div style={{ height: '130px', flexShrink: 0 }} /> {/* Nav spacer */}
       </div>
     </div>
   );

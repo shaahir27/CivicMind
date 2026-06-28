@@ -360,7 +360,7 @@ export default function HomeScreen() {
 
       {showDemoModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', maxWidth: '300px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', animation: 'slideUp 0.3s ease-out' }}>
+          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', maxWidth: '300px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', animation: 'slideUpCenter 0.3s ease-out' }}>
             <div style={{ fontSize: '32px', marginBottom: '16px' }}>✨</div>
             <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', color: '#1e293b' }}>Demo Mode Auto-Seeding</h3>
             <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: '#64748b' }}>

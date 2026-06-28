@@ -139,7 +139,8 @@ export default function AuthScreen() {
     <div className="auth-split-view" style={{ 
       background: 'hsl(220 100% 98%)',
       position: 'relative',
-      overflow: 'hidden',
+      overflowX: 'hidden',
+      overflowY: 'auto',
       color: 'hsl(220 20% 12%)',
       fontFamily: 'var(--font-sans)',
     }}>
