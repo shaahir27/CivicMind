@@ -171,7 +171,7 @@ export default function AuthScreen() {
       {/* Left Pane (Desktop Only) */}
       <div className="auth-left-pane">
         <div style={{ fontSize: '5rem', marginBottom: '24px', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))' }}>🏙️</div>
-        <h1 style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--color-brand-600)', marginBottom: '16px' }}>{t('appName')}</h1>
+        <h1 style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-display)', marginBottom: '16px' }}>{t('appName')}</h1>
         <p style={{ fontSize: '1.25rem', opacity: 0.9, maxWidth: '400px', lineHeight: 1.5 }}>
           {t('appTagline')}
         </p>
