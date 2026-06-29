@@ -68,7 +68,7 @@ export default function Hero() {
         </Suspense>
 
         {/* Floating live-feed cards — wrapped so CSS bob and framer-motion opacity don't clash */}
-        <div className="float-wrap-a" style={{ position: 'absolute', top: '15%', left: '-20px', zIndex: 10, pointerEvents: 'none' }}>
+        <div className="float-wrap-a">
           <motion.div
             className="floating-mockup"
             initial={{ opacity: 0 }}
@@ -83,7 +83,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="float-wrap-b" style={{ position: 'absolute', bottom: '20%', right: '-10px', zIndex: 10, pointerEvents: 'none' }}>
+        <div className="float-wrap-b">
           <motion.div
             className="floating-mockup"
             initial={{ opacity: 0 }}
@@ -98,7 +98,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="float-wrap-c" style={{ position: 'absolute', top: '10%', right: '-15px', zIndex: 10, pointerEvents: 'none' }}>
+        <div className="float-wrap-c">
           <motion.div
             className="floating-mockup"
             initial={{ opacity: 0 }}
@@ -113,7 +113,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="float-wrap-d" style={{ position: 'absolute', bottom: '10%', left: '-15px', zIndex: 10, pointerEvents: 'none' }}>
+        <div className="float-wrap-d">
           <motion.div
             className="floating-mockup"
             initial={{ opacity: 0 }}

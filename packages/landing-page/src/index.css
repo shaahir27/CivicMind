@@ -692,9 +692,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .btn-hero-primary, .btn-hero-secondary { justify-content: center; width: 100%; }
   .hero-3d-container { height: 300px; margin-top: -1rem; transform: scale(0.9); }
   .hero-3d-glow { width: 300px; height: 300px; }
-  .floating-mockup { transform: scale(0.85); transform-origin: center; }
-  .m-top-left { top: 0; left: -10px; }
-  .m-bottom-right { bottom: 0; right: -10px; }
+  .floating-mockup { transform: scale(0.65); transform-origin: center; }
+  .float-wrap-c, .float-wrap-d { display: none; }
+  .float-wrap-a { top: -5%; left: 0px; }
+  .float-wrap-b { bottom: -5%; right: 0px; }
+  .hero-title { font-size: clamp(2.5rem, 8vw, 3.5rem); }
+  .gradient-text-shimmer { white-space: normal; word-break: break-word; }
   
   .how-section, .ecosystem-section, .stats-bar, .footer-cta-section { padding: 4rem 5%; }
   
@@ -802,10 +805,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ── Floating mockup continuous bob ──────────────────────────────────────── */
 /* Applied to outer wrapper so framer-motion (opacity) and CSS (Y) don't clash */
-.float-wrap-a { animation: float-a 4s   ease-in-out infinite; }
-.float-wrap-b { animation: float-b 5.5s ease-in-out infinite; }
-.float-wrap-c { animation: float-c 3.8s ease-in-out infinite; }
-.float-wrap-d { animation: float-b 6.2s ease-in-out infinite; }
+.float-wrap-a { position: absolute; top: 15%; left: -20px; z-index: 10; pointer-events: none; animation: float-a 4s   ease-in-out infinite; }
+.float-wrap-b { position: absolute; bottom: 20%; right: -10px; z-index: 10; pointer-events: none; animation: float-b 5.5s ease-in-out infinite; }
+.float-wrap-c { position: absolute; top: 10%; right: -15px; z-index: 10; pointer-events: none; animation: float-c 3.8s ease-in-out infinite; }
+.float-wrap-d { position: absolute; bottom: 10%; left: -15px; z-index: 10; pointer-events: none; animation: float-b 6.2s ease-in-out infinite; }
 
 /* ── Additional floating mockup positions ────────────────────────────────── */
 .m-top-right   { top: 10%;  right: -15px; }
