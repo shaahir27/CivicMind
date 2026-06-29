@@ -48,7 +48,7 @@ export default function SlaComplianceScreen() {
         </div>
       </div>
 
-      <div style={{ background: 'white', borderRadius: '16px', border: '1px solid var(--color-border)', padding: '24px' }}>
+      <div style={{ background: 'transparent', borderRadius: '16px', border: '1px solid var(--color-border)', padding: '24px' }}>
         <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px' }}>Category Breakdown</h2>
         <div className="table-responsive">
           <table className="data-table">

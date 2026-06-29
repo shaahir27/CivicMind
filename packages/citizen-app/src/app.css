@@ -408,7 +408,7 @@
   border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
   border-top: 1px solid var(--glass-border-light);
   padding: var(--space-4) var(--space-5);
-  box-shadow: 0 -8px 32px hsl(220 14% 19% / 0.15);
+  box-shadow: var(--shadow-lg);
   overflow-y: auto;
 }
 
@@ -451,7 +451,7 @@
 .filter-chip:hover,
 .filter-chip.active {
   border-color: var(--color-brand-400);
-  background: var(--color-brand-50, hsl(220 100% 97%));
+  background: var(--color-brand-50);
   color: var(--color-brand-600);
 }
 
@@ -471,9 +471,9 @@
   width: 100%;
   max-width: 380px;
   aspect-ratio: 4/3;
-  background: hsl(220 20% 12%);
+  background: var(--color-neutral-800);
   border-radius: var(--radius-xl);
-  border: 2px solid hsl(220 87% 53% / 0.4);
+  border: 2px solid var(--color-brand-300);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -625,7 +625,7 @@
 .text-input:focus {
   outline: none;
   border-color: var(--color-brand-400);
-  box-shadow: 0 0 0 3px hsl(220 87% 53% / 0.12);
+  box-shadow: 0 0 0 3px var(--color-brand-200);
 }
 
 /* ─── Section ─────────────────────────────────────────────────────────────── */
@@ -890,7 +890,7 @@
   .auth-left-pane {
     display: flex;
     flex: 1;
-    background: linear-gradient(135deg, hsl(220 87% 65%), hsl(220 87% 53%));
+    background: var(--gradient-brand);
     color: white;
     flex-direction: column;
     justify-content: center;

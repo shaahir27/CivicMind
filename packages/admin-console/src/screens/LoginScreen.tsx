@@ -58,8 +58,8 @@ export default function LoginScreen() {
       {/* Brand Panel - Left Side */}
       <div style={{ 
         flex: '1 1 400px', 
-        background: '#0f172a', // Admin Slate
-        color: 'white',
+        background: 'var(--color-bg-elevated)', // Dark Chocolate in dark mode
+        color: 'var(--color-text-primary)',
         padding: '60px',
         display: 'flex',
         flexDirection: 'column',
@@ -106,8 +106,8 @@ export default function LoginScreen() {
       }}>
         <div style={{ width: '100%', maxWidth: '400px' }}>
           <div style={{ marginBottom: '32px' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: 700, color: 'var(--color-text-primary, #1e293b)', marginBottom: '8px' }}>Admin Console</h2>
-            <p style={{ color: 'var(--color-text-secondary, #64748b)' }}>Enter your administrator credentials to continue</p>
+            <h2 style={{ fontSize: '28px', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '8px' }}>Admin Console</h2>
+            <p style={{ color: 'var(--color-text-secondary)' }}>Enter your administrator credentials to continue</p>
           </div>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -142,7 +142,7 @@ export default function LoginScreen() {
               type="submit" 
               disabled={loading}
               style={{ 
-                background: '#0f172a', color: 'white', border: 'none', 
+                background: 'var(--gradient-brand)', color: 'white', border: 'none', 
                 padding: '14px', borderRadius: '8px', fontSize: '16px', fontWeight: 600, 
                 cursor: 'pointer', marginTop: '8px',
                 display: 'flex', justifyContent: 'center', alignItems: 'center'

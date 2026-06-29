@@ -137,7 +137,7 @@ function JsonDisplay({ raw }: { raw: string }) {
       style={{
         margin: 0,
         padding: '12px',
-        background: 'hsl(0 0% 0% / 0.3)',
+        background: 'var(--color-neutral-300)',
         borderRadius: '8px',
         fontSize: '12px',
         fontFamily: 'monospace',
@@ -145,7 +145,7 @@ function JsonDisplay({ raw }: { raw: string }) {
         overflowX: 'auto',
         whiteSpace: 'pre-wrap',
         wordBreak: 'break-all',
-        border: '1px solid hsl(0 0% 100% / 0.06)',
+        border: '1px solid rgba(0,0,0,0.06)',
       }}
     >
       {JSON.stringify(parsed, null, 2)}
@@ -212,7 +212,7 @@ export default function AuditLogScreen() {
             style={{
               padding: '8px 16px',
               borderRadius: '20px',
-              border: `1px solid ${agentFilter === type ? (AGENT_COLORS[type] ?? '#818cf8') : 'hsl(0 0% 100% / 0.1)'}`,
+              border: `1px solid ${agentFilter === type ? (AGENT_COLORS[type] ?? '#818cf8') : 'rgba(0,0,0,0.1)'}`,
               background: agentFilter === type ? `${AGENT_COLORS[type] ?? '#818cf8'}22` : 'transparent',
               color: agentFilter === type ? (AGENT_COLORS[type] ?? '#818cf8') : '#94a3b8',
               fontWeight: 600,
@@ -302,7 +302,7 @@ export default function AuditLogScreen() {
                   </tr>
                   {expanded.has(log.log_id) && (
                     <tr>
-                      <td colSpan={6} style={{ padding: '0 24px 20px', background: 'hsl(0 0% 0% / 0.2)' }}>
+                      <td colSpan={6} style={{ padding: '0 24px 20px', background: 'var(--color-neutral-200)' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '12px' }}>
                           <div>
                             <div style={{ fontSize: '11px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Input Summary</div>

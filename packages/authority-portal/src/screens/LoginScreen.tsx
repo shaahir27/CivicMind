@@ -58,7 +58,7 @@ export default function LoginScreen() {
       {/* Brand Panel - Left Side */}
       <div style={{ 
         flex: '1 1 400px', 
-        background: 'hsl(220 87% 53%)', // Authority Blue
+        background: 'var(--color-brand-500)', // Authority Blue
         color: 'white',
         padding: '60px',
         display: 'flex',
@@ -142,7 +142,7 @@ export default function LoginScreen() {
               type="submit" 
               disabled={loading}
               style={{ 
-                background: 'hsl(220 87% 53%)', color: 'white', border: 'none', 
+                background: 'var(--color-brand-500)', color: 'white', border: 'none', 
                 padding: '14px', borderRadius: '8px', fontSize: '16px', fontWeight: 600, 
                 cursor: 'pointer', marginTop: '8px',
                 display: 'flex', justifyContent: 'center', alignItems: 'center'

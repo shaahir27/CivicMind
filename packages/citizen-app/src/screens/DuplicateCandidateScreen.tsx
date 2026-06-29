@@ -72,11 +72,11 @@ export default function DuplicateCandidateScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', background: 'var(--color-bg-primary)', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
-        <span style={{ fontWeight: 800, fontSize: '18px', color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>Similar Issue Found</span>
+        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--color-text-primary)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+        <span style={{ fontWeight: 800, fontSize: '18px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>Similar Issue Found</span>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
@@ -116,7 +116,7 @@ export default function DuplicateCandidateScreen() {
 
           {/* Your report */}
           <div style={{ border: '2px solid rgba(0,0,0,0.05)', borderRadius: '16px', overflow: 'hidden', background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-            <div style={{ background: 'hsl(220 100% 98%)', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+            <div style={{ background: 'var(--color-bg-primary)', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
               Your Report
             </div>
             {s.photoPreview ? (
@@ -127,7 +127,7 @@ export default function DuplicateCandidateScreen() {
             <div style={{ padding: '12px' }}>
               <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{candidate.category}</div>
               <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Just captured</div>
-              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '6px', background: 'hsl(220 100% 97%)', padding: '4px 8px', borderRadius: '8px', display: 'inline-block' }}>
+              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '6px', background: 'var(--color-brand-50)', padding: '4px 8px', borderRadius: '8px', display: 'inline-block' }}>
                 New report
               </div>
             </div>
@@ -160,7 +160,7 @@ export default function DuplicateCandidateScreen() {
           disabled={loading}
           style={{
             height: '52px', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px', cursor: 'pointer',
-            background: 'white', color: 'hsl(220 20% 12%)',
+            background: 'white', color: 'var(--color-text-primary)',
             fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 600,
             boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
           }}

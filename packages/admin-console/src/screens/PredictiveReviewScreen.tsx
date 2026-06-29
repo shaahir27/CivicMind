@@ -77,7 +77,7 @@ const MOCK_FORECASTS: HotspotForecast[] = [
 function RiskBar({ value, color }: { value: number; color: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <div style={{ flex: 1, height: '8px', background: 'hsl(0 0% 100% / 0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+      <div style={{ flex: 1, height: '8px', background: 'rgba(255,255,255,0.15)', borderRadius: '4px', overflow: 'hidden' }}>
         <div
           style={{
             width: `${Math.round(value * 100)}%`,
@@ -88,7 +88,7 @@ function RiskBar({ value, color }: { value: number; color: string }) {
           }}
         />
       </div>
-      <span style={{ fontSize: '13px', fontWeight: 600, width: '38px', textAlign: 'right', color: '#e2e8f0' }}>
+      <span style={{ fontSize: '13px', fontWeight: 700, width: '38px', textAlign: 'right', color: 'var(--color-text-primary)' }}>
         {Math.round(value * 100)}%
       </span>
     </div>
@@ -214,8 +214,8 @@ export default function PredictiveReviewScreen() {
               key={tile.label}
               style={{
                 padding: '20px',
-                background: 'hsl(0 0% 100% / 0.04)',
-                border: '1px solid hsl(0 0% 100% / 0.08)',
+                background: 'rgba(0,0,0,0.04)',
+                border: '1px solid rgba(0,0,0,0.08)',
                 borderRadius: '12px',
                 backdropFilter: 'blur(12px)',
               }}
@@ -228,9 +228,9 @@ export default function PredictiveReviewScreen() {
         </div>
 
         {/* Run cycle button */}
-        <div style={{ marginBottom: '24px', padding: '16px', background: 'hsl(280 84% 54% / 0.1)', borderLeft: '4px solid hsl(280 84% 67%)', borderRadius: '4px 8px 8px 4px' }}>
-          <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'hsl(280 84% 75%)' }}>💡 What does this do?</h3>
-          <p style={{ margin: 0, fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+        <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--glass-bg-dark)', borderLeft: '4px solid var(--color-brand-500)', borderRadius: '4px 8px 8px 4px' }}>
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--color-brand-300)' }}>💡 What does this do?</h3>
+          <p style={{ margin: 0, fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>
             Manually triggers the <strong>AI Predictor Agent</strong>. The AI scans historical civic data (issue frequency, location, and resolution times) using geo-clustering to forecast future problem hotspots (e.g., predicting potholes before they happen). This allows the city to shift from reactive maintenance to proactive planning.
           </p>
         </div>
@@ -249,7 +249,7 @@ export default function PredictiveReviewScreen() {
               fontSize: '14px',
               cursor: running ? 'not-allowed' : 'pointer',
               fontFamily: 'var(--font-sans)',
-              boxShadow: running ? 'none' : '0 0 20px hsl(238 84% 67% / 0.4)',
+              boxShadow: running ? 'none' : '0 0 20px var(--color-brand-200)',
               transition: 'all 0.2s',
             }}
           >
@@ -308,7 +308,7 @@ export default function PredictiveReviewScreen() {
                         👁️ Public
                       </span>
                     ) : (
-                      <span style={{ padding: '4px 10px', background: 'hsl(0 0% 100% / 0.05)', color: '#64748b', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid hsl(0 0% 100% / 0.1)' }}>
+                      <span style={{ padding: '4px 10px', background: 'rgba(0,0,0,0.05)', color: '#64748b', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(0,0,0,0.1)' }}>
                         🔇 Suppressed
                       </span>
                     )}

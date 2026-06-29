@@ -190,7 +190,7 @@ export default function OnboardingScreen() {
           
           <p style={{ 
             fontSize: 'clamp(0.95rem, 4vw, 1.1rem)', 
-            color: 'hsl(220 20% 40%)', 
+            color: 'var(--color-text-secondary)', 
             lineHeight: 1.6,
             fontWeight: 400,
             wordBreak: 'break-word',

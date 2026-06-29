@@ -185,7 +185,7 @@ export default function AuthScreen() {
             href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'} 
             style={{ 
               textDecoration: 'none', 
-              color: 'hsl(220 20% 40%)', 
+              color: 'var(--color-text-secondary)', 
               display: 'inline-flex', 
               alignItems: 'center', 
               gap: '8px', 
@@ -200,11 +200,11 @@ export default function AuthScreen() {
               boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'hsl(220 20% 12%)';
+              e.currentTarget.style.color = 'var(--color-text-primary)';
               e.currentTarget.style.background = 'rgba(255, 255, 255, 1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'hsl(220 20% 40%)';
+              e.currentTarget.style.color = 'var(--color-text-secondary)';
               e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
             }}
           >
@@ -228,7 +228,7 @@ export default function AuthScreen() {
           }}>
             {t('appName')}
           </h1>
-          <p style={{ color: 'hsl(220 20% 40%)', fontSize: '15px' }}>{t('appTagline')}</p>
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: '15px' }}>{t('appTagline')}</p>
         </div>
 
         {/* Form Container */}
@@ -279,10 +279,10 @@ export default function AuthScreen() {
                 onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 1)'; e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)'; e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.05)'; }}
               >
-                <div style={{ fontSize: '28px', background: 'hsl(220 100% 97%)', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px', border: '1px solid hsl(220 87% 90%)' }}>👤</div>
+                <div style={{ fontSize: '28px', background: 'var(--color-brand-50)', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px', border: '1px solid var(--color-brand-200)' }}>👤</div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '16px', color: 'hsl(220 20% 12%)', marginBottom: '4px' }}>{t('continueAsGuest')}</div>
-                  <div style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', lineHeight: 1.4 }}>{t('guestDesc')}</div>
+                  <div style={{ fontWeight: 600, fontSize: '16px', color: 'var(--color-text-primary)', marginBottom: '4px' }}>{t('continueAsGuest')}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.4 }}>{t('guestDesc')}</div>
                 </div>
               </button>
 
@@ -315,7 +315,7 @@ export default function AuthScreen() {
               {/* Divider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '8px 0' }}>
                 <div style={{ flex: 1, height: '1px', background: 'rgba(0, 0, 0, 0.05)' }} />
-                <span style={{ color: 'hsl(220 20% 60%)', fontSize: '12px', fontWeight: 500 }}>OR</span>
+                <span style={{ color: 'var(--color-text-tertiary)', fontSize: '12px', fontWeight: 500 }}>OR</span>
                 <div style={{ flex: 1, height: '1px', background: 'rgba(0, 0, 0, 0.05)' }} />
               </div>
 
@@ -350,13 +350,13 @@ export default function AuthScreen() {
 
           {step === 'enter-contact' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
-              <button onClick={() => setStep('choice')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: 'hsl(220 20% 50%)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', padding: 0 }}>
+              <button onClick={() => setStep('choice')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', padding: 0 }}>
                 ← {t('back' as any)}
               </button>
               
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'hsl(220 20% 12%)', marginBottom: '8px' }}>Sign In / Sign Up</h2>
-                <p style={{ color: 'hsl(220 20% 40%)', fontSize: '14px' }}>Choose how you want to sign in or create an account.</p>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '8px' }}>Sign In / Sign Up</h2>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '14px' }}>Choose how you want to sign in or create an account.</p>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.04)', padding: '6px', borderRadius: '14px' }}>
@@ -366,7 +366,7 @@ export default function AuthScreen() {
                     flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
                     background: contactType === 'phone' ? 'white' : 'transparent', 
                     cursor: 'pointer', fontWeight: 600, 
-                    color: contactType === 'phone' ? 'hsl(220 87% 53%)' : 'hsl(220 20% 50%)',
+                    color: contactType === 'phone' ? 'var(--color-brand-500)' : 'var(--color-text-muted)',
                     transition: 'all 0.2s',
                     boxShadow: contactType === 'phone' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
                   }}
@@ -379,7 +379,7 @@ export default function AuthScreen() {
                     flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
                     background: contactType === 'email' ? 'white' : 'transparent', 
                     cursor: 'pointer', fontWeight: 600, 
-                    color: contactType === 'email' ? 'hsl(220 87% 53%)' : 'hsl(220 20% 50%)',
+                    color: contactType === 'email' ? 'var(--color-brand-500)' : 'var(--color-text-muted)',
                     transition: 'all 0.2s',
                     boxShadow: contactType === 'email' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
                   }}
@@ -401,14 +401,14 @@ export default function AuthScreen() {
                     borderRadius: '14px',
                     background: 'white',
                     border: '1px solid rgba(0,0,0,0.1)',
-                    color: 'hsl(220 20% 12%)',
+                    color: 'var(--color-text-primary)',
                     fontSize: '16px',
                     outline: 'none',
                     transition: 'border-color 0.2s, box-shadow 0.2s',
                     boxSizing: 'border-box'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'hsl(220 87% 53%)';
+                    e.currentTarget.style.borderColor = 'var(--color-brand-500)';
                     e.currentTarget.style.boxShadow = '0 0 0 3px hsla(220, 87%, 53%, 0.15)';
                   }}
                   onBlur={(e) => {
@@ -441,14 +441,14 @@ export default function AuthScreen() {
 
           {step === 'enter-otp' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
-              <button onClick={() => setStep('enter-contact')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: 'hsl(220 20% 50%)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', padding: 0 }}>
+              <button onClick={() => setStep('enter-contact')} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', padding: 0 }}>
                 ← {t('back' as any)}
               </button>
               
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'hsl(220 20% 12%)', marginBottom: '8px' }}>{t('enterVerificationCode' as any)}</h2>
-                <p style={{ color: 'hsl(220 20% 40%)', fontSize: '14px', lineHeight: 1.5 }}>
-                  We sent a code to <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 600 }}>{contactValue}</span>. For the demo, enter 123456.
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '8px' }}>{t('enterVerificationCode' as any)}</h2>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '14px', lineHeight: 1.5 }}>
+                  We sent a code to <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{contactValue}</span>. For the demo, enter 123456.
                 </p>
               </div>
 
@@ -462,11 +462,11 @@ export default function AuthScreen() {
                 style={{
                   width: '100%', padding: '16px', borderRadius: '14px',
                   background: 'white', border: '1px solid rgba(0,0,0,0.1)',
-                  color: 'hsl(220 20% 12%)', fontSize: '24px', letterSpacing: '0.3em', textAlign: 'center',
+                  color: 'var(--color-text-primary)', fontSize: '24px', letterSpacing: '0.3em', textAlign: 'center',
                   outline: 'none', transition: 'border-color 0.2s, box-shadow 0.2s', boxSizing: 'border-box'
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = 'hsl(220 87% 53%)';
+                  e.currentTarget.style.borderColor = 'var(--color-brand-500)';
                   e.currentTarget.style.boxShadow = '0 0 0 3px hsla(220, 87%, 53%, 0.15)';
                 }}
                 onBlur={(e) => {

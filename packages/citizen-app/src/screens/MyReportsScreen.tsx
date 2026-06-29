@@ -45,9 +45,9 @@ export default function MyReportsScreen() {
 
   if (isGuest) {
     return (
-      <div style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ height: '100dvh', background: 'var(--color-bg-primary)', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '24px 16px 12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>My Reports</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>My Reports</h1>
         </div>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <EmptyState 
@@ -68,18 +68,18 @@ export default function MyReportsScreen() {
   if (loading) return <FullPageSpinner />;
 
   return (
-    <div style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', background: 'var(--color-bg-primary)', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{ padding: '24px 16px 12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'hsl(220 20% 12%)', marginBottom: '4px', letterSpacing: '-0.02em' }}>My Reports</h1>
-            <div style={{ fontSize: '13px', color: 'hsl(220 20% 40%)' }}>{issues.length} total reports</div>
+            <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '4px', letterSpacing: '-0.02em' }}>My Reports</h1>
+            <div style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>{issues.length} total reports</div>
           </div>
           <button 
             className="btn-ghost"
             onClick={() => navigate('/report')}
-            style={{ height: '36px', padding: '0 16px', borderRadius: '12px', background: 'hsl(220 100% 97%)', color: 'hsl(220 87% 53%)', fontWeight: 600, border: '1px solid hsl(220 87% 90%)' }}
+            style={{ height: '36px', padding: '0 16px', borderRadius: '12px', background: 'var(--color-brand-50)', color: 'var(--color-brand-500)', fontWeight: 600, border: '1px solid var(--color-brand-200)' }}
           >
             + New
           </button>
@@ -110,12 +110,12 @@ export default function MyReportsScreen() {
                 padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px',
                 cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.02)'
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'hsl(220 87% 90%)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(0,0,0,0.04)'; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-brand-200)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(0,0,0,0.04)'; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.05)'; (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(0,0,0,0.02)'; }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'hsl(220 100% 97%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', border: '1px solid hsl(220 87% 90%)' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--color-brand-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', border: '1px solid var(--color-brand-200)' }}>
                     {(CATEGORY_LABELS as Record<string, string>)[issue.category] ? '📌' : '📌'}
                   </div>
                   <div>

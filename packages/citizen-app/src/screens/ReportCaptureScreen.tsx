@@ -283,10 +283,10 @@ export default function ReportCaptureScreen() {
   if (preview) {
     // Photo selected — show preview with analyze button
     return (
-      <div className="screen" style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
+      <div className="screen" style={{ height: '100dvh', background: 'var(--color-bg-primary)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button onClick={() => { setPreview(null); setPhotoFile(null); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
-          <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>Photo Captured</span>
+          <button onClick={() => { setPreview(null); setPhotoFile(null); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--color-text-primary)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+          <span style={{ color: 'var(--color-text-primary)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>Photo Captured</span>
           <div style={{ width: '44px' }} />
         </div>
 
@@ -340,7 +340,7 @@ export default function ReportCaptureScreen() {
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <label style={{ color: 'hsl(220 20% 40%)', fontSize: '13px', fontWeight: 600, fontFamily: 'var(--font-sans)', paddingLeft: '4px' }}>
+            <label style={{ color: 'var(--color-text-secondary)', fontSize: '13px', fontWeight: 600, fontFamily: 'var(--font-sans)', paddingLeft: '4px' }}>
               Additional Details & Exact Address
             </label>
             <textarea
@@ -350,7 +350,7 @@ export default function ReportCaptureScreen() {
               className="text-input"
               style={{
                 background: 'white',
-                color: 'hsl(220 20% 12%)',
+                color: 'var(--color-text-primary)',
                 border: '1px solid rgba(0,0,0,0.08)',
                 borderRadius: '16px',
                 minHeight: '80px',
@@ -369,7 +369,7 @@ export default function ReportCaptureScreen() {
           {isManualFallback ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'white', padding: '16px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
               <div style={{ color: '#dc2626', fontSize: '13px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>AI analysis unavailable. Please provide details manually.</div>
-              <select value={manualCategory} onChange={(e) => setManualCategory(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'hsl(220 100% 97%)', color: 'hsl(220 20% 12%)', border: '1px solid hsl(220 87% 90%)', outline: 'none' }}>
+              <select value={manualCategory} onChange={(e) => setManualCategory(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'var(--color-brand-50)', color: 'var(--color-text-primary)', border: '1px solid var(--color-brand-200)', outline: 'none' }}>
                 <option value="pothole">Pothole</option>
                 <option value="streetlight">Broken Streetlight</option>
                 <option value="garbage">Garbage Overflow</option>
@@ -379,7 +379,7 @@ export default function ReportCaptureScreen() {
                 <option value="traffic_signal">Traffic Signal</option>
                 <option value="other">Other</option>
               </select>
-              <select value={manualSeverity} onChange={(e) => setManualSeverity(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'hsl(220 100% 97%)', color: 'hsl(220 20% 12%)', border: '1px solid hsl(220 87% 90%)', outline: 'none' }}>
+              <select value={manualSeverity} onChange={(e) => setManualSeverity(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'var(--color-brand-50)', color: 'var(--color-text-primary)', border: '1px solid var(--color-brand-200)', outline: 'none' }}>
                 <option value="low">{t('lowSeverity')}</option>
                 <option value="medium">{t('mediumSeverity')}</option>
                 <option value="high">{t('highSeverity')}</option>
@@ -404,7 +404,7 @@ export default function ReportCaptureScreen() {
             </button>
           )}
 
-          <button onClick={() => { setPreview(null); setPhotoFile(null); setIsManualFallback(false); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px', padding: '16px', color: 'hsl(220 20% 12%)', fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+          <button onClick={() => { setPreview(null); setPhotoFile(null); setIsManualFallback(false); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px', padding: '16px', color: 'var(--color-text-primary)', fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
             {t('retakePhoto')}
           </button>
         </div>
@@ -414,11 +414,11 @@ export default function ReportCaptureScreen() {
 
   // Camera / gallery picker
   return (
-    <div className="screen" style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px', width: '100%' }}>
+    <div className="screen" style={{ height: '100dvh', background: 'var(--color-bg-primary)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '20px', width: '100%' }}>
       {/* Header */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
-        <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>{t('uploadPhoto')}</span>
+        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--color-text-primary)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+        <span style={{ color: 'var(--color-text-primary)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>{t('uploadPhoto')}</span>
         <div style={{ width: '44px' }} />
       </div>
 
@@ -444,19 +444,19 @@ export default function ReportCaptureScreen() {
           transition: 'all 0.2s ease',
           boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'hsl(220 87% 53%)'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'var(--color-brand-500)'; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.7)'; e.currentTarget.style.borderColor = 'hsl(220 87% 73%)'; }}
       >
         <div style={{ 
-          width: '72px', height: '72px', borderRadius: '50%', background: 'hsl(220 100% 97%)', border: '1px solid hsl(220 87% 90%)',
+          width: '72px', height: '72px', borderRadius: '50%', background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-200)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
         }}>
-          <span style={{ fontSize: '32px', color: 'hsl(220 87% 53%)' }}>📤</span>
+          <span style={{ fontSize: '32px', color: 'var(--color-brand-500)' }}>📤</span>
         </div>
-        <div style={{ color: 'hsl(220 20% 12%)', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
+        <div style={{ color: 'var(--color-text-primary)', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
           {t('tapToUpload')}
         </div>
-        <div style={{ color: 'hsl(220 20% 40%)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
+        <div style={{ color: 'var(--color-text-secondary)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
           {t('uploadDesc')}
         </div>
       </div>
@@ -464,13 +464,13 @@ export default function ReportCaptureScreen() {
       {/* Location status */}
       {location ? (
         <div style={{ background: 'white', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid rgba(0,0,0,0.05)', width: '100%', maxWidth: '380px', boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
-          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'hsl(220 100% 97%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, border: '1px solid hsl(220 87% 90%)' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--color-brand-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, border: '1px solid var(--color-brand-200)' }}>
             📍
           </div>
-          <div style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
+          <div style={{ color: 'var(--color-text-primary)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
             <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.01em' }}>{t('location')}</span>
             {addressText ? (
-              <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {addressText}
               </span>
             ) : (
@@ -479,9 +479,9 @@ export default function ReportCaptureScreen() {
           </div>
         </div>
       ) : (
-        <div style={{ background: 'hsl(220 100% 98%)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '16px', width: '100%', maxWidth: '380px', border: '1px solid hsl(220 87% 90%)', boxShadow: '0 8px 24px rgba(0,0,0,0.02)' }}>
+        <div style={{ background: 'var(--color-bg-primary)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '16px', width: '100%', maxWidth: '380px', border: '1px solid var(--color-brand-200)', boxShadow: '0 8px 24px rgba(0,0,0,0.02)' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'hsl(220 100% 95%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'hsl(220 87% 60%)', animation: 'pulse 1.5s infinite ease-in-out', border: '3px solid white', boxShadow: '0 0 0 2px hsl(220 87% 60% / 0.3)' }} />
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--color-brand-400)', animation: 'pulse 1.5s infinite ease-in-out', border: '3px solid white', boxShadow: '0 0 0 2px hsl(220 87% 60% / 0.3)' }} />
           </div>
           <span style={{ color: 'hsl(220 87% 40%)', fontSize: '14px', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>{t('locatingYou')}</span>
         </div>

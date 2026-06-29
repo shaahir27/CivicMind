@@ -46,20 +46,20 @@ export default function ProfileSetupScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, hsl(220 100% 98%) 0%, hsl(220 100% 96%) 100%)' }}>
+    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, var(--color-bg-primary) 0%, hsl(220 100% 96%) 100%)' }}>
       <header style={{ display: 'flex', alignItems: 'center', padding: '16px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
         <button 
           onClick={() => navigate('/auth')} 
-          style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', padding: '8px', color: 'hsl(220 20% 40%)' }}
+          style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', padding: '8px', color: 'var(--color-text-secondary)' }}
         >
           ←
         </button>
-        <h1 style={{ margin: '0 0 0 16px', fontSize: '18px', fontWeight: 800, color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>Complete Profile</h1>
+        <h1 style={{ margin: '0 0 0 16px', fontSize: '18px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>Complete Profile</h1>
       </header>
       <div style={{ padding: '32px 24px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: '420px', margin: '0 auto', width: '100%' }}>
         <div style={{ background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', padding: '32px 24px', borderRadius: '24px', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.1), inset 0 2px 10px rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', border: '1px solid rgba(255, 255, 255, 0.5)' }}>
           
-          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, hsl(220 87% 53%), hsl(220 87% 73%))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '32px', marginBottom: '24px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}>
+          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-brand-500), hsl(220 87% 73%))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '32px', marginBottom: '24px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}>
             👤
           </div>
 

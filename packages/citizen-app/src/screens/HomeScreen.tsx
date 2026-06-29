@@ -227,13 +227,13 @@ export default function HomeScreen() {
       </div>
 
       {/* List Container */}
-      <div className="home-list-container" style={{ background: 'hsl(220 100% 98%)' }}>
+      <div className="home-list-container" style={{ background: 'var(--color-bg-primary)' }}>
 
         {/* Header inside Panel */}
         <div style={{ padding: '0 4px 16px', background: 'transparent', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '20px' }}>🏙️</span>
-          <span style={{ fontWeight: 800, fontSize: '20px', color: 'hsl(220 20% 12%)', flex: 1, letterSpacing: '-0.02em' }}>{t('reportLogs')}</span>
-          <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', fontWeight: 600, marginRight: '8px', background: 'rgba(0,0,0,0.04)', padding: '4px 10px', borderRadius: '12px' }}>{t('logsCount', { count: filtered.length })}</span>
+          <span style={{ fontWeight: 800, fontSize: '20px', color: 'var(--color-text-primary)', flex: 1, letterSpacing: '-0.02em' }}>{t('reportLogs')}</span>
+          <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)', fontWeight: 600, marginRight: '8px', background: 'rgba(0,0,0,0.04)', padding: '4px 10px', borderRadius: '12px' }}>{t('logsCount', { count: filtered.length })}</span>
           <AppSwitcher currentApp="citizen" userRole={UserRole.Citizen} />
         </div>
 
@@ -271,7 +271,7 @@ export default function HomeScreen() {
               {forecasts.map((fc) => (
                 <div
                   key={fc.forecast_id}
-                  style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '16px', border: '1px solid hsl(268 83% 50% / 0.15)', background: 'white', cursor: 'default', boxShadow: '0 4px 20px rgba(167, 139, 250, 0.05)' }}
+                  style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '16px', border: '1px solid hsl(268 83% 50% / 0.15)', background: 'var(--glass-bg-light)', cursor: 'default', boxShadow: '0 4px 20px rgba(167, 139, 250, 0.05)' }}
                 >
                   <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'hsl(268 83% 50% / 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>
                     {CATEGORY_ICONS[fc.predicted_category as keyof typeof CATEGORY_ICONS] ?? '⚠️'}
@@ -305,9 +305,9 @@ export default function HomeScreen() {
                   key={issue.issue_id}
                   className="issue-card"
                   onClick={() => navigate(`/issue/${issue.issue_id}`)}
-                  style={{ all: 'unset', display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)', cursor: 'pointer', background: 'white', transition: 'all 0.2s', width: '100%', boxSizing: 'border-box', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}
+                  style={{ all: 'unset', display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '16px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)', cursor: 'pointer', background: 'var(--glass-bg-light)', transition: 'all 0.2s', width: '100%', boxSizing: 'border-box', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}
                 >
-                  <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'hsl(220 100% 97%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', flexShrink: 0, border: '1px solid hsl(220 87% 90%)' }}>
+                  <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'var(--color-brand-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', flexShrink: 0, border: '1px solid var(--color-brand-200)' }}>
                     {CATEGORY_ICONS[issue.category as keyof typeof CATEGORY_ICONS] ?? '📌'}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -359,7 +359,7 @@ export default function HomeScreen() {
 
       {showDemoModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: 'white', padding: '24px', borderRadius: '16px', maxWidth: '300px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', animation: 'slideUpCenter 0.3s ease-out' }}>
+          <div style={{ background: 'var(--glass-bg-light)', padding: '24px', borderRadius: '16px', maxWidth: '300px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', animation: 'slideUpCenter 0.3s ease-out' }}>
             <div style={{ fontSize: '32px', marginBottom: '16px' }}>✨</div>
             <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', color: '#1e293b' }}>Demo Mode Auto-Seeding</h3>
             <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: '#64748b' }}>

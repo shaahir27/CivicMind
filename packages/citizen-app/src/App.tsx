@@ -82,15 +82,15 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
         <div className="sidebar-footer" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {/* User Profile */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'hsl(220 100% 98%)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, hsl(220 87% 60%), hsl(220 87% 50%))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '15px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'var(--color-bg-primary)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-brand-400), var(--color-brand-600))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '15px' }}>
               C
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(220 20% 12%)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                 Citizen
               </div>
-              <div style={{ fontSize: '12px', color: 'hsl(220 20% 40%)' }}>
+              <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
                 Community Member
               </div>
             </div>

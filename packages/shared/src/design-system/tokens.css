@@ -153,6 +153,9 @@
 
   --color-border:         var(--color-neutral-200);
   --color-border-subtle:  var(--color-neutral-100);
+
+  --glass-bg:             var(--glass-bg-light);
+  --glass-border:         var(--glass-border-light);
 }
 
 /* ─── Dark-mode overrides (Used by Admin Console) ──────────────────────── */
@@ -167,6 +170,9 @@
 
   --color-border:         rgba(246, 192, 166, 0.15);
   --color-border-subtle:  rgba(246, 192, 166, 0.08);
+
+  --glass-bg:             var(--glass-bg-dark);
+  --glass-border:         var(--glass-border-dark);
   
   --shadow-sm:  0 2px 4px 0 hsl(0 0% 0% / 0.2), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
   --shadow-md:  0 6px 12px -2px hsl(0 0% 0% / 0.25), 0 3px 6px -3px hsl(0 0% 0% / 0.35);

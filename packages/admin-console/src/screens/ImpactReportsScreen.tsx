@@ -88,7 +88,7 @@ function HealthScoreRing({ score }: { score: number }) {
         width: '64px',
         height: '64px',
         borderRadius: '50%',
-        background: `conic-gradient(${color} ${score * 3.6}deg, hsl(0 0% 100% / 0.06) 0)`,
+        background: `conic-gradient(${color} ${score * 3.6}deg, rgba(0,0,0,0.06) 0)`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -101,15 +101,15 @@ function HealthScoreRing({ score }: { score: number }) {
           width: '50px',
           height: '50px',
           borderRadius: '50%',
-          background: 'hsl(220 30% 8%)',
+          background: 'var(--color-bg-elevated)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'column',
         }}
       >
-        <span style={{ fontSize: '16px', fontWeight: 700, color }}>{score}</span>
-        <span style={{ fontSize: '9px', color: '#475569', fontWeight: 600 }}>/ 100</span>
+        <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)' }}>{score}</span>
+        <span style={{ fontSize: '9px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>/ 100</span>
       </div>
     </div>
   );
@@ -117,7 +117,7 @@ function HealthScoreRing({ score }: { score: number }) {
 
 function MetricPill({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ padding: '8px 12px', background: 'hsl(0 0% 100% / 0.04)', borderRadius: '8px', border: '1px solid hsl(0 0% 100% / 0.07)' }}>
+    <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.04)', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.07)' }}>
       <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
       <div style={{ fontSize: '15px', fontWeight: 700, color: '#e2e8f0' }}>{value}</div>
     </div>
@@ -242,17 +242,17 @@ export default function ImpactReportsScreen() {
       {/* Generator Form */}
       <div
         style={{
-          background: 'hsl(0 0% 100% / 0.04)',
-          border: '1px solid hsl(0 0% 100% / 0.08)',
+          background: 'rgba(0,0,0,0.04)',
+          border: '1px solid rgba(0,0,0,0.08)',
           borderRadius: '16px',
           padding: '24px',
           marginBottom: '32px',
           backdropFilter: 'blur(12px)',
         }}
       >
-        <div style={{ marginBottom: '24px', padding: '16px', background: 'hsl(230 84% 54% / 0.1)', borderLeft: '4px solid hsl(230 84% 67%)', borderRadius: '4px 8px 8px 4px' }}>
-          <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'hsl(230 84% 75%)' }}>💡 What does this do?</h3>
-          <p style={{ margin: 0, fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+        <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--glass-bg-dark)', borderLeft: '4px solid var(--color-brand-500)', borderRadius: '4px 8px 8px 4px' }}>
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--color-brand-300)' }}>💡 What does this do?</h3>
+          <p style={{ margin: 0, fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>
             This tool aggregates resolved issues for a ward, calculating real-world metrics like <strong>Resolution Speed</strong>, <strong>Escalation Rates</strong>, and estimated <strong>Financial Savings</strong>. It computes a final <strong>Civic Health Score (0-100)</strong> to help city managers measure departmental efficiency and ROI.
           </p>
         </div>
@@ -343,8 +343,8 @@ export default function ImpactReportsScreen() {
             <div
               key={rpt.report_id}
               style={{
-                background: 'hsl(0 0% 100% / 0.04)',
-                border: '1px solid hsl(0 0% 100% / 0.08)',
+                background: 'rgba(0,0,0,0.04)',
+                border: '1px solid rgba(0,0,0,0.08)',
                 borderRadius: '16px',
                 padding: '24px',
                 backdropFilter: 'blur(12px)',
@@ -362,8 +362,8 @@ export default function ImpactReportsScreen() {
                     <span
                       style={{
                         padding: '2px 8px',
-                        background: 'hsl(0 0% 100% / 0.06)',
-                        border: '1px solid hsl(0 0% 100% / 0.12)',
+                        background: 'rgba(0,0,0,0.06)',
+                        border: '1px solid rgba(0,0,0,0.12)',
                         borderRadius: '20px',
                         fontSize: '11px',
                         color: '#94a3b8',

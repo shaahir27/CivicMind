@@ -114,11 +114,11 @@ export default function ClassificationReviewScreen() {
   };
 
   return (
-    <div style={{ height: '100dvh', background: 'hsl(220 100% 98%)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', background: 'var(--color-bg-primary)', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
-        <span style={{ fontWeight: 800, fontSize: '18px', color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>Review Classification</span>
+        <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--color-text-primary)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
+        <span style={{ fontWeight: 800, fontSize: '18px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>Review Classification</span>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
@@ -137,7 +137,7 @@ export default function ClassificationReviewScreen() {
         )}
 
         {/* AI trust signal — per ui_ux_spec §8 "Never let automated decision look like a black box" */}
-        <div style={{ background: 'hsl(220 100% 97%)', border: '1px solid hsl(220 96% 85%)', borderRadius: '10px', padding: '10px 14px', marginBottom: '16px', fontSize: '13px', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-300)', borderRadius: '10px', padding: '10px 14px', marginBottom: '16px', fontSize: '13px', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '8px' }}>
           🤖 AI analyzed your photo in ~3 seconds. {categoryChanged || severityChanged ? 'You\'ve updated the classification below.' : 'Confirm the classification or override it.'}
         </div>
 

@@ -89,9 +89,9 @@ function RoleBadge({ role }: { role: string }) {
     <span
       style={{
         padding: '3px 10px',
-        background: isAdmin ? 'hsl(280 80% 50% / 0.2)' : 'hsl(200 80% 50% / 0.2)',
-        border: `1px solid ${isAdmin ? 'hsl(280 80% 50% / 0.4)' : 'hsl(200 80% 50% / 0.4)'}`,
-        color: isAdmin ? '#c084fc' : '#38bdf8',
+        background: isAdmin ? 'var(--color-accent-600)' : 'var(--color-brand-500)',
+        border: `1px solid ${isAdmin ? 'var(--color-accent-300)' : 'var(--color-brand-300)'}`,
+        color: 'white',
         borderRadius: '20px',
         fontSize: '12px',
         fontWeight: 700,
@@ -171,7 +171,7 @@ function InviteModal({ onClose, onInvite }: { onClose: () => void; onInvite: (us
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div style={{ background: 'hsl(220 30% 12%)', border: '1px solid hsl(0 0% 100% / 0.1)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '480px', boxShadow: '0 25px 60px rgba(0,0,0,0.6)' }}>
+      <div style={{ background: 'var(--color-bg-primary)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '20px', padding: '32px', width: '100%', maxWidth: '480px', boxShadow: '0 25px 60px rgba(0,0,0,0.6)' }}>
         <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#f1f5f9', marginBottom: '24px' }}>Invite User</h2>
 
         {error && (
@@ -244,7 +244,7 @@ function InviteModal({ onClose, onInvite }: { onClose: () => void; onInvite: (us
                       style={{
                         padding: '6px 12px',
                         borderRadius: '20px',
-                        border: `1px solid ${form.jurisdiction_scope.includes(ward) ? '#818cf8' : 'hsl(0 0% 100% / 0.1)'}`,
+                        border: `1px solid ${form.jurisdiction_scope.includes(ward) ? '#818cf8' : 'rgba(0,0,0,0.1)'}`,
                         background: form.jurisdiction_scope.includes(ward) ? 'hsl(238 84% 67% / 0.2)' : 'transparent',
                         color: form.jurisdiction_scope.includes(ward) ? '#818cf8' : '#64748b',
                         fontSize: '12px',
@@ -266,14 +266,14 @@ function InviteModal({ onClose, onInvite }: { onClose: () => void; onInvite: (us
         <div style={{ display: 'flex', gap: '12px', marginTop: '28px', justifyContent: 'flex-end' }}>
           <button
             onClick={onClose}
-            style={{ padding: '10px 20px', background: 'hsl(0 0% 100% / 0.05)', border: '1px solid hsl(0 0% 100% / 0.1)', borderRadius: '10px', color: '#94a3b8', fontWeight: 600, fontSize: '14px', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+            style={{ padding: '10px 20px', background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '10px', color: '#94a3b8', fontWeight: 600, fontSize: '14px', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={saving}
-            style={{ padding: '10px 24px', background: saving ? '#334155' : 'linear-gradient(135deg, #818cf8, #6366f1)', border: 'none', borderRadius: '10px', color: 'white', fontWeight: 600, fontSize: '14px', cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-sans)', boxShadow: saving ? 'none' : '0 0 16px hsl(238 84% 67% / 0.4)', transition: 'all 0.2s' }}
+            style={{ padding: '10px 24px', background: saving ? '#334155' : 'linear-gradient(135deg, #818cf8, #6366f1)', border: 'none', borderRadius: '10px', color: 'white', fontWeight: 600, fontSize: '14px', cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-sans)', boxShadow: saving ? 'none' : '0 0 16px var(--color-brand-200)', transition: 'all 0.2s' }}
           >
             {saving ? '⏳ Sending…' : '✉️ Send Invite'}
           </button>
@@ -318,7 +318,7 @@ export default function UserManagementScreen() {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #818cf8, #6366f1)', border: 'none', borderRadius: '10px', color: 'white', fontWeight: 600, fontSize: '14px', cursor: 'pointer', fontFamily: 'var(--font-sans)', boxShadow: '0 0 20px hsl(238 84% 67% / 0.4)', transition: 'all 0.2s', flexShrink: 0 }}
+          style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #818cf8, #6366f1)', border: 'none', borderRadius: '10px', color: 'white', fontWeight: 600, fontSize: '14px', cursor: 'pointer', fontFamily: 'var(--font-sans)', boxShadow: '0 0 20px var(--color-brand-200)', transition: 'all 0.2s', flexShrink: 0 }}
         >
           + Invite User
         </button>
@@ -359,7 +359,7 @@ export default function UserManagementScreen() {
                     ) : (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                         {user.jurisdiction_scope.slice(0, 2).map((w) => (
-                          <span key={w} style={{ fontSize: '11px', padding: '2px 8px', background: 'hsl(0 0% 100% / 0.06)', border: '1px solid hsl(0 0% 100% / 0.1)', borderRadius: '12px', color: '#94a3b8' }}>
+                          <span key={w} style={{ fontSize: '11px', padding: '2px 8px', background: 'rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', color: '#94a3b8' }}>
                             {w}
                           </span>
                         ))}

@@ -70,11 +70,11 @@ export default function ConfirmationStatusScreen() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', background: 'hsl(220 100% 98%)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', background: 'var(--color-bg-primary)' }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: 0, zIndex: 10 }}>
-        <button onClick={() => navigate('/home')} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>✕</button>
-        <span style={{ fontWeight: 800, fontSize: '18px', color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em' }}>
+        <button onClick={() => navigate('/home')} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'var(--color-text-primary)', fontSize: '20px', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>✕</button>
+        <span style={{ fontWeight: 800, fontSize: '18px', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>
           {state?.merged ? 'Successfully Corroborated' : 'Report Submitted'}
         </span>
       </div>
@@ -98,7 +98,7 @@ export default function ConfirmationStatusScreen() {
 
         {/* Guest Warning */}
         {isGuest && (
-          <div style={{ background: 'hsl(220 100% 97%)', border: '1px solid hsl(220 96% 85%)', borderRadius: '12px', padding: '12px 16px', marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-300)', borderRadius: '12px', padding: '12px 16px', marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
             <span style={{ fontSize: '20px' }}>🔔</span>
             <div>
               <div style={{ fontWeight: 600, fontSize: '14px', color: '#1e40af', marginBottom: '2px' }}>Want live updates?</div>
@@ -185,14 +185,14 @@ export default function ConfirmationStatusScreen() {
 
         {/* Timeline */}
         <div style={{ background: 'white', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', padding: '20px', marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em', marginBottom: '20px' }}>Live Tracking</h3>
+          <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em', marginBottom: '20px' }}>Live Tracking</h3>
           <StatusTimeline currentStatus={issue.status} history={issue.status_history} />
         </div>
 
         {/* Location Map Box */}
         {(typeof issue.location?.lat === 'number' && typeof issue.location?.lng === 'number') && (
           <div style={{ background: 'white', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', overflow: 'hidden', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'hsl(220 20% 12%)', letterSpacing: '-0.02em', margin: '20px 20px 12px' }}>Location</h3>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em', margin: '20px 20px 12px' }}>Location</h3>
             <div style={{ height: '200px' }}>
               <MapPlaceholder
                 pins={[{ id: issue.issue_id, lat: issue.location.lat, lng: issue.location.lng, category: issue.category, status: issue.status, severity: issue.severity }]}
