@@ -18,22 +18,22 @@ export default function OnboardingScreen() {
       icon: '📸',
       title: t('onboarding1Title'),
       sub: t('onboarding1Sub'),
-      accent: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)',
-      blobColor: 'hsla(220, 87%, 53%, 0.15)',
+      accent: 'var(--gradient-brand)',
+      blobColor: 'rgba(226, 113, 12, 0.15)',
     },
     {
       icon: '🤖',
       title: t('onboarding2Title'),
       sub: t('onboarding2Sub'),
-      accent: 'linear-gradient(135deg, hsl(260 87% 65%) 0%, hsl(260 87% 53%) 100%)',
-      blobColor: 'hsla(260, 87%, 53%, 0.15)',
+      accent: 'linear-gradient(135deg, #499A9F 0%, #0E6B73 100%)',
+      blobColor: 'rgba(73, 154, 159, 0.15)',
     },
     {
       icon: '✅',
       title: t('onboarding3Title'),
       sub: t('onboarding3Sub'),
-      accent: 'linear-gradient(135deg, hsl(150 87% 65%) 0%, hsl(150 87% 43%) 100%)',
-      blobColor: 'hsla(150, 87%, 53%, 0.15)',
+      accent: 'linear-gradient(135deg, #E2710C 0%, #B05008 100%)',
+      blobColor: 'rgba(226, 113, 12, 0.15)',
     },
   ];
 
@@ -49,12 +49,13 @@ export default function OnboardingScreen() {
   return (
     <div style={{ 
       height: '100dvh', 
-      background: 'hsl(220 100% 98%)', // Light premium background
+      background: 'var(--color-bg-primary)',
       display: 'flex', 
       flexDirection: 'column',
       position: 'relative',
-      overflow: 'hidden',
-      color: 'hsl(220 20% 12%)',
+      overflowX: 'hidden',
+      overflowY: 'auto',
+      color: 'var(--color-text-primary)',
       fontFamily: 'var(--font-sans)',
       transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
@@ -110,15 +111,15 @@ export default function OnboardingScreen() {
           style={{
             background: 'none',
             border: 'none',
-            color: 'hsl(220 20% 50%)',
+            color: 'var(--color-text-secondary)',
             fontSize: '15px',
             fontWeight: 500,
             cursor: 'pointer',
             padding: '8px',
             transition: 'color 0.2s',
           }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(220 87% 53%)'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(220 20% 50%)'}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-brand-500)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
         >
           {t('skip')}
         </button>
@@ -134,7 +135,9 @@ export default function OnboardingScreen() {
           WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.8)',
           borderRadius: '32px',
-          padding: '40px 32px',
+          padding: '40px 24px',
+          width: '100%',
+          boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -173,23 +176,24 @@ export default function OnboardingScreen() {
           </div>
 
           <h1 style={{ 
-            fontSize: '2rem', 
-            fontWeight: 800, 
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(2rem, 8vw, 2.8rem)', 
+            fontWeight: 900, 
             letterSpacing: '-0.02em',
             marginBottom: '16px',
-            lineHeight: 1.2,
-            background: 'linear-gradient(180deg, hsl(220 20% 12%) 0%, hsl(220 20% 30%) 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            lineHeight: 1.15,
+            wordBreak: 'break-word',
+            color: 'var(--color-brand-600)',
           }}>
             {p.title}
           </h1>
           
           <p style={{ 
-            fontSize: '1.1rem', 
+            fontSize: 'clamp(0.95rem, 4vw, 1.1rem)', 
             color: 'hsl(220 20% 40%)', 
             lineHeight: 1.6,
             fontWeight: 400,
+            wordBreak: 'break-word',
           }}>
             {p.sub}
           </p>
@@ -244,7 +248,6 @@ export default function OnboardingScreen() {
           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
           {panel < PANELS.length - 1 ? t('continue') : t('getStarted')}
-          <span style={{ fontSize: '1.2em' }}>→</span>
         </button>
       </div>
       

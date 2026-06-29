@@ -232,8 +232,8 @@ export default function HomeScreen() {
         {/* Header inside Panel */}
         <div style={{ padding: '0 4px 16px', background: 'transparent', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '20px' }}>🏙️</span>
-          <span style={{ fontWeight: 800, fontSize: '20px', color: 'hsl(220 20% 12%)', flex: 1, letterSpacing: '-0.02em' }}>Report Logs</span>
-          <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', fontWeight: 600, marginRight: '8px', background: 'rgba(0,0,0,0.04)', padding: '4px 10px', borderRadius: '12px' }}>{filtered.length} logs</span>
+          <span style={{ fontWeight: 800, fontSize: '20px', color: 'hsl(220 20% 12%)', flex: 1, letterSpacing: '-0.02em' }}>{t('reportLogs')}</span>
+          <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', fontWeight: 600, marginRight: '8px', background: 'rgba(0,0,0,0.04)', padding: '4px 10px', borderRadius: '12px' }}>{t('logsCount', { count: filtered.length })}</span>
           <AppSwitcher currentApp="citizen" userRole={UserRole.Citizen} />
         </div>
 
@@ -246,7 +246,7 @@ export default function HomeScreen() {
                 className={`filter-chip ${catFilter === cat && !showForecasts ? 'active' : ''}`}
                 onClick={() => { setCatFilter(cat); setShowForecasts(false); }}
               >
-                {cat === 'All' ? '🌐 All' : `${CATEGORY_ICONS[cat as keyof typeof CATEGORY_ICONS] ?? '⚠️'} ${t(cat as any) ?? cat}`}
+                {cat === 'All' ? `🌐 ${t('filterAll')}` : `${CATEGORY_ICONS[cat as keyof typeof CATEGORY_ICONS] ?? '⚠️'} ${t(cat as any) ?? cat}`}
               </button>
             ))}
             {/* Hotspot Forecast toggle */}
@@ -255,7 +255,7 @@ export default function HomeScreen() {
               onClick={() => setShowForecasts((v) => !v)}
               style={{ borderColor: showForecasts ? '#a78bfa' : undefined, background: showForecasts ? 'hsl(268 83% 50% / 0.15)' : undefined, color: showForecasts ? '#a78bfa' : undefined }}
             >
-              🔮 Forecasts
+              🔮 {t('filterForecasts')}
             </button>
           </div>
         </div>
@@ -266,7 +266,7 @@ export default function HomeScreen() {
             <>
               {/* Disclaimer */}
               <div style={{ padding: '10px 14px', background: 'hsl(268 83% 50% / 0.08)', border: '1px solid hsl(268 83% 50% / 0.2)', borderRadius: '10px', fontSize: '12px', color: '#7c3aed', fontWeight: 500 }}>
-                🔮 Predictive forecasts — generated {new Date(forecasts[0]?.generated_at ?? '').toLocaleDateString()}. Not real-time.
+                🔮 {t('forecastDisclaimer', { date: new Date(forecasts[0]?.generated_at ?? '').toLocaleDateString() })}
               </div>
               {forecasts.map((fc) => (
                 <div
@@ -288,14 +288,14 @@ export default function HomeScreen() {
                         {getRiskLabel(fc.risk_score)}
                       </span>
                       <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-                        {Math.round(fc.risk_score * 100)}% risk
+                        {t('riskLabel', { risk: Math.round(fc.risk_score * 100) })}
                       </span>
                     </div>
                   </div>
                 </div>
               ))}
               {forecasts.length === 0 && (
-                <EmptyState icon="🔮" title="No forecasts available" description="The Predictor Agent hasn't generated forecasts yet for your area." />
+                <EmptyState icon="🔮" title={t('noForecastsTitle')} description={t('noForecastsDesc')} />
               )}
             </>
           ) : (

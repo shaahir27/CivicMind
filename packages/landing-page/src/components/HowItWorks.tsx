@@ -48,6 +48,7 @@ export default function HowItWorks() {
               className="step-card"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileHover={{ y: -5, boxShadow: '0 15px 30px rgba(0,0,0,0.06)' }}
               transition={{ duration: 0.6, delay: 0.2 + idx * 0.15 }}
             >
               <div className="step-icon-wrap">

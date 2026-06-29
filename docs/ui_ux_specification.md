@@ -6,20 +6,19 @@
 
 ## 1. Design System
 - **Framework:** Custom CSS with CSS Variables for theme consistency, avoiding utility-class bloat.
-- **Typography:** Google Fonts ('Outfit' for bold headings, 'Inter' for body).
-- **Colors:**
-  - Citizen Theme: Emerald Green (`#10b981`)
-  - Authority Theme: Ocean Blue (`#3b82f6`)
-  - Admin Theme: Slate/Purple (`#6366f1`)
-  - Shared: Neutral grays, true white, off-white backgrounds for contrast.
-- **Animations:** Framer Motion for smooth page transitions, stagger effects, and list pop-ins.
+- **Typography:** Google Fonts (`Playfair Display` for bold premium headings, `Plus Jakarta Sans` for clean body text).
+- **Colors (Unified Earthy Palette):**
+  - Backgrounds: Warm Cream (`#FBEBCF` / `var(--color-bg-primary)`)
+  - Primary Actions/Accents: Vibrant Orange (`#E57734` / `var(--color-brand-500)`)
+  - Structural/Secondary: Deep Teal (`#01757A` / `var(--color-brand-700)`)
+- **Animations:** Framer Motion for smooth page transitions, staggered entry, and fluid hover physics.
 
 ---
 
 ## 2. Landing Page (`packages/landing-page`)
 **Target Audience:** Everyone (Citizens, Officials, Judges).
 **Key Elements:**
-- **Hero:** 3D glowing globe with "glass-morphism" floating mockups demonstrating real-time AI capabilities.
+- **Hero:** Dense, slowly rotating 3D particle globe (Deep Teal & Vibrant Orange particles) with a soft glowing core, flanked by floating mockups demonstrating real-time AI capabilities.
 - **The Dual Ecosystem:** Asymmetric layout clearly defining the value for Citizens vs. Authorities.
 - **Navigation:** Explicit calls to action ("Citizen Login", "Official Login").
 

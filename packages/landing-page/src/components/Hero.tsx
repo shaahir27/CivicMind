@@ -41,12 +41,22 @@ export default function Hero() {
         </motion.p>
 
         <motion.div className="hero-actions" variants={itemVariants}>
-          <a href={CITIZEN_APP_URL} className="btn-hero-primary">
+          <motion.a 
+            href={CITIZEN_APP_URL} 
+            className="btn-hero-primary"
+            whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(229, 119, 52, 0.4)' }}
+            whileTap={{ scale: 0.95 }}
+          >
             Citizen Portal <span>→</span>
-          </a>
-          <a href="#how-it-works" className="btn-hero-secondary">
+          </motion.a>
+          <motion.a 
+            href="#how-it-works" 
+            className="btn-hero-secondary"
+            whileHover={{ scale: 1.05, backgroundColor: 'rgba(0,0,0,0.05)' }}
+            whileTap={{ scale: 0.95 }}
+          >
             <span>▶</span> How it Works
-          </a>
+          </motion.a>
         </motion.div>
       </motion.div>
 

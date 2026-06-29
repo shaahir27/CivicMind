@@ -36,8 +36,8 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: bool
       />
       <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
-          <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>⚙️</span> CivicSense Admin Console
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--color-brand-500)', display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '-0.5px' }}>
+            <span>⚙️</span> CivicSense <span style={{ fontSize: '0.9rem', fontFamily: 'var(--font-sans)', color: 'white', marginLeft: '6px', fontWeight: 600 }}>Admin Console</span>
           </h2>
         </div>
         <nav className="admin-sidebar-nav">

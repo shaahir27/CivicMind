@@ -13,9 +13,11 @@ import { storage } from '../config/firebase.js';
 import { ref, uploadBytes } from 'firebase/storage';
 import exifr from 'exifr';
 import { MapPlaceholder } from '../components/shared.js';
+import { useI18n } from '../context/I18nContext.js';
 
 export default function ReportCaptureScreen() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { token } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -47,14 +49,14 @@ export default function ReportCaptureScreen() {
               if (data.status === 'OK' && data.results && data.results.length > 0) {
                 setAddressText(data.results[0].formatted_address);
               } else {
-                setAddressText('Address unavailable');
+                setAddressText(t('addressUnavailable'));
               }
             } else {
-              setAddressText('Address unavailable');
+              setAddressText(t('addressUnavailable'));
             }
           } catch (err) {
             console.error('Failed to reverse geocode', err);
-            setAddressText('Address unavailable');
+            setAddressText(t('addressUnavailable'));
           }
         },
         () => setLocationError('Location unavailable — you can adjust the pin after submission.')
@@ -378,13 +380,13 @@ export default function ReportCaptureScreen() {
                 <option value="other">Other</option>
               </select>
               <select value={manualSeverity} onChange={(e) => setManualSeverity(e.target.value)} style={{ padding: '12px', borderRadius: '12px', background: 'hsl(220 100% 97%)', color: 'hsl(220 20% 12%)', border: '1px solid hsl(220 87% 90%)', outline: 'none' }}>
-                <option value="low">Low Severity</option>
-                <option value="medium">Medium Severity</option>
-                <option value="high">High Severity</option>
-                <option value="critical">Critical Severity</option>
+                <option value="low">{t('lowSeverity')}</option>
+                <option value="medium">{t('mediumSeverity')}</option>
+                <option value="high">{t('highSeverity')}</option>
+                <option value="critical">{t('criticalSeverity')}</option>
               </select>
               <button className="btn-primary" onClick={submitManualFallback} disabled={loading} style={{ height: '50px', fontSize: '15px', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}>
-                {loading ? <LoadingSpinner size={20} /> : 'Submit Report'}
+                {loading ? <LoadingSpinner size={20} /> : t('submitReport')}
               </button>
             </div>
           ) : (
@@ -395,15 +397,15 @@ export default function ReportCaptureScreen() {
               style={{ height: '56px', fontSize: '16px', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)' }}
             >
               {loading ? (
-                <><LoadingSpinner size={20} /> Analyzing with AI…</>
+                <><LoadingSpinner size={20} /> {t('analyzing')}</>
               ) : (
-                <>🤖 Analyze with AI</>
+                <>🤖 {t('analyzeWithAI')}</>
               )}
             </button>
           )}
 
           <button onClick={() => { setPreview(null); setPhotoFile(null); setIsManualFallback(false); }} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px', padding: '16px', color: 'hsl(220 20% 12%)', fontFamily: 'var(--font-sans)', fontSize: '15px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-            Retake Photo
+            {t('retakePhoto')}
           </button>
         </div>
       </div>
@@ -416,7 +418,7 @@ export default function ReportCaptureScreen() {
       {/* Header */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button onClick={() => navigate(-1)} style={{ background: 'white', border: '1px solid rgba(0,0,0,0.05)', color: 'hsl(220 20% 12%)', fontSize: '24px', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>←</button>
-        <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>Upload Photo</span>
+        <span style={{ color: 'hsl(220 20% 12%)', fontWeight: 700, fontSize: '18px', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>{t('uploadPhoto')}</span>
         <div style={{ width: '44px' }} />
       </div>
 
@@ -452,10 +454,10 @@ export default function ReportCaptureScreen() {
           <span style={{ fontSize: '32px', color: 'hsl(220 87% 53%)' }}>📤</span>
         </div>
         <div style={{ color: 'hsl(220 20% 12%)', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
-          Tap to Upload or Drag & Drop
+          {t('tapToUpload')}
         </div>
         <div style={{ color: 'hsl(220 20% 40%)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
-          Please upload a clear photo of the civic issue.
+          {t('uploadDesc')}
         </div>
       </div>
 
@@ -466,7 +468,7 @@ export default function ReportCaptureScreen() {
             📍
           </div>
           <div style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
-            <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.01em' }}>Location</span>
+            <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.01em' }}>{t('location')}</span>
             {addressText ? (
               <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {addressText}
@@ -481,7 +483,7 @@ export default function ReportCaptureScreen() {
           <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'hsl(220 100% 95%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'hsl(220 87% 60%)', animation: 'pulse 1.5s infinite ease-in-out', border: '3px solid white', boxShadow: '0 0 0 2px hsl(220 87% 60% / 0.3)' }} />
           </div>
-          <span style={{ color: 'hsl(220 87% 40%)', fontSize: '14px', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>Locating you...</span>
+          <span style={{ color: 'hsl(220 87% 40%)', fontSize: '14px', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>{t('locatingYou')}</span>
         </div>
       )}
 

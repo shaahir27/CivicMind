@@ -32,7 +32,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   const navLinks = [
-    { to: '/home', icon: '📋', label: 'Report Logs' },
+    { to: '/home', icon: '📋', label: t('reportLogs') },
     { to: '/my-reports', icon: '👤', label: t('myReports') },
   ];
 
@@ -76,7 +76,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             className="sidebar-report-btn"
             onClick={() => setSidebarOpen(false)}
           >
-            📸 Report an Issue
+            📸 {t('reportTitle')}
           </Link>
         </nav>
 
@@ -118,7 +118,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             onClick={() => { logout(); navigate('/auth'); setSidebarOpen(false); }}
           >
             <span className="sidebar-icon">🚪</span>
-            <span className="sidebar-label">Logout</span>
+            <span className="sidebar-label">{t('navLogout')}</span>
           </button>
         </div>
       </aside>
@@ -133,7 +133,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         <nav className="mobile-bottom-nav">
           <Link to="/home" className={`bottom-nav-item ${location.pathname === '/home' ? 'active' : ''}`}>
             <span className="bottom-nav-icon">🗺️</span>
-            <span className="bottom-nav-label">Map</span>
+            <span className="bottom-nav-label">{t('navMap')}</span>
           </Link>
           <div className="bottom-nav-report-wrapper">
             <Link to="/report" className="bottom-nav-report-btn">
@@ -145,7 +145,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <Link to="/my-reports" className={`bottom-nav-item ${location.pathname === '/my-reports' ? 'active' : ''}`}>
             <span className="bottom-nav-icon">👤</span>
-            <span className="bottom-nav-label">Profile</span>
+            <span className="bottom-nav-label">{t('navProfile')}</span>
           </Link>
         </nav>
       )}

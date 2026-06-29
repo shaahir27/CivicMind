@@ -25,6 +25,7 @@ export default function Features() {
           className="eco-card citizen-card"
           initial={{ opacity: 0, x: -30 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
+          whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="eco-header">
@@ -46,6 +47,7 @@ export default function Features() {
           className="eco-card official-card"
           initial={{ opacity: 0, x: 30 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
+          whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <div className="eco-header">

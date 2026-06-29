@@ -18,7 +18,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
   if (!userRole || userRole === UserRole.Citizen) {
     if (currentApp !== 'citizen') {
       return (
-        <a href="http://localhost:5173" className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>
+        <a href="http://localhost:5173" className="btn btn--secondary btn--sm">
           Back to Citizen App
         </a>
       );
@@ -30,8 +30,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
     <div className="app-switcher" style={{ position: 'relative', display: 'inline-block' }}>
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="btn btn-secondary"
-        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '6px 12px', background: 'white', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', cursor: 'pointer', fontWeight: 500, fontSize: '14px' }}
+        className="btn btn--secondary"
         aria-label="Switch Applications"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -50,18 +49,20 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
             position: 'absolute', 
             top: '100%', 
             right: 0, 
-            marginTop: '0.5rem', 
-            background: 'white', 
-            border: '1px solid #e2e8f0', 
-            borderRadius: '8px', 
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-            zIndex: 1000,
+            marginTop: 'var(--space-2)', 
+            background: 'var(--glass-bg-light)', 
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--glass-border-light)', 
+            borderRadius: 'var(--radius-xl)', 
+            boxShadow: 'var(--shadow-xl)',
+            zIndex: 'var(--z-dropdown)',
             minWidth: '220px',
             overflow: 'hidden'
           }}
         >
-          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Switch App</span>
+          <div style={{ padding: 'var(--space-3) var(--space-4)', borderBottom: '1px solid var(--color-border-subtle)', background: 'var(--color-bg-secondary)' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--font-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Switch App</span>
           </div>
           
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
@@ -69,7 +70,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
               <li>
                 <a 
                   href={(import.meta as any).env.VITE_CITIZEN_APP_URL || 'http://localhost:5173'} 
-                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: '#0f172a', borderBottom: '1px solid #f1f5f9', fontWeight: 500 }}
+                  style={{ display: 'block', padding: 'var(--space-3) var(--space-4)', textDecoration: 'none', color: 'var(--color-text-primary)', borderBottom: '1px solid var(--color-border-subtle)', fontWeight: 'var(--font-medium)' }}
                 >
                   🏙️ Citizen App
                 </a>
@@ -80,7 +81,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
               <li>
                 <a 
                   href={(import.meta as any).env.VITE_AUTHORITY_APP_URL || 'http://localhost:5174'} 
-                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: '#0f172a', borderBottom: '1px solid #f1f5f9', fontWeight: 500 }}
+                  style={{ display: 'block', padding: 'var(--space-3) var(--space-4)', textDecoration: 'none', color: 'var(--color-text-primary)', borderBottom: '1px solid var(--color-border-subtle)', fontWeight: 'var(--font-medium)' }}
                 >
                   🛡️ Authority Portal
                 </a>
@@ -91,7 +92,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({ userRole, currentApp }
               <li>
                 <a 
                   href={(import.meta as any).env.VITE_ADMIN_CONSOLE_URL || 'http://localhost:5175'} 
-                  style={{ display: 'block', padding: '0.75rem 1rem', textDecoration: 'none', color: '#0f172a', fontWeight: 500 }}
+                  style={{ display: 'block', padding: 'var(--space-3) var(--space-4)', textDecoration: 'none', color: 'var(--color-text-primary)', fontWeight: 'var(--font-medium)' }}
                 >
                   ⚙️ Admin Console
                 </a>

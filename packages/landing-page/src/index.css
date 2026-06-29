@@ -1,9 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap');
-
 /* ── Reset ───────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 img, video { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
@@ -11,47 +9,47 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ── Design Tokens ───────────────────────────────────────────────────────── */
 :root {
   /* Brand */
-  --brand-50:  hsl(230, 100%, 97%);
-  --brand-100: hsl(230, 100%, 94%);
-  --brand-300: hsl(230, 96%, 76%);
-  --brand-500: hsl(230, 84%, 54%);
-  --brand-600: hsl(230, 76%, 46%);
-  --brand-700: hsl(230, 70%, 38%);
-  --purple-400: hsl(270, 80%, 68%);
-  --purple-500: hsl(270, 76%, 60%);
+  --brand-50:  var(--color-brand-50);
+  --brand-100: var(--color-brand-100);
+  --brand-300: var(--color-brand-300);
+  --brand-500: var(--color-brand-500);
+  --brand-600: var(--color-brand-600);
+  --brand-700: var(--color-brand-700);
+  --purple-400: var(--color-accent-300);
+  --purple-500: var(--color-accent-500);
 
   /* Neutral (Light Mode) */
-  --white:       hsl(0, 0%, 100%);
-  --gray-50:     hsl(220, 20%, 98%);
-  --gray-100:    hsl(220, 16%, 94%);
-  --gray-200:    hsl(220, 14%, 88%);
-  --gray-400:    hsl(220, 10%, 60%);
-  --gray-500:    hsl(220, 9%, 46%);
-  --gray-700:    hsl(220, 12%, 27%);
-  --gray-900:    hsl(220, 18%, 11%);
+  --white:       var(--color-bg-primary);
+  --gray-50:     var(--color-neutral-50);
+  --gray-100:    var(--color-neutral-100);
+  --gray-200:    var(--color-neutral-200);
+  --gray-400:    var(--color-neutral-400);
+  --gray-500:    var(--color-neutral-500);
+  --gray-700:    var(--color-neutral-700);
+  --gray-900:    var(--color-neutral-900);
 
   /* Dark Mode (Footer area) */
-  --dark-bg:     hsl(222, 47%, 8%);
-  --dark-card:   hsl(222, 30%, 13%);
-  --dark-border: hsl(222, 20%, 20%);
+  --dark-bg:     var(--color-neutral-950);
+  --dark-card:   var(--color-bg-secondary);
+  --dark-border: var(--color-border);
 
   /* Gradients */
-  --gradient-brand: linear-gradient(135deg, var(--brand-500), var(--purple-500));
-  --gradient-brand-text: linear-gradient(135deg, hsl(230, 84%, 58%), hsl(270, 76%, 65%));
-  --gradient-dark-hero: linear-gradient(145deg, hsl(222, 47%, 10%) 0%, hsl(245, 40%, 14%) 100%);
+  --gradient-brand: var(--gradient-brand, linear-gradient(135deg, var(--color-brand-500), var(--color-brand-600)));
+  --gradient-brand-text: linear-gradient(135deg, var(--color-brand-400), var(--color-brand-600));
+  --gradient-dark-hero: linear-gradient(145deg, var(--color-neutral-950) 0%, var(--color-brand-900) 100%);
 
   /* Shadows */
-  --shadow-sm:  0 1px 3px hsl(220 14% 19% / 0.06), 0 1px 2px hsl(220 14% 19% / 0.04);
-  --shadow-md:  0 4px 12px hsl(220 14% 19% / 0.08), 0 2px 6px hsl(220 14% 19% / 0.06);
-  --shadow-lg:  0 12px 32px hsl(220 14% 19% / 0.10), 0 6px 16px hsl(220 14% 19% / 0.08);
-  --shadow-xl:  0 24px 64px hsl(220 14% 19% / 0.14), 0 12px 28px hsl(220 14% 19% / 0.10);
-  --shadow-brand: 0 8px 32px hsl(230 84% 54% / 0.35);
+  --shadow-sm:  var(--shadow-sm);
+  --shadow-md:  var(--shadow-md);
+  --shadow-lg:  var(--shadow-lg);
+  --shadow-xl:  var(--shadow-xl);
+  --shadow-brand: var(--shadow-glow-brand);
 
   /* Transitions */
-  --t-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --t-base:   250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --t-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
-  --t-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast:   var(--transition-fast);
+  --t-base:   var(--transition-base);
+  --t-slow:   var(--transition-slow);
+  --t-spring: var(--transition-bounce);
 }
 
 /* ── Utility ─────────────────────────────────────────────────────────────── */
@@ -93,10 +91,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .nav-root.scrolled { box-shadow: var(--shadow-md); }
 .nav-logo {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.4rem;
-  letter-spacing: -0.5px;
+  font-size: 1.6rem;
+  letter-spacing: -1px;
+  color: var(--color-brand-500);
 }
 .nav-links {
   display: flex;
@@ -194,8 +193,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero-bg-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 70% 50%, hsl(230 100% 96% / 0.8) 0%, transparent 70%),
-              radial-gradient(ellipse 40% 40% at 30% 20%, hsl(270 80% 95% / 0.5) 0%, transparent 60%);
+  background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(229, 119, 52, 0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 30% 20%, rgba(246, 192, 166, 0.2) 0%, transparent 60%);
   pointer-events: none;
 }
 .hero-content { position: relative; z-index: 2; }
@@ -213,11 +212,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border: 1px solid hsl(230 100% 88%);
 }
 .hero-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3rem, 5.5vw, 5.5rem);
   font-weight: 900;
-  line-height: 1.04;
-  letter-spacing: -0.03em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--gray-900);
   margin-bottom: 1.5rem;
 }
@@ -383,12 +382,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin-bottom: 1rem;
 }
 .section-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 3.5vw, 2.8rem);
   font-weight: 800;
   color: var(--gray-900);
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
   margin-bottom: 1rem;
 }
 .section-subtitle {
@@ -401,17 +400,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .steps-container {
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr;
-  gap: 0;
+  gap: 1.5rem;
   align-items: start;
   max-width: 1000px;
 }
 .step-connector {
   align-self: center;
   margin-top: -3rem;
-  width: 80px;
+  width: 60px;
   height: 2px;
   background: linear-gradient(90deg, var(--brand-300), var(--purple-400));
-  opacity: 0.4;
+  opacity: 0.7;
   position: relative;
 }
 .step-connector::after {
@@ -420,9 +419,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   right: -5px;
   top: 50%;
   transform: translateY(-50%);
-  border: 5px solid transparent;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
   border-left-color: var(--purple-400);
-  opacity: 0.6;
+  opacity: 1;
 }
 .step-card { padding: 1rem 0.5rem; }
 .step-icon-wrap {
@@ -499,10 +500,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   height: 6px;
 }
 .citizen-card::before {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, var(--color-tertiary-500), var(--color-brand-400));
 }
 .official-card::before {
-  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-300));
 }
 .eco-header {
   display: flex;
@@ -579,17 +580,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .footer-cta-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 50%, hsl(230 84% 54% / 0.12) 0%, transparent 70%),
-              radial-gradient(ellipse 60% 50% at 20% 80%, hsl(270 76% 60% / 0.08) 0%, transparent 60%);
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(229, 119, 52, 0.15) 0%, transparent 70%),
+              radial-gradient(ellipse 60% 50% at 20% 80%, rgba(246, 192, 166, 0.08) 0%, transparent 60%);
   pointer-events: none;
 }
 .footer-cta-section .section-eyebrow { color: var(--brand-300); }
 .footer-cta-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   margin-bottom: 1.25rem;
   color: var(--white);
 }
@@ -642,10 +643,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .footer-brand { }
 .footer-logo {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.3rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 800;
-  color: var(--white);
+  color: var(--color-brand-500);
   margin-bottom: 0.75rem;
 }
 .footer-tagline { font-size: 0.9rem; color: hsl(220, 20%, 50%); line-height: 1.6; max-width: 280px; }

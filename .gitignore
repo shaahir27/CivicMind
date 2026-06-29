@@ -6,3 +6,13 @@ secrets/
 .DS_Store
 Thumbs.db
 *.tsbuildinfo
+
+# Agent / Scratch Files
+prompt.md
+error.md
+progress.md
+implementation_plan.md
+demo-script.md
+issue_detail.json
+update_urls.js
+scratch/

@@ -3,6 +3,16 @@
  * Mobile-first, PWA-ready styles layered on the shared design system.
  */
 
+:root {
+  /* WCAG AA Outdoor Contrast Overrides (Issue #E2710C is 2.97:1 vs #F9F7F3, C8600A is 3.82:1) */
+  --color-accent-500: #C8600A;
+  --color-status-escalated: #C8600A;
+  --color-status-publicly-escalated: #C8600A;
+  --color-status-at-risk: #C8600A;
+  --color-warning: #C8600A;
+  --gradient-warning: linear-gradient(135deg, #C8600A, #B05008);
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -81,9 +91,10 @@
 }
 
 .mobile-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--color-brand-600);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--color-brand-500);
   margin: 0;
 }
 
@@ -145,9 +156,10 @@
 }
 
 .sidebar-logo {
-  font-size: 20px;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: var(--color-brand-600);
+  font-family: var(--font-display);
+  color: var(--color-brand-500);
 }
 
 .sidebar-close {

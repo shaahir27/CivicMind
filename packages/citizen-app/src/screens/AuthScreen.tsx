@@ -137,11 +137,11 @@ export default function AuthScreen() {
 
   return (
     <div className="auth-split-view" style={{ 
-      background: 'hsl(220 100% 98%)',
+      background: 'var(--color-bg-primary)',
       position: 'relative',
       overflowX: 'hidden',
       overflowY: 'auto',
-      color: 'hsl(220 20% 12%)',
+      color: 'var(--color-text-primary)',
       fontFamily: 'var(--font-sans)',
     }}>
       {/* Background Animated Blobs for mobile or right pane */}
@@ -152,7 +152,7 @@ export default function AuthScreen() {
         width: '60vw',
         height: '60vw',
         borderRadius: '50%',
-        background: 'hsla(220, 87%, 53%, 0.15)',
+        background: 'rgba(226, 113, 12, 0.15)',
         filter: 'blur(80px)',
         zIndex: 0
       }} />
@@ -163,7 +163,7 @@ export default function AuthScreen() {
         width: '70vw',
         height: '70vw',
         borderRadius: '50%',
-        background: 'hsla(260, 87%, 53%, 0.15)',
+        background: 'rgba(73, 154, 159, 0.15)',
         filter: 'blur(100px)',
         zIndex: 0
       }} />
@@ -171,7 +171,7 @@ export default function AuthScreen() {
       {/* Left Pane (Desktop Only) */}
       <div className="auth-left-pane">
         <div style={{ fontSize: '5rem', marginBottom: '24px', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))' }}>🏙️</div>
-        <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '16px' }}>{t('appName')}</h1>
+        <h1 style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--color-brand-600)', marginBottom: '16px' }}>{t('appName')}</h1>
         <p style={{ fontSize: '1.25rem', opacity: 0.9, maxWidth: '400px', lineHeight: 1.5 }}>
           {t('appTagline')}
         </p>
@@ -220,12 +220,11 @@ export default function AuthScreen() {
             filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.1))'
           }}>🏙️</div>
           <h1 style={{ 
-            fontSize: '2rem', 
-            fontWeight: 800, 
+            fontSize: '2.5rem', 
+            fontWeight: 900, 
+            fontFamily: 'var(--font-display)',
+            color: 'var(--color-brand-600)',
             marginBottom: '8px',
-            background: 'linear-gradient(180deg, hsl(220 20% 12%) 0%, hsl(220 20% 30%) 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
           }}>
             {t('appName')}
           </h1>
@@ -291,7 +290,7 @@ export default function AuthScreen() {
               <button
                 onClick={() => setStep('enter-contact')}
                 style={{
-                  background: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)', 
+                  background: 'var(--gradient-brand)', 
                   border: 'none', 
                   borderRadius: '16px',
                   padding: '20px', 
@@ -425,7 +424,7 @@ export default function AuthScreen() {
                 onClick={handleRequestOtp} 
                 disabled={loading}
                 style={{
-                  background: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)',
+                  background: 'var(--gradient-brand)',
                   color: 'white', border: 'none', borderRadius: '14px',
                   padding: '16px', fontSize: '16px', fontWeight: 600,
                   cursor: 'pointer', boxShadow: '0 10px 20px -5px rgba(59, 130, 246, 0.3)',
@@ -482,7 +481,7 @@ export default function AuthScreen() {
                 onClick={handleVerifyOtp} 
                 disabled={loading}
                 style={{
-                  background: 'linear-gradient(135deg, hsl(220 87% 65%) 0%, hsl(220 87% 53%) 100%)',
+                  background: 'var(--gradient-brand)',
                   color: 'white', border: 'none', borderRadius: '14px',
                   padding: '16px', fontSize: '16px', fontWeight: 600,
                   cursor: 'pointer', boxShadow: '0 10px 20px -5px rgba(59, 130, 246, 0.3)',
