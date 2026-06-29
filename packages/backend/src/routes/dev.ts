@@ -38,11 +38,7 @@ const placeholderImages: Record<string, string> = {
 
 // ─── POST /api/v1/dev/seed-near-me ───────────────────────────────────────────
 router.post('/seed-near-me', asyncHandler(async (req: Request, res: Response) => {
-  // Allow only in dev or if specifically requested for demo
-  if (process.env.NODE_ENV === 'production') {
-    res.status(403).json({ error: { message: 'Not available in production' } });
-    return;
-  }
+  // Allow demo seeding from any environment for the jury demo
 
   const { lat, lng, city } = req.body as { lat?: number; lng?: number; city?: string };
   if (lat === undefined || lng === undefined || !city) {

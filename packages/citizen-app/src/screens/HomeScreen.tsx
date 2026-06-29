@@ -147,7 +147,6 @@ export default function HomeScreen() {
     if (userLocation && issues.length === 0 && !loading && !isSeeding && !hasAutoSeeded) {
       setHasAutoSeeded(true);
       setShowDemoModal(true);
-      triggerVibeCoding();
     }
   }, [issues.length, userLocation, loading, isSeeding, hasAutoSeeded]);
 
@@ -372,7 +371,10 @@ export default function HomeScreen() {
                 Generating...
               </div>
             ) : (
-              <button onClick={() => setShowDemoModal(false)} style={{ padding: '10px 20px', width: '100%', background: 'var(--color-brand-600)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>Got it, let's go!</button>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
+                <button onClick={() => setShowDemoModal(false)} style={{ padding: '10px', flex: 1, background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>Not Now</button>
+                <button onClick={() => { setShowDemoModal(false); triggerVibeCoding(); }} style={{ padding: '10px', flex: 1, background: 'var(--color-brand-600)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>Generate Demo Data</button>
+              </div>
             )}
           </div>
         </div>

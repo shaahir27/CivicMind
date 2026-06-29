@@ -44,12 +44,17 @@ export default function ReportCaptureScreen() {
             if (apiKey) {
               const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
               const data = await res.json();
-              if (data.results && data.results.length > 0) {
+              if (data.status === 'OK' && data.results && data.results.length > 0) {
                 setAddressText(data.results[0].formatted_address);
+              } else {
+                setAddressText('Address unavailable');
               }
+            } else {
+              setAddressText('Address unavailable');
             }
           } catch (err) {
             console.error('Failed to reverse geocode', err);
+            setAddressText('Address unavailable');
           }
         },
         () => setLocationError('Location unavailable — you can adjust the pin after submission.')
@@ -456,19 +461,27 @@ export default function ReportCaptureScreen() {
 
       {/* Location status */}
       {location ? (
-        <div style={{ background: 'white', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid rgba(0,0,0,0.05)', width: '100%', maxWidth: '380px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-          <span style={{ fontSize: '20px' }}>📍</span>
-          <span style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <span style={{ fontWeight: 700 }}>Location</span>
-            <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)' }}>
-              {addressText || 'Fetching address...'}
-            </span>
-          </span>
+        <div style={{ background: 'white', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid rgba(0,0,0,0.05)', width: '100%', maxWidth: '380px', boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'hsl(220 100% 97%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, border: '1px solid hsl(220 87% 90%)' }}>
+            📍
+          </div>
+          <div style={{ color: 'hsl(220 20% 12%)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
+            <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.01em' }}>Location</span>
+            {addressText ? (
+              <span style={{ fontSize: '13px', color: 'hsl(220 20% 40%)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {addressText}
+              </span>
+            ) : (
+              <div className="skeleton" style={{ height: '14px', width: '80%', borderRadius: '4px' }} />
+            )}
+          </div>
         </div>
       ) : (
-        <div style={{ background: 'hsl(36 100% 97%)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', width: '100%', maxWidth: '380px', border: '1px solid hsl(36 100% 80%)' }}>
-          <LoadingSpinner size={16} />
-          <span style={{ color: '#92400e', fontSize: '13px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>Detecting location…</span>
+        <div style={{ background: 'hsl(220 100% 98%)', borderRadius: '16px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '16px', width: '100%', maxWidth: '380px', border: '1px solid hsl(220 87% 90%)', boxShadow: '0 8px 24px rgba(0,0,0,0.02)' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'hsl(220 100% 95%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'hsl(220 87% 60%)', animation: 'pulse 1.5s infinite ease-in-out', border: '3px solid white', boxShadow: '0 0 0 2px hsl(220 87% 60% / 0.3)' }} />
+          </div>
+          <span style={{ color: 'hsl(220 87% 40%)', fontSize: '14px', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>Locating you...</span>
         </div>
       )}
 
