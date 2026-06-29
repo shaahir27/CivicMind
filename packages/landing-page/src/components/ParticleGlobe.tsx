@@ -7,6 +7,7 @@ import * as THREE from 'three';
 function CivicGlobe() {
   const { scene } = useThree();
   const groupRef = useRef<THREE.Group | null>(null);
+  const pinsRef  = useRef<THREE.Mesh[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -95,6 +96,63 @@ function CivicGlobe() {
     const particleSystem = new THREE.Points(particlesGeo, particlesMat);
     group.add(particleSystem);
 
+    // 3. Wireframe lat/lng grid
+    const gridGeo = new THREE.SphereGeometry(radius * 1.01, 16, 8);
+    const wireGeo = new THREE.WireframeGeometry(gridGeo);
+    const wireMat = new THREE.LineBasicMaterial({
+      color: 0x499A9F, // Medium teal
+      transparent: true,
+      opacity: 0.12,
+    });
+    const wireLines = new THREE.LineSegments(wireGeo, wireMat);
+    group.add(wireLines);
+
+    // 4. Outer atmosphere halo
+    const atmosGeo = new THREE.SphereGeometry(radius * 1.14, 32, 32);
+    const atmosMat = new THREE.MeshBasicMaterial({
+      color: 0x1D8189, // Deep teal
+      transparent: true,
+      opacity: 0.04,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
+    group.add(atmosMesh);
+
+    // 5. Issue pins — 8 Indian city lat/lng positions
+    const cityCoords = [
+      { lat: 12.97, lng: 77.59 }, // Bengaluru
+      { lat: 19.07, lng: 72.87 }, // Mumbai
+      { lat: 28.67, lng: 77.22 }, // Delhi
+      { lat: 13.08, lng: 80.27 }, // Chennai
+      { lat: 22.57, lng: 88.36 }, // Kolkata
+      { lat: 17.38, lng: 78.48 }, // Hyderabad
+      { lat: 23.03, lng: 72.58 }, // Ahmedabad
+      { lat: 18.52, lng: 73.86 }, // Pune
+    ];
+    const pinGeo = new THREE.SphereGeometry(0.09, 10, 10);
+    const pinMat = new THREE.MeshBasicMaterial({
+      color: 0xE57734, // Brand orange
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const pins: THREE.Mesh[] = [];
+    for (const { lat, lng } of cityCoords) {
+      const latR = (lat * Math.PI) / 180;
+      const lngR = (lng * Math.PI) / 180;
+      const x = radius * Math.cos(latR) * Math.cos(lngR - Math.PI);
+      const y = radius * Math.sin(latR);
+      const z = radius * Math.cos(latR) * Math.sin(lngR - Math.PI);
+      const pin = new THREE.Mesh(pinGeo, pinMat);
+      pin.position.set(x, y, z);
+      group.add(pin);
+      pins.push(pin);
+    }
+    pinsRef.current = pins;
+
     return () => {
       scene.remove(group);
       coreGeo.dispose();
@@ -102,6 +160,13 @@ function CivicGlobe() {
       particlesGeo.dispose();
       particlesMat.dispose();
       texture.dispose();
+      gridGeo.dispose();
+      wireGeo.dispose();
+      wireMat.dispose();
+      atmosGeo.dispose();
+      atmosMat.dispose();
+      pinGeo.dispose();
+      pinMat.dispose();
     };
   }, [scene]);
 
@@ -123,6 +188,12 @@ function CivicGlobe() {
       mouseRef.current.x * 0.1,
       0.05
     );
+
+    // Pulse issue pins
+    pinsRef.current.forEach((pin, i) => {
+      const scale = 0.65 + Math.sin(t * 2.5 + i * 1.1) * 0.4;
+      pin.scale.setScalar(scale);
+    });
   });
 
   return null;

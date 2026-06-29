@@ -8,7 +8,11 @@ export default function FooterCTA() {
 
   return (
     <section id="for-officials" className="footer-cta-section" ref={ref}>
-      <div className="footer-cta-bg" aria-hidden="true" />
+      <div className="footer-cta-bg" aria-hidden="true">
+        <div className="footer-blob footer-blob-1" />
+        <div className="footer-blob footer-blob-2" />
+        <div className="footer-blob footer-blob-3" />
+      </div>
 
       <motion.div
         style={{ position: 'relative', zIndex: 2 }}

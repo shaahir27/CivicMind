@@ -87,6 +87,30 @@ async function resolveWardFromCoordinates(
   return 'ward-unknown';
 }
 
+/**
+ * Resolves a human-readable address string from coordinates using the
+ * Google Geocoding API server-side key (no browser CORS/referrer restrictions).
+ * Returns empty string if geocoding fails — callers should handle gracefully.
+ */
+async function resolveAddressText(lat: number, lng: number): Promise<string> {
+  try {
+    const apiKey = config.googleMaps.serverApiKey;
+    if (!apiKey) return '';
+
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+    const response = await fetch(url);
+    const data = (await response.json()) as any;
+
+    if (data.status === 'OK' && data.results?.length > 0) {
+      return data.results[0].formatted_address as string;
+    }
+    console.warn('[Geocoding] resolveAddressText status:', data.status);
+  } catch (err) {
+    console.error('[Geocoding] Error resolving address text:', err);
+  }
+  return '';
+}
+
 /** Fetches a signed URL for a storage path (public expiry: 15 min) */
 async function getSignedUrl(storagePath: string): Promise<string> {
   try {
@@ -236,7 +260,11 @@ router.post('/', requireCitizen as any, strictRateLimit, validate(reportIssueSch
     throw new OutsideServiceAreaError();
   }
 
-  const wardOrAreaId = await resolveWardFromCoordinates(location.lat, location.lng);
+  // Resolve both ward and human-readable address in parallel to avoid double round-trips
+  const [wardOrAreaId, locationAddressText] = await Promise.all([
+    resolveWardFromCoordinates(location.lat, location.lng),
+    resolveAddressText(location.lat, location.lng),
+  ]);
 
   // For Vision API: load photos from storage as base64
   const photoBase64List: Array<{ mimeType: string; data: string }> = [];
@@ -264,7 +292,7 @@ router.post('/', requireCitizen as any, strictRateLimit, validate(reportIssueSch
     manualSeverityOverride: manual_severity_override,
     reporterUserId: user.uid,
     wardOrAreaId,
-    locationAddressText: '',
+    locationAddressText,
   });
 
   res.status(201).json({

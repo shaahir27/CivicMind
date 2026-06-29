@@ -33,7 +33,7 @@ export default function Hero() {
 
         <motion.h1 className="hero-title" variants={itemVariants}>
           Empowering Citizens.<br />
-          <span className="gradient-text">Transforming Cities.</span>
+          <span className="gradient-text-shimmer">Transforming Cities.</span>
         </motion.h1>
 
         <motion.p className="hero-subtitle" variants={itemVariants}>
@@ -67,31 +67,66 @@ export default function Hero() {
           <ParticleGlobe />
         </Suspense>
 
-        <motion.div 
-          className="floating-mockup m-top-left"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-        >
-          <div className="mockup-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>✅</div>
-          <div className="mockup-text">
-            <strong>Pothole Resolved</strong>
-            <span>10m ago • Citizen Verified</span>
-          </div>
-        </motion.div>
+        {/* Floating live-feed cards — wrapped so CSS bob and framer-motion opacity don't clash */}
+        <div className="float-wrap-a" style={{ position: 'absolute', top: '15%', left: '-20px', zIndex: 10, pointerEvents: 'none' }}>
+          <motion.div
+            className="floating-mockup"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.8 }}
+          >
+            <div className="mockup-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>✅</div>
+            <div className="mockup-text">
+              <strong>Pothole Resolved</strong>
+              <span>10m ago • Citizen Verified</span>
+            </div>
+          </motion.div>
+        </div>
 
-        <motion.div 
-          className="floating-mockup m-bottom-right"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.8 }}
-        >
-          <div className="mockup-icon" style={{ background: '#fff7ed', color: '#f59e0b' }}>⚠️</div>
-          <div className="mockup-text">
-            <strong>AI Ticket Routed</strong>
-            <span>Water Dept • High Priority</span>
-          </div>
-        </motion.div>
+        <div className="float-wrap-b" style={{ position: 'absolute', bottom: '20%', right: '-10px', zIndex: 10, pointerEvents: 'none' }}>
+          <motion.div
+            className="floating-mockup"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
+          >
+            <div className="mockup-icon" style={{ background: '#fff7ed', color: '#f59e0b' }}>⚠️</div>
+            <div className="mockup-text">
+              <strong>AI Ticket Routed</strong>
+              <span>Water Dept • High Priority</span>
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="float-wrap-c" style={{ position: 'absolute', top: '10%', right: '-15px', zIndex: 10, pointerEvents: 'none' }}>
+          <motion.div
+            className="floating-mockup"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.7, duration: 0.8 }}
+          >
+            <div className="mockup-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>📊</div>
+            <div className="mockup-text">
+              <strong>3 Reports Merged</strong>
+              <span>AI Duplicate Clustering</span>
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="float-wrap-d" style={{ position: 'absolute', bottom: '10%', left: '-15px', zIndex: 10, pointerEvents: 'none' }}>
+          <motion.div
+            className="floating-mockup"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.1, duration: 0.8 }}
+          >
+            <div className="mockup-icon" style={{ background: '#fef3c7', color: '#d97706' }}>🔔</div>
+            <div className="mockup-text">
+              <strong>SLA Alert: Ward 12</strong>
+              <span>Escalated • 2h overdue</span>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

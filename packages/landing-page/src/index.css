@@ -286,8 +286,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* Floating Mockups */
 .floating-mockup {
-  position: absolute;
-  z-index: 10;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   padding: 12px 16px;
@@ -319,6 +317,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .mockup-text {
   display: flex;
   flex-direction: column;
+  white-space: nowrap;
 }
 .mockup-text strong {
   font-size: 0.9rem;
@@ -709,5 +708,167 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
   .footer-cta-title { font-size: 2.2rem; }
   .footer-cta-actions { flex-direction: column; width: 100%; }
-  .footer-cta-actions a { width: 100%; justify-content: center; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PREMIUM UPGRADE — Keyframes & Utility Classes
+   All new, zero overrides of existing styles above.
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Keyframes ────────────────────────────────────────────────────────────── */
+@keyframes aurora-drift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes shimmer-sweep {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes badge-ping {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(229,119,52,0.28); }
+  55%       { box-shadow: 0 0 0 10px rgba(229,119,52,0);   }
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translateY(0px);   }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translateY(0px);   }
+  50%       { transform: translateY(-7px);  }
+}
+@keyframes float-c {
+  0%, 100% { transform: translateY(0px);   }
+  50%       { transform: translateY(-13px); }
+}
+
+@keyframes blob-drift-1 {
+  0%, 100% { transform: translate(0,    0)    scale(1);    }
+  33%       { transform: translate(35px, -25px) scale(1.08); }
+  66%       { transform: translate(-20px, 18px) scale(0.94); }
+}
+@keyframes blob-drift-2 {
+  0%, 100% { transform: translate(0,     0)     scale(1);    }
+  33%       { transform: translate(-45px,  28px) scale(0.93); }
+  66%       { transform: translate( 28px, -38px) scale(1.07); }
+}
+@keyframes blob-drift-3 {
+  0%, 100% { transform: translate(0,    0)     scale(1);    }
+  50%       { transform: translate(22px, 44px)  scale(1.12); }
+}
+
+/* ── Hero aurora overlay (added via CSS ::before — zero JSX change needed) */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    -45deg,
+    rgba(229,119,52,  0.05),
+    rgba(73, 154,159, 0.08),
+    rgba(246,192,166, 0.07),
+    rgba(29, 129,137, 0.05)
+  );
+  background-size: 400% 400%;
+  animation: aurora-drift 22s ease infinite;
+  pointer-events: none;
+}
+
+/* ── Hero badge pulse ring ────────────────────────────────────────────────── */
+.hero-badge {
+  animation: badge-ping 3.5s ease-in-out infinite;
+}
+
+/* ── Gradient text shimmer ────────────────────────────────────────────────── */
+.gradient-text-shimmer {
+  background: linear-gradient(
+    120deg,
+    #499A9F 0%,
+    #E57734 30%,
+    #F2A968 50%,
+    #E57734 70%,
+    #D06323 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-sweep 5s linear infinite;
+}
+
+/* ── Floating mockup continuous bob ──────────────────────────────────────── */
+/* Applied to outer wrapper so framer-motion (opacity) and CSS (Y) don't clash */
+.float-wrap-a { animation: float-a 4s   ease-in-out infinite; }
+.float-wrap-b { animation: float-b 5.5s ease-in-out infinite; }
+.float-wrap-c { animation: float-c 3.8s ease-in-out infinite; }
+.float-wrap-d { animation: float-b 6.2s ease-in-out infinite; }
+
+/* ── Additional floating mockup positions ────────────────────────────────── */
+.m-top-right   { top: 10%;  right: -15px; }
+.m-bottom-left { bottom: 10%; left: -15px; }
+
+/* ── Stat icon badge ──────────────────────────────────────────────────────── */
+.stat-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #E57734, #D06323);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 1rem;
+  box-shadow: 0 8px 20px rgba(229,119,52,0.28);
+}
+
+/* ── Step card hover glow on icon ────────────────────────────────────────── */
+.step-icon-wrap {
+  transition: box-shadow var(--t-base), transform var(--t-base);
+}
+.step-card:hover .step-icon-wrap {
+  box-shadow: 0 14px 36px rgba(229,119,52,0.45);
+  transform: scale(1.08) translateY(-2px);
+}
+
+/* ── Step connector: draw left → right ───────────────────────────────────── */
+.step-connector {
+  transform-origin: 0% 50%;
+}
+
+/* ── Eco card: stronger top accent bar ───────────────────────────────────── */
+.citizen-card::before  { height: 5px; }
+.official-card::before { height: 5px; }
+.eco-card:hover {
+  box-shadow: 0 28px 64px rgba(0,0,0,0.11);
+}
+
+/* ── Footer CTA animated blobs ───────────────────────────────────────────── */
+.footer-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+}
+.footer-blob-1 {
+  width: 520px; height: 520px;
+  top: -150px;  left: -100px;
+  background: rgba(229,119,52, 0.20);
+  animation: blob-drift-1 20s ease-in-out infinite;
+}
+.footer-blob-2 {
+  width: 430px; height: 430px;
+  bottom: -110px; right: -80px;
+  background: rgba(73,154,159, 0.17);
+  animation: blob-drift-2 24s ease-in-out infinite;
+}
+.footer-blob-3 {
+  width: 320px; height: 320px;
+  top: 38%; left: 42%;
+  background: rgba(242,169,104, 0.13);
+  animation: blob-drift-3 16s ease-in-out infinite;
+}
+

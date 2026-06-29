@@ -179,38 +179,81 @@ export default function AuthScreen() {
 
       {/* Right Pane */}
       <div className="auth-right-pane">
-        {/* Top Bar inside right pane */}
-        <div style={{ width: '100%', paddingBottom: '24px', zIndex: 10, display: 'flex' }}>
-          <a 
-            href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'} 
-            style={{ 
-              textDecoration: 'none', 
-              color: 'var(--color-text-secondary)', 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              fontWeight: 500, 
-              fontSize: '14px',
-              background: 'rgba(255, 255, 255, 0.7)',
-              padding: '8px 16px',
+        {/* Top Bar — Landing + other portal links */}
+        <div style={{ width: '100%', paddingBottom: '24px', zIndex: 10, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
+          <a
+            href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'}
+            style={{
+              textDecoration: 'none',
+              color: 'var(--color-text-secondary)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontWeight: 500,
+              fontSize: '13px',
+              background: 'rgba(255,255,255,0.7)',
+              padding: '7px 14px',
               borderRadius: '20px',
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(0,0,0,0.05)',
               transition: 'all 0.2s',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--color-text-primary)';
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--color-text-secondary)';
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
-            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.7)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
           >
-            <span>←</span> Back to Landing Page
+            ← Home
+          </a>
+
+          <div style={{ flex: 1 }} />
+
+          <span style={{ fontSize: '11px', color: 'var(--color-text-tertiary)', fontWeight: 500, marginRight: '2px' }}>Other portals:</span>
+          <a
+            href={import.meta.env.VITE_AUTHORITY_APP_URL ?? 'http://localhost:5174'}
+            title="Authority Portal — for municipal officers"
+            style={{
+              textDecoration: 'none',
+              color: 'var(--color-text-secondary)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontWeight: 500,
+              fontSize: '12px',
+              background: 'rgba(255,255,255,0.65)',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              border: '1px solid rgba(0,0,0,0.05)',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.65)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
+          >
+            🛡️ Authority
+          </a>
+          <a
+            href={import.meta.env.VITE_ADMIN_CONSOLE_URL ?? 'http://localhost:5175'}
+            title="Admin Console — for system administrators"
+            style={{
+              textDecoration: 'none',
+              color: 'var(--color-text-secondary)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontWeight: 500,
+              fontSize: '12px',
+              background: 'rgba(255,255,255,0.65)',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              border: '1px solid rgba(0,0,0,0.05)',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.65)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
+          >
+            ⚙️ Admin
           </a>
         </div>
+
 
         {/* Mobile Header (Hidden on Desktop via CSS maybe? Or just keep it small) */}
         <div className="mobile-only-header" style={{ textAlign: 'center', marginBottom: '24px', zIndex: 10, animation: 'fadeInDown 0.6s ease' }}>

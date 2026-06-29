@@ -66,12 +66,38 @@ export default function LoginScreen() {
         justifyContent: 'center',
         position: 'relative'
       }}>
-        <a 
-          href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'} 
-          style={{ position: 'absolute', top: '24px', left: '24px', textDecoration: 'none', color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '14px' }}
-        >
-          ← Back to Landing Page
-        </a>
+        {/* Portal navigation — helps misdirected users find the right app */}
+        <div style={{ position: 'absolute', top: '20px', left: '20px', right: '20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
+          <a
+            href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'}
+            style={{ textDecoration: 'none', color: 'rgba(255,255,255,0.85)', display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '13px', background: 'rgba(0,0,0,0.15)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.15)', transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.25)'; e.currentTarget.style.color = 'white'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.15)'; e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; }}
+          >
+            ← Home
+          </a>
+          <div style={{ flex: 1 }} />
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>Other portals:</span>
+          <a
+            href={import.meta.env.VITE_CITIZEN_APP_URL ?? 'http://localhost:5173'}
+            title="Citizen App — for the public"
+            style={{ textDecoration: 'none', color: 'rgba(255,255,255,0.8)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 500, fontSize: '12px', background: 'rgba(0,0,0,0.12)', padding: '5px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.12)', transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.25)'; e.currentTarget.style.color = 'white'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}
+          >
+            🏙️ Citizen
+          </a>
+          <a
+            href={import.meta.env.VITE_ADMIN_CONSOLE_URL ?? 'http://localhost:5175'}
+            title="Admin Console — for system administrators"
+            style={{ textDecoration: 'none', color: 'rgba(255,255,255,0.8)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 500, fontSize: '12px', background: 'rgba(0,0,0,0.12)', padding: '5px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.12)', transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.25)'; e.currentTarget.style.color = 'white'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}
+          >
+            ⚙️ Admin
+          </a>
+        </div>
+
         
         <div style={{ maxWidth: '480px' }}>
           <div style={{ fontSize: '3rem', marginBottom: '24px' }}>🏢</div>

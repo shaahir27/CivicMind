@@ -5,6 +5,15 @@ export default function Features() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
 
+  const listVariants = {
+    hover: { transition: { staggerChildren: 0.1 } }
+  };
+  
+  const itemVariants = {
+    initial: { x: 0 },
+    hover: { x: 6, transition: { duration: 0.2 } }
+  };
+
   return (
     <section id="features" className="ecosystem-section" ref={ref}>
       <motion.div
@@ -34,12 +43,12 @@ export default function Features() {
           </div>
           <h2>Your direct line to city hall.</h2>
           <p className="eco-desc">Hold your city accountable with a few taps. CivicSense handles the bureaucracy so you don't have to.</p>
-          <ul className="eco-features-list">
-            <li><span>⚡</span> Report any issue in under 30 seconds</li>
-            <li><span>🤖</span> AI automatically categorizes your photo</li>
-            <li><span>📍</span> Live tracking from submission to resolution</li>
-            <li><span>🛡️</span> You hold the power: verify fixes before closure</li>
-          </ul>
+          <motion.ul className="eco-features-list" variants={listVariants} initial="initial">
+            <motion.li variants={itemVariants}><span>⚡</span> Report any issue in under 30 seconds</motion.li>
+            <motion.li variants={itemVariants}><span>🤖</span> AI automatically categorizes your photo</motion.li>
+            <motion.li variants={itemVariants}><span>📍</span> Live tracking from submission to resolution</motion.li>
+            <motion.li variants={itemVariants}><span>🛡️</span> You hold the power: verify fixes before closure</motion.li>
+          </motion.ul>
         </motion.div>
 
         {/* Block B: Official */}
@@ -56,12 +65,12 @@ export default function Features() {
           </div>
           <h2>Command your infrastructure.</h2>
           <p className="eco-desc">Empower your workforce with AI triage and real-time dashboards that eliminate duplicate tickets.</p>
-          <ul className="eco-features-list">
-            <li><span>🧠</span> Smart AI routing to the exact department</li>
-            <li><span>📊</span> Real-time predictive heatmap dashboards</li>
-            <li><span>⏱️</span> Automated SLA tracking and escalation</li>
-            <li><span>🔍</span> AI-powered duplicate ticket clustering</li>
-          </ul>
+          <motion.ul className="eco-features-list" variants={listVariants} initial="initial">
+            <motion.li variants={itemVariants}><span>🧠</span> Smart AI routing to the exact department</motion.li>
+            <motion.li variants={itemVariants}><span>📊</span> Real-time predictive heatmap dashboards</motion.li>
+            <motion.li variants={itemVariants}><span>⏱️</span> Automated SLA tracking and escalation</motion.li>
+            <motion.li variants={itemVariants}><span>🔍</span> AI-powered duplicate ticket clustering</motion.li>
+          </motion.ul>
         </motion.div>
       </div>
     </section>

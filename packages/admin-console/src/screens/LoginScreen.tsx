@@ -66,12 +66,38 @@ export default function LoginScreen() {
         justifyContent: 'center',
         position: 'relative'
       }}>
-        <a 
-          href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'} 
-          style={{ position: 'absolute', top: '24px', left: '24px', textDecoration: 'none', color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '14px' }}
-        >
-          ← Back to Landing Page
-        </a>
+        {/* Portal navigation — helps misdirected users find the right app */}
+        <div style={{ position: 'absolute', top: '20px', left: '20px', right: '20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
+          <a
+            href={import.meta.env.VITE_LANDING_URL ?? 'http://localhost:5176'}
+            style={{ textDecoration: 'none', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '13px', background: 'rgba(255,255,255,0.06)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
+          >
+            ← Home
+          </a>
+          <div style={{ flex: 1 }} />
+          <span style={{ fontSize: '11px', color: 'var(--color-text-tertiary)', fontWeight: 500 }}>Other portals:</span>
+          <a
+            href={import.meta.env.VITE_CITIZEN_APP_URL ?? 'http://localhost:5173'}
+            title="Citizen App — for the public"
+            style={{ textDecoration: 'none', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 500, fontSize: '12px', background: 'rgba(255,255,255,0.05)', padding: '5px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
+          >
+            🏙️ Citizen
+          </a>
+          <a
+            href={import.meta.env.VITE_AUTHORITY_APP_URL ?? 'http://localhost:5174'}
+            title="Authority Portal — for municipal officers"
+            style={{ textDecoration: 'none', color: 'var(--color-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 500, fontSize: '12px', background: 'rgba(255,255,255,0.05)', padding: '5px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', transition: 'all 0.2s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
+          >
+            🛡️ Authority
+          </a>
+        </div>
+
         
         <div style={{ maxWidth: '480px' }}>
           <div style={{ fontSize: '3rem', marginBottom: '24px' }}>⚙️</div>

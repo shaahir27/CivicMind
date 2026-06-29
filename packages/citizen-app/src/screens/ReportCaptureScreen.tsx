@@ -15,18 +15,91 @@ import exifr from 'exifr';
 import { MapPlaceholder } from '../components/shared.js';
 import { useI18n } from '../context/I18nContext.js';
 
+/**
+ * Reverse geocode a lat/lng to a human-readable address string.
+ *
+ * Uses window.google.maps.Geocoder (the Maps JS API loaded by APIProvider)
+ * instead of a raw fetch() to the REST endpoint — raw fetch fails with
+ * REQUEST_DENIED when the API key has IP restrictions (server-side key).
+ *
+ * Polls for the SDK to become available (it loads async) before falling back.
+ * Returns null if geocoding fails.
+ */
+async function reverseGeocode(lat: number, lng: number): Promise<string | null> {
+  // Wait up to 5s for the Maps JS SDK to initialise (it loads asynchronously)
+  const sdk = await new Promise<any>((resolveSDK) => {
+    const g = (window as any).google;
+    if (g?.maps?.Geocoder) { resolveSDK(g); return; }
+
+    let attempts = 0;
+    const maxAttempts = 50; // 50 × 100ms = 5s timeout
+    const interval = setInterval(() => {
+      const gNow = (window as any).google;
+      if (gNow?.maps?.Geocoder) {
+        clearInterval(interval);
+        resolveSDK(gNow);
+      } else if (++attempts >= maxAttempts) {
+        clearInterval(interval);
+        resolveSDK(null); // timed out
+      }
+    }, 100);
+  });
+
+  if (sdk?.maps?.Geocoder) {
+    // Primary path: use Maps JS Geocoder (handles API key restrictions correctly)
+    return new Promise((resolve) => {
+      const geocoder = new sdk.maps.Geocoder();
+      geocoder.geocode(
+        { location: { lat, lng } },
+        (results: any[], status: string) => {
+          if (status === 'OK' && results?.length > 0) {
+            resolve(results[0].formatted_address);
+          } else {
+            console.warn('[Geocoder] status:', status);
+            resolve(null);
+          }
+        }
+      );
+    });
+  }
+
+  // Fallback: SDK never loaded — try the Geocoding REST API directly.
+  // This works when the API key does NOT have IP restrictions.
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_CLIENT_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
+    );
+    const data = await res.json() as any;
+    if (data.status === 'OK' && data.results?.length > 0) {
+      return data.results[0].formatted_address;
+    }
+    console.warn('[Geocoder REST fallback] status:', data.status, data.error_message ?? '');
+  } catch (err) {
+    console.error('[Geocoder REST fallback] fetch error:', err);
+  }
+  return null;
+}
+
 export default function ReportCaptureScreen() {
   const navigate = useNavigate();
   const { t } = useI18n();
   const { token } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  // Strict User-Agent check to ensure laptops (even with touchscreens and narrow windows) 
+  // are treated as desktops and do not show the mobile camera UI.
+  const isMobile = typeof navigator !== 'undefined' && 
+    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   const [preview, setPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationError, setLocationError] = useState('');
-  const [addressText, setAddressText] = useState('');
+  // null = geocoding in progress (shows skeleton), '' or string = done
+  const [addressText, setAddressText] = useState<string | null>(null);
   const [description, setDescription] = useState('');
   const [isManualFallback, setIsManualFallback] = useState(false);
   const [manualCategory, setManualCategory] = useState('pothole');
@@ -40,29 +113,21 @@ export default function ReportCaptureScreen() {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
           setLocation({ lat, lng });
-          
-          try {
-            const apiKey = import.meta.env.VITE_GOOGLE_MAPS_CLIENT_API_KEY;
-            if (apiKey) {
-              const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
-              const data = await res.json();
-              if (data.status === 'OK' && data.results && data.results.length > 0) {
-                setAddressText(data.results[0].formatted_address);
-              } else {
-                setAddressText(t('addressUnavailable'));
-              }
-            } else {
-              setAddressText(t('addressUnavailable'));
-            }
-          } catch (err) {
-            console.error('Failed to reverse geocode', err);
-            setAddressText(t('addressUnavailable'));
-          }
+          setAddressText(null); // show skeleton while geocoding
+
+          // Use Maps JS Geocoder (already loaded by APIProvider) to avoid
+          // REQUEST_DENIED that occurs when calling REST API with a server-side key
+          const address = await reverseGeocode(lat, lng);
+          setAddressText(address ?? t('addressUnavailable'));
         },
-        () => setLocationError('Location unavailable — you can adjust the pin after submission.')
+        () => {
+          setLocationError('Location unavailable — you can adjust the pin after submission.');
+          setAddressText(t('addressUnavailable'));
+        }
       );
     } else {
       setLocationError('Geolocation not supported.');
+      setAddressText(t('addressUnavailable'));
     }
   }, []);
 
@@ -87,14 +152,9 @@ export default function ReportCaptureScreen() {
         const lat = gps.latitude;
         const lng = gps.longitude;
         setLocation({ lat, lng });
-        const apiKey = import.meta.env.VITE_GOOGLE_MAPS_CLIENT_API_KEY;
-        if (apiKey) {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
-          const data = await res.json();
-          if (data.results && data.results.length > 0) {
-            setAddressText(data.results[0].formatted_address);
-          }
-        }
+        setAddressText(null); // show skeleton while geocoding EXIF coords
+        const address = await reverseGeocode(lat, lng);
+        setAddressText(address ?? t('addressUnavailable'));
       }
     } catch (e) {
       console.log('EXIF extraction failed or not available');
@@ -311,16 +371,9 @@ export default function ReportCaptureScreen() {
                     const lat = e.detail.latLng.lat;
                     const lng = e.detail.latLng.lng;
                     setLocation({ lat, lng });
-                    try {
-                      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_CLIENT_API_KEY;
-                      if (apiKey) {
-                        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
-                        const data = await res.json();
-                        if (data.results && data.results.length > 0) {
-                          setAddressText(data.results[0].formatted_address);
-                        }
-                      }
-                    } catch (err) {}
+                    setAddressText(null); // show skeleton while re-geocoding
+                    const address = await reverseGeocode(lat, lng);
+                    setAddressText(address ?? t('addressUnavailable'));
                   }
                 }}
               />
@@ -422,44 +475,106 @@ export default function ReportCaptureScreen() {
         <div style={{ width: '44px' }} />
       </div>
 
-      {/* Upload Zone */}
-      <div
-        onClick={() => fileInputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-        onDrop={handleDrop}
-        style={{
-          width: '100%',
-          maxWidth: '380px',
-          aspectRatio: '4/3',
-          border: '2px dashed hsl(220 87% 73%)',
-          borderRadius: '24px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          background: 'rgba(255,255,255,0.7)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          transition: 'all 0.2s ease',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'var(--color-brand-500)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.7)'; e.currentTarget.style.borderColor = 'hsl(220 87% 73%)'; }}
-      >
-        <div style={{ 
-          width: '72px', height: '72px', borderRadius: '50%', background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-200)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
-        }}>
-          <span style={{ fontSize: '32px', color: 'var(--color-brand-500)' }}>📤</span>
+      {/* Upload Zone — desktop: drag-drop; mobile: Camera + Gallery buttons */}
+      {isMobile ? (
+        /* Mobile: two large tap-target buttons */
+        <div style={{ width: '100%', maxWidth: '380px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {/* Camera button */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              width: '100%',
+              padding: '28px 20px',
+              borderRadius: '24px',
+              border: '2px solid hsl(220 87% 73%)',
+              background: 'rgba(255,255,255,0.85)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+              transition: 'all 0.18s ease',
+            }}
+            onTouchStart={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.transform = 'scale(0.98)'; }}
+            onTouchEnd={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.85)'; e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-200)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', flexShrink: 0 }}>📷</div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ color: 'var(--color-text-primary)', fontSize: '16px', fontWeight: 700, fontFamily: 'var(--font-sans)', marginBottom: '4px' }}>Take Photo</div>
+              <div style={{ color: 'var(--color-text-secondary)', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>Use your camera to capture the issue</div>
+            </div>
+          </button>
+
+          {/* Gallery button */}
+          <button
+            onClick={() => galleryInputRef.current?.click()}
+            style={{
+              width: '100%',
+              padding: '28px 20px',
+              borderRadius: '24px',
+              border: '2px dashed hsl(220 87% 73%)',
+              background: 'rgba(255,255,255,0.7)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+              transition: 'all 0.18s ease',
+            }}
+            onTouchStart={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.transform = 'scale(0.98)'; }}
+            onTouchEnd={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.7)'; e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'hsl(220 100% 97%)', border: '1px solid hsl(220 87% 88%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', flexShrink: 0 }}>🖼️</div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ color: 'var(--color-text-primary)', fontSize: '16px', fontWeight: 700, fontFamily: 'var(--font-sans)', marginBottom: '4px' }}>Choose from Gallery</div>
+              <div style={{ color: 'var(--color-text-secondary)', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>Pick an existing photo from your device</div>
+            </div>
+          </button>
         </div>
-        <div style={{ color: 'var(--color-text-primary)', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
-          {t('tapToUpload')}
+      ) : (
+        /* Desktop: drag-drop zone */
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          onDrop={handleDrop}
+          style={{
+            width: '100%',
+            maxWidth: '380px',
+            aspectRatio: '4/3',
+            border: '2px dashed hsl(220 87% 73%)',
+            borderRadius: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            background: 'rgba(255,255,255,0.7)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'var(--color-brand-500)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.7)'; e.currentTarget.style.borderColor = 'hsl(220 87% 73%)'; }}
+        >
+          <div style={{ 
+            width: '72px', height: '72px', borderRadius: '50%', background: 'var(--color-brand-50)', border: '1px solid var(--color-brand-200)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
+          }}>
+            <span style={{ fontSize: '32px', color: 'var(--color-brand-500)' }}>📤</span>
+          </div>
+          <div style={{ color: 'var(--color-text-primary)', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', marginBottom: '8px' }}>
+            {t('tapToUpload')}
+          </div>
+          <div style={{ color: 'var(--color-text-secondary)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
+            {t('uploadDesc')}
+          </div>
         </div>
-        <div style={{ color: 'var(--color-text-secondary)', fontSize: '13px', fontFamily: 'var(--font-sans)', textAlign: 'center', padding: '0 20px' }}>
-          {t('uploadDesc')}
-        </div>
-      </div>
+      )}
 
       {/* Location status */}
       {location ? (
@@ -469,12 +584,12 @@ export default function ReportCaptureScreen() {
           </div>
           <div style={{ color: 'var(--color-text-primary)', fontSize: '13px', fontFamily: 'var(--font-sans)', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
             <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.01em' }}>{t('location')}</span>
-            {addressText ? (
-              <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {addressText}
-              </span>
-            ) : (
+            {addressText === null ? (
               <div className="skeleton" style={{ height: '14px', width: '80%', borderRadius: '4px' }} />
+            ) : (
+              <span style={{ fontSize: '13px', color: addressText === t('addressUnavailable') ? 'var(--color-text-secondary)' : 'var(--color-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {addressText || t('addressUnavailable')}
+              </span>
             )}
           </div>
         </div>
@@ -493,12 +608,20 @@ export default function ReportCaptureScreen() {
         </div>
       )}
 
-      {/* Hidden file input */}
+      {/* Camera input — triggers camera directly on mobile */}
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
         capture="environment"
+        style={{ display: 'none' }}
+        onChange={handleFileInput}
+      />
+      {/* Gallery input — opens photo picker/gallery without forcing camera */}
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
         style={{ display: 'none' }}
         onChange={handleFileInput}
       />

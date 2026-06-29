@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring, animate } from 'framer-motion';
 
 const STATS = [
-  { value: 12400, suffix: '+', label: 'Issues Reported' },
-  { value: 89,    suffix: '%', label: 'Resolution Rate' },
-  { value: 48,    suffix: 'h', label: 'Avg. Resolution Time' },
-  { value: 3,     suffix: '',  label: 'Cities Active' },
+  { value: 12400, suffix: '+', label: 'Issues Reported',       icon: '📋' },
+  { value: 89,    suffix: '%', label: 'Resolution Rate',        icon: '✅' },
+  { value: 48,    suffix: 'h', label: 'Avg. Resolution Time',   icon: '⚡' },
+  { value: 3,     suffix: '',  label: 'Cities Active',          icon: '🏙️' },
 ];
 
 function AnimatedNumber({ value, suffix }: { value: number; suffix: string }) {
@@ -57,6 +57,7 @@ export default function StatsBar() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: idx * 0.12 }}
             >
+              <div className="stat-icon-badge">{stat.icon}</div>
               <div className="stat-number">
                 <AnimatedNumber value={stat.value} suffix={stat.suffix} />
               </div>

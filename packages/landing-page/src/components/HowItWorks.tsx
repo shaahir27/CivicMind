@@ -61,6 +61,7 @@ export default function HowItWorks() {
             {idx < STEPS.length - 1 && (
               <motion.div
                 className="step-connector"
+                style={{ transformOrigin: '0% 50%' }}
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={inView ? { scaleX: 1, opacity: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.4 + idx * 0.15 }}
