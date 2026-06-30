@@ -9,6 +9,8 @@ import PredictiveReviewScreen from './screens/PredictiveReviewScreen.js';
 import ImpactReportsScreen from './screens/ImpactReportsScreen.js';
 import AuditLogScreen from './screens/AuditLogScreen.js';
 import UserManagementScreen from './screens/UserManagementScreen.js';
+import LeaderboardScreen from './screens/LeaderboardScreen.js';
+import CopilotScreen from './screens/CopilotScreen.js';
 
 import '../../shared/src/design-system/tokens.css';
 import '../../shared/src/design-system/components.css';
@@ -19,8 +21,10 @@ const NAV_ITEMS = [
   { path: '/jurisdiction',      label: 'Jurisdiction Mapping',  icon: '🗺️' },
   { path: '/predictive-review', label: 'Predictive Review',     icon: '🔮' },
   { path: '/impact-reports',    label: 'Impact Reports',        icon: '📊' },
+  { path: '/leaderboard',       label: 'Ward Leaderboard',      icon: '🏆' },
   { path: '/audit-log',         label: 'Audit Log',             icon: '📋' },
   { path: '/users',             label: 'User Management',       icon: '👥' },
+  { path: '/copilot',           label: 'AI Copilot',            icon: '✨' },
 ];
 
 function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
@@ -133,8 +137,10 @@ export default function App() {
           <Route path="/jurisdiction"      element={<AdminLayout><JurisdictionScreen /></AdminLayout>} />
           <Route path="/predictive-review" element={<AdminLayout><PredictiveReviewScreen /></AdminLayout>} />
           <Route path="/impact-reports"    element={<AdminLayout><ImpactReportsScreen /></AdminLayout>} />
+          <Route path="/leaderboard"       element={<AdminLayout><LeaderboardScreen /></AdminLayout>} />
           <Route path="/audit-log"         element={<AdminLayout><AuditLogScreen /></AdminLayout>} />
           <Route path="/users"             element={<AdminLayout><UserManagementScreen /></AdminLayout>} />
+          <Route path="/copilot"           element={<AdminLayout><CopilotScreen /></AdminLayout>} />
           <Route path="*"                  element={<Navigate to="/sla-config" replace />} />
         </Routes>
       </BrowserRouter>

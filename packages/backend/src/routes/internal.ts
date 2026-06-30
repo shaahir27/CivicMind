@@ -11,6 +11,7 @@ import { authenticateInternal } from '../middleware/authenticate.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { runEscalationCycle } from '../agents/escalationAgent.js';
 import { runPredictorAgent } from '../agents/predictorAgent.js';
+import { generateAllLeaderboards } from '../services/leaderboard.js';
 import type { Request, Response } from 'express';
 
 const router = Router();
@@ -39,6 +40,12 @@ router.post('/predictor/run-cycle', asyncHandler(async (_req: Request, res: Resp
     forecasts_generated: result.forecastsGenerated,
     areas_with_insufficient_data: result.areasWithInsufficientData,
   });
+}));
+
+// ─── POST /internal/v1/agents/leaderboard/run-cycle ──────────────────────────
+router.post('/leaderboard/run-cycle', asyncHandler(async (_req: Request, res: Response) => {
+  const generatedCount = await generateAllLeaderboards();
+  res.status(200).json({ generatedCount });
 }));
 
 export default router;

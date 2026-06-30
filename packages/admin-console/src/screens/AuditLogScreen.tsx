@@ -156,6 +156,7 @@ function JsonDisplay({ raw }: { raw: string }) {
 export default function AuditLogScreen() {
   const { token } = useAuth();
   const [logs, setLogs] = useState<AgentLogEntry[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [agentFilter, setAgentFilter] = useState('All');
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
@@ -166,12 +167,21 @@ export default function AuditLogScreen() {
   const fetchLogs = useCallback(async () => {
     try {
       const params = agentFilter !== 'All' ? `?agent_type=${agentFilter}&limit=50` : '?limit=50';
-      const res = await fetch(`${BASE}/api/v1/admin/agent-decision-log${params}`, { headers: authHeaders });
+      const [res, alertsRes] = await Promise.all([
+        fetch(`${BASE}/api/v1/admin/agent-decision-log${params}`, { headers: authHeaders }),
+        fetch(`${BASE}/api/v1/admin/agent-health-alerts`, { headers: authHeaders })
+      ]);
+      
       if (res.ok) {
         const data = await res.json();
         setLogs(data.logs && data.logs.length > 0 ? data.logs : MOCK_LOGS);
       } else {
         setLogs(MOCK_LOGS);
+      }
+
+      if (alertsRes.ok) {
+        const alertsData = await alertsRes.json();
+        setAlerts(alertsData.alerts || []);
       }
     } catch {
       setLogs(MOCK_LOGS);
@@ -202,6 +212,25 @@ export default function AuditLogScreen() {
           Every agent invocation is recorded here. Append-only — no edits or deletes permitted (NFR-6).
         </p>
       </div>
+
+      {alerts.length > 0 && (
+        <div style={{ marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-danger)' }}>⚠️ Active Anomaly Alerts</h2>
+          {alerts.map(alert => (
+            <div key={alert.alert_id} style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ fontSize: '24px' }}>🚨</div>
+              <div>
+                <h3 style={{ color: '#fca5a5', margin: '0 0 4px 0', fontSize: '15px' }}>
+                  {alert.agent_type.toUpperCase()} Agent Confidence Drop
+                </h3>
+                <div style={{ color: '#f87171', fontSize: '13px' }}>
+                  Average confidence dropped by <strong>{alert.drop_percentage}%</strong> (from {alert.baseline_avg.toFixed(2)} to {alert.recent_avg.toFixed(2)} in the last 7 days). Check recent logs for potential model drift.
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Filter bar */}
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>

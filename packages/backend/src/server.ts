@@ -3,15 +3,20 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { rateLimit } from 'express-rate-limit';
+import cron from 'node-cron';
 import { config } from './config/env.js';
+import { generateAllLeaderboards } from './services/leaderboard.js';
+import { runAgentAnomalyMonitor } from './cron/agentMonitor.js';
 import { globalErrorHandler } from './middleware/errorHandler.js';
 
 // Route imports
 import authRouter from './routes/auth.js';
 import issuesRouter from './routes/issues.js';
-import authorityRouter from './routes/authority.js';
-import adminRouter from './routes/admin.js';
+import authorityRoutes from './routes/authority.js';
+import adminRoutes from './routes/admin.js';
 import mapRouter from './routes/map.js';
+import routingRoutes from './routes/routing.js';
+import channelsRoutes from './routes/channels.js';
 import internalRouter from './routes/internal.js';
 import demoAuthRouter from './routes/demo-auth.js';
 import devRouter from './routes/dev.js';
@@ -53,9 +58,11 @@ app.use(limiter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/demo-auth', demoAuthRouter);
 app.use('/api/v1/issues', issuesRouter);
-app.use('/api/v1/authority', authorityRouter);
-app.use('/api/v1/admin', adminRouter);
+app.use('/api/v1/authority', authorityRoutes);
+app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/map', mapRouter);
+app.use('/api/v1/routing', routingRoutes);
+app.use('/api/v1/channels', channelsRoutes);
 app.use('/api/v1/dev', devRouter);
 
 // Internal routes (scheduler-triggered — never exposed publicly)
@@ -82,6 +89,28 @@ app.use((_req, res) => {
 
 // Global error handler
 app.use(globalErrorHandler);
+
+// Scheduled jobs
+// Run leaderboard generation nightly at 00:00
+cron.schedule('0 0 * * *', async () => {
+  console.log('[CRON] Running nightly leaderboard generation...');
+  try {
+    const count = await generateAllLeaderboards();
+    console.log(`[CRON] Leaderboard generation complete. Processed ${count} wards.`);
+  } catch (err) {
+    console.error('[CRON] Leaderboard generation failed:', err);
+  }
+});
+
+// Run agent anomaly monitor daily at 01:00
+cron.schedule('0 1 * * *', async () => {
+  try {
+    const count = await runAgentAnomalyMonitor();
+    console.log(`[CRON] Agent anomaly monitor complete. Generated ${count} alerts.`);
+  } catch (err) {
+    console.error('[CRON] Agent anomaly monitor failed:', err);
+  }
+});
 
 // Start server
 app.listen(config.port, '0.0.0.0', () => {

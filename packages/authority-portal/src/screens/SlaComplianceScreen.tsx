@@ -1,86 +1,77 @@
-/**
- * SLA Compliance Dashboard — ui_ux_specification.md §3.3
- */
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.js';
-import { CATEGORY_LABELS } from '@civicmind/shared';
+
+interface PerformanceSummary {
+  department_id: string;
+  total_resolved: number;
+  avg_resolution_hours: number;
+  verification_success_rate: number;
+  peer_rank: number;
+}
 
 export default function SlaComplianceScreen() {
-  const { user } = useAuth();
+  const { token } = useAuth();
+  const [summary, setSummary] = useState<PerformanceSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   
-  // For demo purposes, we generate some mock analytics since there's no dedicated endpoint in v1
-  // We would derive this from the issues list
-  const [metrics] = useState({
-    totalResolved: 145,
-    withinSla: 122,
-    breached: 23,
-    avgResolutionTimeHours: 34,
-    escalationRate: 15.8,
-  });
+  useEffect(() => {
+    let active = true;
+    const fetchSummary = async () => {
+      try {
+        const base = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
+        const res = await fetch(`${base}/api/v1/authority/performance-summary`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (!res.ok) throw new Error('Failed to fetch performance summary');
+        const data = await res.json();
+        if (active) setSummary(data);
+      } catch (err: any) {
+        if (active) setError(err.message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    fetchSummary();
+    return () => { active = false; };
+  }, [token]);
+
+  if (loading) return <div>Loading dashboard...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (!summary) return <div>No data available</div>;
 
   return (
     <div>
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-neutral-800)', marginBottom: '8px' }}>SLA Compliance Dashboard</h1>
-        <p style={{ color: 'var(--color-text-secondary)' }}>Department performance for {user?.department_id ?? 'your assigned department'}</p>
+        <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-neutral-800)', marginBottom: '8px' }}>Performance Scorecard</h1>
+        <p style={{ color: 'var(--color-text-secondary)' }}>Department performance for {summary.department_id || 'your assigned department'}</p>
       </div>
 
-      <div className="metrics-grid">
-        <div className="metric-card">
-          <span className="metric-label">Resolution Rate (Within SLA)</span>
-          <span className="metric-value" style={{ color: 'var(--color-success)' }}>
-            {Math.round((metrics.withinSla / metrics.totalResolved) * 100)}%
+      <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+        <div className="metric-card" style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column' }}>
+          <span className="metric-label" style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '8px', fontWeight: 600 }}>Avg Resolution Time</span>
+          <span className="metric-value" style={{ fontSize: '32px', fontWeight: 800, color: 'var(--color-primary-700)' }}>
+            {summary.avg_resolution_hours.toFixed(1)} hrs
           </span>
-          <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Target: 95%</span>
         </div>
         
-        <div className="metric-card">
-          <span className="metric-label">Total Escalations</span>
-          <span className="metric-value" style={{ color: 'var(--color-error)' }}>{metrics.breached}</span>
-          <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>This month</span>
+        <div className="metric-card" style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column' }}>
+          <span className="metric-label" style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '8px', fontWeight: 600 }}>Total Resolved</span>
+          <span className="metric-value" style={{ fontSize: '32px', fontWeight: 800, color: 'var(--color-primary-700)' }}>{summary.total_resolved}</span>
         </div>
         
-        <div className="metric-card">
-          <span className="metric-label">Avg Resolution Time</span>
-          <span className="metric-value">{metrics.avgResolutionTimeHours}h</span>
-          <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Across all categories</span>
+        <div className="metric-card" style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column' }}>
+          <span className="metric-label" style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '8px', fontWeight: 600 }}>AI Verification Success</span>
+          <span className="metric-value" style={{ fontSize: '32px', fontWeight: 800, color: 'var(--color-success)' }}>
+            {(summary.verification_success_rate * 100).toFixed(0)}%
+          </span>
         </div>
-      </div>
 
-      <div style={{ background: 'transparent', borderRadius: '16px', border: '1px solid var(--color-border)', padding: '24px' }}>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px' }}>Category Breakdown</h2>
-        <div className="table-responsive">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Category</th>
-                <th>Resolved</th>
-                <th>Breached</th>
-                <th>Compliance Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span style={{ fontWeight: 500 }}>{CATEGORY_LABELS['pothole']}</span></td>
-                <td>45</td>
-                <td>12</td>
-                <td><span style={{ color: 'var(--color-status-at-risk)', fontWeight: 600 }}>78%</span></td>
-              </tr>
-              <tr>
-                <td><span style={{ fontWeight: 500 }}>{CATEGORY_LABELS['streetlight']}</span></td>
-                <td>60</td>
-                <td>2</td>
-                <td><span style={{ color: 'var(--color-success)', fontWeight: 600 }}>96%</span></td>
-              </tr>
-              <tr>
-                <td><span style={{ fontWeight: 500 }}>{CATEGORY_LABELS['garbage']}</span></td>
-                <td>40</td>
-                <td>9</td>
-                <td><span style={{ color: 'var(--color-status-at-risk)', fontWeight: 600 }}>81%</span></td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="metric-card" style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column' }}>
+          <span className="metric-label" style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '8px', fontWeight: 600 }}>Peer Rank (Citywide)</span>
+          <span className="metric-value" style={{ fontSize: '32px', fontWeight: 800, color: '#ca8a04' }}>
+            #{summary.peer_rank}
+          </span>
         </div>
       </div>
     </div>

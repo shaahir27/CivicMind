@@ -81,6 +81,7 @@ export interface Issue {
   updated_at: string;
   resolved_at?: string | null;
   verified_at?: string | null;
+  assigned_worker_id?: string;
 }
 
 // ─── 2.5 IssuePhoto ──────────────────────────────────────────────────────────
@@ -169,6 +170,24 @@ export interface HeroPointsLedger {
   created_at: string;
 }
 
+export interface FieldWorker {
+  worker_id: string;
+  department_id: string;
+  display_name: string;
+  skills: string[];
+  is_active: boolean;
+  current_workload_count: number;
+}
+
+export interface CsatResponse {
+  csat_id: string;
+  issue_id: string;
+  citizen_user_id: string;
+  rating: number; // 1-5
+  comment: string;
+  created_at: string;
+}
+
 // ─── 2.13 HotspotForecast ────────────────────────────────────────────────────
 export interface HotspotForecast {
   forecast_id: string;
@@ -216,6 +235,9 @@ export interface IssueSummary {
   time_remaining_seconds?: number | null;
   created_at: string;
   updated_at: string;
+  predicted_category?: string;
+  predicted_severity?: string;
+  assigned_worker_id?: string;
 }
 
 /** Full issue detail with nested history and photos */

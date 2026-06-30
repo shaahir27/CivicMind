@@ -131,4 +131,69 @@ router.get('/impact-reports', asyncHandler(async (req: Request, res: Response) =
   res.status(200).json({ reports: snapshot.docs.map((d) => d.data()) });
 }));
 
+// ─── GET /api/v1/map/leaderboard (public) ───────────────────────────────────
+router.get('/leaderboard', asyncHandler(async (_req: Request, res: Response) => {
+  const db = getFirestore();
+  // Fetch recent reports to get the latest per ward
+  // In a real app we'd want a separate aggregated collection for this,
+  // but for the demo we can just fetch the last 200 reports and group in memory.
+  const snapshot = await db
+    .collection(COLLECTIONS.IMPACT_REPORTS)
+    .orderBy('generated_at', 'desc')
+    .limit(200)
+    .get();
+
+  const latestPerWard = new Map<string, any>();
+  for (const doc of snapshot.docs) {
+    const data = doc.data();
+    if (!latestPerWard.has(data.ward_or_area_id)) {
+      latestPerWard.set(data.ward_or_area_id, data);
+    }
+  }
+
+  const leaderboard = Array.from(latestPerWard.values())
+    .sort((a, b) => (b.civic_health_score || 0) - (a.civic_health_score || 0));
+
+  res.status(200).json({ leaderboard });
+}));
+
+// ─── GET /api/v1/map/transparency-summary (public) ────────────────────────
+router.get('/transparency-summary', asyncHandler(async (_req: Request, res: Response) => {
+  const db = getFirestore();
+  const snapshot = await db
+    .collection(COLLECTIONS.IMPACT_REPORTS)
+    .orderBy('generated_at', 'desc')
+    .limit(200)
+    .get();
+
+  const latestPerWard = new Map<string, any>();
+  for (const doc of snapshot.docs) {
+    const data = doc.data();
+    if (!latestPerWard.has(data.ward_or_area_id)) {
+      latestPerWard.set(data.ward_or_area_id, data);
+    }
+  }
+
+  let totalResolved = 0;
+  let totalIssuesSum = 0;
+  let weightedAvgResTimeSum = 0;
+
+  for (const report of latestPerWard.values()) {
+    const resolvedInWard = Math.round((report.total_issues || 0) * (report.resolution_rate || 0));
+    totalResolved += resolvedInWard;
+    totalIssuesSum += (report.total_issues || 0);
+    weightedAvgResTimeSum += (report.avg_resolution_hours || 0) * resolvedInWard;
+  }
+
+  const overallAvgResTime = totalResolved > 0 ? (weightedAvgResTimeSum / totalResolved) : 0;
+
+  res.status(200).json({
+    summary: {
+      total_resolved: totalResolved,
+      total_reported: totalIssuesSum,
+      avg_resolution_hours: overallAvgResTime,
+    }
+  });
+}));
+
 export default router;

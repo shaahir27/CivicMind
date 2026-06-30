@@ -4,8 +4,11 @@ import { AuthProvider, useAuth } from './context/AuthContext.js';
 
 import LoginScreen from './screens/LoginScreen.js';
 import DashboardScreen from './screens/DashboardScreen.js';
-import IssueDetailScreen from './screens/IssueDetailScreen.js';
+import MapDashboardScreen from './screens/MapDashboardScreen.js';
+import MyRouteScreen from './screens/MyRouteScreen.js';
+import MyTeamScreen from './screens/MyTeamScreen.js';
 import SlaComplianceScreen from './screens/SlaComplianceScreen.js';
+import IssueDetailScreen from './screens/IssueDetailScreen.js';
 
 import '../../shared/src/design-system/tokens.css';
 import '../../shared/src/design-system/components.css';
@@ -32,8 +35,17 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
           <Link to="/dashboard" className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
             <span>📋</span> Active Queue
           </Link>
+          <Link to="/map" className={`nav-item ${location.pathname === '/map' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
+            <span>🗺️</span> Map Dashboard
+          </Link>
+          <Link to="/my-team" className={`nav-item ${location.pathname === '/my-team' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
+            <span>👥</span> My Team
+          </Link>
           <Link to="/sla" className={`nav-item ${location.pathname === '/sla' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
             <span>📊</span> SLA Compliance
+          </Link>
+          <Link to="/route" className={`nav-item ${location.pathname === '/route' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
+            <span>📍</span> Today's Route
           </Link>
         </nav>
         <div style={{ padding: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
@@ -66,10 +78,12 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
 
 import { AppSwitcher } from '../../shared/src/components/AppSwitcher.js';
 import { UserRole } from '@civicmind/shared';
+import { useOfflineSync } from './hooks/useOfflineSync.js';
 
 function PortalLayout({ children }: { children: React.ReactNode }) {
   const { token, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const { isOnline, syncing, offlineCount } = useOfflineSync();
   
   if (!token) return <Navigate to="/login" replace />;
 
@@ -85,7 +99,12 @@ function PortalLayout({ children }: { children: React.ReactNode }) {
             <div style={{ fontWeight: 600, color: 'var(--color-text-secondary)' }}>Officer Portal</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span className="hide-on-mobile" style={{ fontSize: '14px', fontWeight: 500, marginRight: '16px' }}>System Status: <span style={{ color: 'var(--color-success)' }}>Active</span></span>
+            <span className="hide-on-mobile" style={{ fontSize: '14px', fontWeight: 500, marginRight: '16px' }}>
+              System Status: {' '}
+              {syncing ? <span style={{ color: 'var(--color-warning)' }}>Syncing {offlineCount} items...</span> :
+               !isOnline ? <span style={{ color: 'var(--color-danger)' }}>Offline ({offlineCount} pending)</span> :
+               <span style={{ color: 'var(--color-success)' }}>Active</span>}
+            </span>
             <AppSwitcher currentApp="authority" userRole={user?.role as UserRole} />
           </div>
         </header>
@@ -104,7 +123,10 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/dashboard" element={<PortalLayout><DashboardScreen /></PortalLayout>} />
+          <Route path="/map" element={<PortalLayout><MapDashboardScreen /></PortalLayout>} />
+          <Route path="/my-team" element={<PortalLayout><MyTeamScreen /></PortalLayout>} />
           <Route path="/sla" element={<PortalLayout><SlaComplianceScreen /></PortalLayout>} />
+          <Route path="/route" element={<PortalLayout><MyRouteScreen /></PortalLayout>} />
           <Route path="/issue/:id" element={<PortalLayout><IssueDetailScreen /></PortalLayout>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

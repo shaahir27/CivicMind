@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CITIZEN_APP_URL, AUTHORITY_APP_URL, ADMIN_APP_URL } from '../config.js';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -22,13 +25,19 @@ export default function Navbar() {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="nav-logo">
-          <span className="gradient-text">CivicSense</span>
+          <Link to="/" className="gradient-text" style={{ textDecoration: 'none' }}>CivicSense</Link>
         </div>
 
         <ul className="nav-links">
-          <li><a href="#how-it-works">How it Works</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#for-officials">For Officials</a></li>
+          {location.pathname === '/' ? (
+            <>
+              <li><a href="#how-it-works">How it Works</a></li>
+              <li><a href="#features">Features</a></li>
+            </>
+          ) : (
+            <li><Link to="/">Home</Link></li>
+          )}
+          <li><Link to="/transparency" style={{ color: 'var(--color-brand-500)', fontWeight: 600 }}>Transparency</Link></li>
         </ul>
 
         <div className="nav-actions">
@@ -115,8 +124,16 @@ export default function Navbar() {
               exit={{ x: 300, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             >
-              <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it Works</a>
-              <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+              {location.pathname === '/' && (
+                <>
+                  <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it Works</a>
+                  <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+                </>
+              )}
+              {location.pathname !== '/' && (
+                <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+              )}
+              <Link to="/transparency" onClick={() => setMenuOpen(false)} style={{ color: 'var(--color-brand-500)', fontWeight: 600 }}>Transparency Portal</Link>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem' }}>
                 <span style={{ fontSize: '0.85rem', color: '#666', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Official Access</span>

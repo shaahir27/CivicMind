@@ -10,6 +10,9 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/authenticate.js';
 import { requireAdmin } from '../middleware/rbac.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { generateAllLeaderboards } from '../services/leaderboard.js';
+import { generateContentWithRetry } from '../services/ai.js';
+import { GoogleGenAI } from '@google/genai';
 import {
   ValidationError,
   NotFoundError,
@@ -527,6 +530,102 @@ router.post('/impact-reports/generate', asyncHandler(async (req: Request, res: R
   await db.collection(COLLECTIONS.IMPACT_REPORTS).doc(reportId).set(report);
 
   res.status(200).json({ status: 'generated', ...report });
+}));
+
+// ─── POST /api/v1/admin/impact-reports/generate-all ───────────────────────────
+router.post('/impact-reports/generate-all', asyncHandler(async (_req: Request, res: Response) => {
+  const count = await generateAllLeaderboards();
+  res.status(200).json({ status: 'generated', count });
+}));
+
+// ─── POST /api/v1/admin/copilot ───────────────────────────────────────────────
+router.post('/copilot', asyncHandler(async (req: Request, res: Response) => {
+  const { query } = req.body as { query?: string };
+  if (!query) throw new ValidationError('query is required.');
+
+  const db = getFirestore();
+  
+  // Fetch SLA configs for context
+  const slaSnapshot = await db.collection(COLLECTIONS.SLA_CONFIG).get();
+  const slaConfigs = slaSnapshot.docs.map(d => d.data());
+  
+  // Fetch recent impact reports for context
+  const reportsSnapshot = await db.collection(COLLECTIONS.IMPACT_REPORTS).orderBy('generated_at', 'desc').limit(50).get();
+  const impactReports = reportsSnapshot.docs.map(d => d.data());
+
+  const contextStr = JSON.stringify({
+    slaConfigs,
+    impactReports: impactReports.map((r: any) => ({
+      ward: r.ward_or_area_id,
+      score: r.civic_health_score,
+      resolution_rate: r.resolution_rate,
+      avg_hours: r.avg_resolution_hours,
+      total_issues: r.total_issues
+    }))
+  }, null, 2);
+
+  const prompt = `You are CivicMind Copilot, an AI assistant for city administrators. 
+Use the following JSON data about SLA configurations and Ward Impact Reports to answer the admin's query.
+If the query cannot be answered using this data, politely say so. Keep your answer concise and formatting-friendly (markdown allowed).
+
+Context Data:
+${contextStr}
+
+Admin Query:
+"${query}"`;
+
+  const aiKey = process.env.GOOGLE_GENAI_API_KEY;
+  if (!aiKey) {
+    throw new ApiError(500, 'INTERNAL_ERROR', 'Google GenAI API key is missing. Ensure GOOGLE_GENAI_API_KEY is set in your .env');
+  }
+  const client = new GoogleGenAI({ apiKey: aiKey });
+
+  const aiResponse = await generateContentWithRetry(client, {
+    model: process.env['GEMINI_MODEL_TEXT'] || 'gemini-3.1-flash-lite',
+    contents: prompt
+  });
+
+  const answer = aiResponse?.text || 'No response generated.';
+  res.status(200).json({ answer });
+}));
+
+// ─── PATCH /api/v1/admin/forecasts/:forecast_id ─────────────────────────────
+// Toggle is_public_visible for a hotspot forecast (PredictiveReviewScreen)
+router.patch('/forecasts/:forecast_id', asyncHandler(async (req: Request, res: Response) => {
+  const { forecast_id } = req.params;
+  const { is_public_visible } = req.body as { is_public_visible?: boolean };
+
+  if (typeof is_public_visible !== 'boolean') {
+    throw new ValidationError('is_public_visible must be a boolean.');
+  }
+
+  const db = getFirestore();
+  const forecastRef = db.collection(COLLECTIONS.HOTSPOT_FORECASTS).doc(forecast_id);
+  const forecastDoc = await forecastRef.get();
+
+  if (!forecastDoc.exists) {
+    throw new NotFoundError('Forecast');
+  }
+
+  await forecastRef.update({
+    is_public_visible,
+    updated_at: new Date().toISOString(),
+  });
+
+  res.status(200).json({ forecast_id, is_public_visible });
+}));
+
+// ─── GET /api/v1/admin/agent-health-alerts ─────────────────────────────────
+router.get('/agent-health-alerts', asyncHandler(async (_req: Request, res: Response) => {
+  const db = getFirestore();
+  const snapshot = await db.collection('agent_health_alerts')
+    .where('is_active', '==', true)
+    .get();
+
+  const alerts = snapshot.docs.map(d => d.data());
+  alerts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  
+  res.status(200).json({ alerts: alerts.slice(0, 50) });
 }));
 
 export default router;

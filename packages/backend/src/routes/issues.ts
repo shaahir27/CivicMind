@@ -38,6 +38,7 @@ import {
 import { notifyIssueStateChange } from '../services/notificationService.js';
 import { ActorType } from '@civicmind/shared';
 import type { Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
@@ -605,6 +606,89 @@ router.post('/:issue_id/dispute-resolution', requireCitizen as any, validate(dis
     issue_id: issue_id,
     status: IssueStatus.Routed,
   });
+}));
+
+// ─── GET /api/v1/issues/:issue_id/messages ──────────────────────────────────
+router.get('/:issue_id/messages', asyncHandler(async (req: Request, res: Response) => {
+  const { issue_id } = req.params;
+  const db = getFirestore();
+  const snapshot = await db.collection(COLLECTIONS.ISSUES).doc(issue_id).collection('messages').orderBy('created_at', 'asc').get();
+  const messages = snapshot.docs.map(d => d.data());
+  res.status(200).json({ messages });
+}));
+
+// ─── POST /api/v1/issues/:issue_id/messages ─────────────────────────────────
+router.post('/:issue_id/messages', asyncHandler(async (req: Request, res: Response) => {
+  const user = (req as AuthRequest).user;
+  const { issue_id } = req.params;
+  const { body } = req.body;
+
+  if (!body || typeof body !== 'string' || body.trim().length === 0) {
+    throw new ValidationError('Message body is required.');
+  }
+
+  const db = getFirestore();
+  const issueRef = db.collection(COLLECTIONS.ISSUES).doc(issue_id);
+  const issueDoc = await issueRef.get();
+  
+  if (!issueDoc.exists) throw new NotFoundError('Issue');
+
+  const messageId = uuidv4();
+  const message = {
+    message_id: messageId,
+    issue_id,
+    author_type: user.role,
+    author_id: user.uid,
+    body: body.trim(),
+    created_at: new Date().toISOString()
+  };
+
+  await issueRef.collection('messages').doc(messageId).set(message);
+
+  res.status(201).json({ message });
+}));
+
+// ─── POST /api/v1/issues/:issue_id/csat ─────────────────────────────────────
+router.post('/:issue_id/csat', requireCitizen as any, asyncHandler(async (req: Request, res: Response) => {
+  const user = (req as AuthRequest).user;
+  const { issue_id } = req.params;
+  const { rating, comment } = req.body;
+
+  if (rating === undefined || rating < 1 || rating > 5) {
+    throw new ValidationError('rating must be between 1 and 5');
+  }
+
+  const db = getFirestore();
+  const issueDoc = await db.collection(COLLECTIONS.ISSUES).doc(issue_id).get();
+  
+  if (!issueDoc.exists) throw new NotFoundError('Issue');
+  const issue = issueDoc.data() as Issue;
+
+  if (issue.reporter_user_id !== user.uid) {
+    throw new ForbiddenError('Only the reporter can submit a CSAT survey.');
+  }
+
+  if (issue.status !== IssueStatus.VerifiedResolved && issue.status !== IssueStatus.Closed) {
+    throw new ApiError(400, 'INVALID_STATE', 'Issue must be verified_resolved or closed to submit CSAT.');
+  }
+
+  const csatRef = db.collection('csat_responses').doc(issue_id);
+  const csatDoc = await csatRef.get();
+  if (csatDoc.exists) {
+    throw new ApiError(409, 'CONFLICT', 'CSAT already submitted for this issue.');
+  }
+
+  const now = new Date().toISOString();
+  await csatRef.set({
+    csat_id: issue_id,
+    issue_id,
+    citizen_user_id: user.uid,
+    rating,
+    comment: comment || '',
+    created_at: now
+  });
+
+  res.status(201).json({ csat_id: issue_id, success: true });
 }));
 
 export default router;
