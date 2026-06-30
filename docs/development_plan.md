@@ -1,33 +1,37 @@
 # CivicSense — Completed Development History
 
-> This document serves as a historical record of the 5-phase development plan successfully executed to build the CivicSense MVP.
+> This document serves as a historical record of the development sprints successfully executed to build CivicSense.
 
 ---
 
-## Phase 1: Foundation & Scaffold (Completed)
-- **Monorepo Setup:** Configured npm workspaces containing `packages/backend`, `packages/citizen-app`, `packages/authority-portal`, `packages/admin-console`, and `packages/landing-page`.
-- **Firebase Initialization:** Set up Firestore database rules, Cloud Storage buckets, and Authentication integration.
-- **Shared Config:** Created common environment variables and TS configs to ensure typing parity across the stack.
+## Sprint 1: Foundation & Scaffold (Completed)
+- **Monorepo Setup:** Configured npm workspaces.
+- **Firebase Initialization:** Set up Firestore database, Storage, and Auth.
 
-## Phase 2: Agent Orchestrator & Backend (Completed)
+## Sprint 2: Agent Orchestrator & Backend (Completed)
 - **Node.js/Express Setup:** Built the core API gateway.
-- **Gemini SDK Integration:** Successfully integrated `@google/genai` (Gemini 3.1 Flash-Lite) as the central reasoning engine for all 6 agents.
-- **Agent Pipelines Built:**
-  - **Reporter & Router:** Successfully parsing citizen images and routing to mock departments.
-  - **Escalation (Cron):** Node-cron sweeps for SLA breaches.
-  - **Verifier:** Image comparison pipeline built and tested.
+- **Gemini SDK Integration:** Integrated `@google/genai` (Gemini 3.1 Flash-Lite).
+- **Agent Pipelines Built:** Reporter, Router, Escalation, and Verifier.
 
-## Phase 3: Frontend Implementation (Completed)
-- **Citizen App:** Built the mobile PWA with Google Maps and camera integrations.
-- **Authority Portal:** Built the desktop queue, resolution modal, and SLA indicators.
+## Sprint 3: Core Frontend Implementation (Completed)
+- **Citizen App:** Built the mobile PWA with Google Maps.
+- **Authority Portal:** Built the desktop queue and resolution modal.
 - **Admin Console:** Built the oversight logs and user management screens.
-- **Landing Page:** Designed the central bridge to direct traffic and highlight the dual ecosystem.
+- **Landing Page:** Designed the central bridge.
 
-## Phase 4: Integration & E2E Testing (Completed)
-- **E2E Scripts:** Created `packages/backend/src/scripts/e2e-lifecycle-test.ts` to simulate the full journey of a complaint from creation to verification.
-- **Auth Linking:** Connected Firebase Auth across all frontends to ensure secure API requests.
+## Sprint 4: Communications & Oversight (Completed)
+- **WhatsApp Integration:** Built Twilio webhooks for live citizen SMS updates.
+- **Kanban Board:** Replaced the static authority queue with a dynamic Kanban interface.
+- **Transparency Portal:** Built public-facing metrics on the landing page.
+- **CSAT Feedback:** Added a citizen rating system for resolved issues.
 
-## Phase 5: Deployment (Completed)
+## Sprint 5: Proof of Impact Gamification (Completed)
+- **Civic Trust System:** Implemented backend ledgers to track and award Trust points.
+- **Profile Dashboard:** Added a reputation screen to the Citizen App displaying ranks and escalation tokens.
+- **AI Verifier Upgrade:** Linked the Verifier Agent directly to the trust ledger to automate reward distribution.
+- **UI Polish:** Deployed the Earthy Palette and premium typography across all portals.
+
+## Sprint 6: Deployment (Completed)
 - **Google Cloud Run:** Backend containerized via Docker and deployed.
 - **Firebase Hosting:** Configured `firebase.json` for multi-site deployment of the 4 frontend packages.
 - **Production URL Sync:** Synced all CORS headers and environment variables to point to live URLs.

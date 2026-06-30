@@ -1,6 +1,6 @@
 # CivicSense — System Architecture
 
-> This document describes the final, implemented architecture of CivicSense as of the MVP completion.
+> This document describes the final, implemented architecture of CivicSense (Phase 4), including the Gamification and Communications pipelines.
 
 ---
 
@@ -59,11 +59,11 @@ Each agent is implemented as a functional module within the backend:
 | Validator Agent | Synchronous, per-submission | Duplicate detection, community consensus check |
 | Router Agent | Synchronous, per-validated-issue | Department identification |
 | Escalation Agent | Scheduled (Cron), batch | SLA monitoring, auto-escalation |
-| Verifier Agent | Synchronous, per-resolution | Before/after vision comparison |
-| Predictor Agent | Scheduled (Cron), batch | Historical pattern analysis (simplified for MVP) |
+| Verifier Agent | Synchronous, per-resolution | Before/after vision comparison + Civic Trust Points allocation |
+| Predictor Agent | Scheduled (Cron), batch | Historical pattern analysis |
 
 ### 3.3 Scheduling
-- We utilize `node-cron` inside the backend process to run the Escalation Agent sweeps, replacing the need for external Cloud Scheduler in the MVP.
+- We utilize `node-cron` inside the backend process to run the Escalation Agent sweeps.
 
 ---
 
@@ -83,6 +83,7 @@ Each agent is implemented as a functional module within the backend:
 | Google Maps Platform | Geocoding, map rendering | Used by frontends for interactive maps |
 | Firebase Auth | Authentication | Handles Email/Password and Anonymous sign-ins |
 | Firebase Admin SDK | Backend DB access | Secures all database transactions |
+| Twilio Webhook API | Messaging | Handles bidirectional WhatsApp communications for citizens |
 
 ---
 

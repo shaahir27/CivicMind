@@ -20,50 +20,81 @@ Stores all registered entities interacting with the platform.
 - **Fields:**
   - `role` (string): `"citizen" | "authority" | "admin"`
   - `email` (string, optional)
-  - `displayName` (string, optional)
-  - `departmentId` (string, optional): Only present if `role == "authority"`
-  - `createdAt` (timestamp)
+  - `display_name` (string, optional)
+  - `department_id` (string, optional): Only present if `role == "authority"`
+  - `trust_score` (number): Civic Trust points for Gamification (Phase 4)
+  - `available_escalation_tokens` (number): Earned tokens to fast-track issues
+  - `current_tier` (string): Rank badge (e.g. Bronze, Silver, Gold)
+  - `created_at` (timestamp)
 
 ### 2.2 Collection: `issues`
 The core record representing a civic problem.
 
 - **Document ID:** Auto-generated UUID
 - **Fields:**
-  - `reporterId` (string): Maps to `users` UID
-  - `status` (string): `"pending_validation" | "open" | "in_progress" | "resolved" | "rejected"`
+  - `reporter_user_id` (string): Maps to `users` UID
+  - `status` (string): `"pending_validation" | "open" | "in_progress" | "resolved" | "rejected" | "verified_resolved"`
   - `category` (string): Extracted by AI (e.g., "pothole", "graffiti")
   - `severity` (string): Extracted by AI (e.g., "High", "Low")
-  - `location` (GeoPoint): Latitude/Longitude
-  - `address` (string): Reverse-geocoded address
-  - `description` (string): AI-drafted or user-provided
-  - `images` (array of strings): URLs to Cloud Storage (Before photos)
-  - `resolutionImages` (array of strings): URLs to Cloud Storage (After photos)
-  - `assignedDepartment` (string): Set by Router Agent
-  - `escalationLevel` (number): Tracks SLA breaches (0 = initial, 1 = escalated)
-  - `createdAt` (timestamp)
-  - `updatedAt` (timestamp)
-  - `resolvedAt` (timestamp, optional)
-  - `resolutionNotes` (string, optional)
+  - `location_lat` / `location_lng` (number)
+  - `location_address_text` (string)
+  - `description` (string)
+  - `department_id` (string): Set by Router Agent
+  - `assigned_worker_id` (string, optional): Set via Authority Kanban
+  - `sla_deadline` (timestamp)
+  - `escalation_tier_current` (number)
+  - `csat_score` (number, optional): Feedback from citizen post-resolution
+  - `created_at`, `updated_at`, `resolved_at`, `verified_at` (timestamps)
 
-### 2.3 Collection: `departments`
+### 2.3 Collection: `civic_trust_events` (Phase 4)
+Immutable ledger of earned trust points.
+
+- **Document ID:** Auto-generated
+- **Fields:**
+  - `user_id` (string)
+  - `event_type` (string): `"REPORT_VERIFIED" | "RLHF_ASSIST" | "ESCALATION_SPEND"`
+  - `yield_amount` (number): Points granted
+  - `timestamp` (timestamp)
+
+### 2.4 Collection: `field_workers` (Phase 3)
+Contractors and on-ground personnel for assignment.
+
+- **Document ID:** Auto-generated
+- **Fields:**
+  - `department_id` (string)
+  - `display_name` (string)
+  - `skills` (string[])
+  - `is_active` (boolean)
+
+### 2.5 Collection: `csat_responses` (Phase 3)
+Citizen feedback on resolved issues.
+
+- **Document ID:** Auto-generated
+- **Fields:**
+  - `issue_id` (string)
+  - `citizen_user_id` (string)
+  - `rating` (number): 1-5
+  - `comment` (string)
+  - `created_at` (timestamp)
+
+### 2.6 Collection: `departments`
 Mapping for routing and SLA configuration.
 
-- **Document ID:** Department Name (e.g., "dot", "sanitation")
+- **Document ID:** Department ID
 - **Fields:**
-  - `name` (string): Display name
-  - `slaHours` (number): Time allowed before escalation
-  - `escalationContact` (string): Email or ID of higher authority
+  - `name` (string)
+  - `category_scope` (array of strings)
 
-### 2.4 Collection: `logs`
+### 2.7 Collection: `logs` (Agent Logs)
 System oversight and AI debugging.
 
 - **Document ID:** Auto-generated
 - **Fields:**
-  - `agent` (string): e.g., "ReporterAgent", "VerifierAgent"
-  - `action` (string): Summary of event
-  - `issueId` (string, optional)
-  - `payload` (object): JSON dump of inputs/outputs
-  - `timestamp` (timestamp)
+  - `agent_type` (string)
+  - `issue_id` (string, optional)
+  - `input_summary` (string): JSON
+  - `output_summary` (string): JSON
+  - `created_at` (timestamp)
 
 ---
 

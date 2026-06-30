@@ -20,6 +20,7 @@
 **Key Elements:**
 - **Hero:** Dense, slowly rotating 3D particle globe (Deep Teal & Vibrant Orange particles) with a soft glowing core, flanked by floating mockups demonstrating real-time AI capabilities.
 - **The Dual Ecosystem:** Asymmetric layout clearly defining the value for Citizens vs. Authorities.
+- **Transparency Portal:** Real-time data visualization showing system-wide statistics (resolved issues, active workers).
 - **Navigation:** Explicit calls to action ("Citizen Login", "Official Login").
 
 ---
@@ -30,8 +31,8 @@
 **Key Elements:**
 - **Map View:** Google Maps view showing recent issues in the neighborhood.
 - **Camera FAB:** Large floating action button to instantly report a problem.
-- **Upload Flow:** Stripped down to minimize friction. User selects a photo, and the AI handles the rest.
-- **Timeline View:** A clean, vertical timeline showing exactly what stage the issue is in (e.g., "Routed to Sanitation").
+- **Timeline View:** A clean, vertical timeline showing exactly what stage the issue is in (e.g., "Routed to Sanitation") with an embedded Messaging thread for updates.
+- **Profile Dashboard:** A gamified reputation hub displaying the citizen's Civic Trust score, current rank tier (Bronze/Silver/Gold), and recent proof-of-impact activity.
 
 ---
 
@@ -39,9 +40,9 @@
 **Target Audience:** Municipal workers.
 **Form Factor:** Desktop-first dashboard.
 **Key Elements:**
-- **Sidebar Navigation:** Queue, Resolved, Map.
-- **Issue Queue:** Data table with sortable columns (Severity, SLA Time Remaining, Category).
-- **Detail View:** Side-by-side comparison of the citizen's photo and the AI's extracted metadata.
+- **Sidebar Navigation:** Kanban Queue, Resolved, Map.
+- **Kanban Issue Queue:** Visual, drag-and-drop or categorized board for moving issues between states (Open → Assigned → In Progress).
+- **Detail View:** Side-by-side comparison of the citizen's photo and the AI's extracted metadata, including an integrated chat interface for contacting citizens.
 - **Resolution Modal:** Upload prompt for the "after" photo to pass to the Verifier Agent.
 
 ---

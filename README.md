@@ -20,8 +20,11 @@ A citizen reports a civic issue (pothole, broken streetlight, garbage overflow, 
 | **Intelligent Routing** | Auto-identify the correct department and auto-draft a formal complaint |
 | **Autonomous SLA Escalation** | Auto-escalate unaddressed issues to higher authority tiers without citizen follow-up |
 | **Resolution Verification** | Before/after AI vision comparison certifies that "resolved" means actually resolved |
+| **Proof of Impact Gamification** | Citizens earn Civic Trust points and rank up when their reported issues are fixed and AI-verified |
+| **WhatsApp Integration** | Real-time issue tracking and status alerts directly via Twilio WhatsApp API |
+| **Transparency Portal** | Real-time public metrics and leaderboards on city-wide civic health |
 | **Multi-Language Support** | Full AI-generated translation support for 7 Indian languages (English, Tamil, Hindi, Telugu, Malayalam, Bengali, Kannada) |
-| **Authority Dashboard** | A structured, SLA-aware worklist replacing ad hoc complaint handling |
+| **Authority Dashboard** | A structured, Kanban-style SLA-aware worklist replacing ad hoc complaint handling |
 | **Admin Console** | System-wide oversight for AI monitoring and ecosystem health |
 
 ---
@@ -50,6 +53,7 @@ CivicSense is built as a modern TypeScript monorepo using npm workspaces. It con
 | **Database** | Firebase Firestore (NoSQL Document Store) |
 | **Storage (Photos)** | Firebase Cloud Storage |
 | **Authentication** | Firebase Auth (Email/Password, Anonymous) |
+| **Messaging & Notifications** | Twilio API (WhatsApp) |
 | **Job Scheduling** | Node `node-cron` for Escalaration & Predictive sweeps |
 
 ---
@@ -128,4 +132,4 @@ The project is fully configured for production deployment:
 
 ## Documentation
 
-Initial planning and specification documents are located in the `/docs` folder. Note that the live architecture described in this README supersedes the initial MVP specifications found in the `docs` directory, as the system evolved into a more robust monorepo architecture during development.
+Detailed architectural and feature specification documents are located in the `/docs` folder. These have been fully updated to reflect the final production state of the monorepo, including Phase 3 & 4 extensions (Gamification, WhatsApp Integration, Transparency Portal).
