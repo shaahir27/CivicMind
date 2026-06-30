@@ -83,4 +83,5 @@ export const COLLECTIONS = {
   HOTSPOT_FORECASTS:      'hotspot_forecasts',
   IMPACT_REPORTS:         'impact_reports',
   FORECASTS:              'forecasts',
+  CIVIC_TRUST_EVENTS:     'civic_trust_events',
 } as const;

@@ -6,6 +6,7 @@ import { I18nProvider, useI18n, SUPPORTED_LANGUAGES } from './context/I18nContex
 import OnboardingScreen from './screens/OnboardingScreen.js';
 import AuthScreen from './screens/AuthScreen.js';
 import ProfileSetupScreen from './screens/ProfileSetupScreen.js';
+import ProfileScreen from './screens/ProfileScreen.js';
 import HomeScreen from './screens/HomeScreen.js';
 import ReportCaptureScreen from './screens/ReportCaptureScreen.js';
 import ClassificationReviewScreen from './screens/ClassificationReviewScreen.js';
@@ -33,7 +34,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navLinks = [
     { to: '/home', icon: '📋', label: t('reportLogs') },
-    { to: '/my-reports', icon: '👤', label: t('myReports') },
+    { to: '/profile', icon: '👤', label: t('navProfile') || 'Profile' },
   ];
 
   return (
@@ -143,7 +144,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
               </svg>
             </Link>
           </div>
-          <Link to="/my-reports" className={`bottom-nav-item ${location.pathname === '/my-reports' ? 'active' : ''}`}>
+          <Link to="/profile" className={`bottom-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
             <span className="bottom-nav-icon">👤</span>
             <span className="bottom-nav-label">{t('navProfile')}</span>
           </Link>
@@ -164,6 +165,7 @@ export default function App() {
               <Route path="/auth" element={<AuthScreen />} />
               <Route path="/profile-setup" element={<ProfileSetupScreen />} />
               <Route path="/home" element={<HomeScreen />} />
+              <Route path="/profile" element={<ProfileScreen />} />
               <Route path="/my-reports" element={<MyReportsScreen />} />
               
               {/* Report Flow */}

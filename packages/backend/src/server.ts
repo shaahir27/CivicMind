@@ -20,6 +20,7 @@ import channelsRoutes from './routes/channels.js';
 import internalRouter from './routes/internal.js';
 import demoAuthRouter from './routes/demo-auth.js';
 import devRouter from './routes/dev.js';
+import trustRouter from './routes/trust.js';
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.use('/api/v1/map', mapRouter);
 app.use('/api/v1/routing', routingRoutes);
 app.use('/api/v1/channels', channelsRoutes);
 app.use('/api/v1/dev', devRouter);
+app.use('/api/v1/trust', trustRouter);
 
 // Internal routes (scheduler-triggered — never exposed publicly)
 app.use('/internal/v1/agents', internalRouter);
@@ -110,6 +112,12 @@ cron.schedule('0 1 * * *', async () => {
   } catch (err) {
     console.error('[CRON] Agent anomaly monitor failed:', err);
   }
+});
+
+// Phase 4: Sentinel Agent Fraud Monitor (Every 5 mins)
+cron.schedule('*/5 * * * *', async () => {
+  console.log('[CRON] Sentinel Agent: Scanning civic_trust_events for GPS spoofing anomalies...');
+  // Implementation stub for hackathon Phase 4 gamification
 });
 
 // Start server

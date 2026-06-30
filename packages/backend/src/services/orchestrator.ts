@@ -785,6 +785,7 @@ export async function orchestrateAuthorityStatusUpdate({
   // Award bonus hero points for verified_resolved (BR-10.2)
   if (finalStatus === IssueStatus.VerifiedResolved && issue.reporter_user_id) {
     await awardHeroPoints(issue.reporter_user_id, issueId, 'verified_resolved_bonus');
+    await awardCivicTrust(issue.reporter_user_id, issueId, 'REPORT_VERIFIED');
   }
 
   await notifyIssueStateChange({
@@ -855,6 +856,56 @@ async function awardHeroPoints(
   } catch (err) {
     console.error('[Orchestrator] Failed to award hero points:', err);
     // Non-critical: don't let this fail the main pipeline
+  }
+}
+
+// ─── Phase 4 Gamification (PoI Protocol) ──────────────────────────────────────
+
+async function awardCivicTrust(
+  userId: string,
+  issueId: string,
+  reason: 'REPORT_VERIFIED' | 'RLHF_ASSIST'
+): Promise<void> {
+  const db = getFirestore();
+  // DCY placeholder: Default to 50 for a verified report
+  const yield_amount = reason === 'REPORT_VERIFIED' ? 50 : 10;
+  const now = new Date().toISOString();
+
+  try {
+    const existingSnapshot = await db
+      .collection(COLLECTIONS.CIVIC_TRUST_EVENTS)
+      .where('idempotency_key', '==', `trust_${issueId}_${reason}`)
+      .limit(1)
+      .get();
+
+    if (!existingSnapshot.empty) return; // Already awarded
+
+    const batch = db.batch();
+    const eventRef = db.collection(COLLECTIONS.CIVIC_TRUST_EVENTS).doc();
+
+    batch.set(eventRef, {
+      event_id: eventRef.id,
+      user_id: userId,
+      event_type: reason,
+      yield_amount,
+      geohash: 'global',
+      timestamp: now,
+      idempotency_key: `trust_${issueId}_${reason}`,
+    });
+
+    const userRef = db.collection(COLLECTIONS.USERS).doc(userId);
+    const userDoc = await userRef.get();
+    const currentScore = userDoc.data()?.['trust_score'] as number || 0;
+    
+    batch.update(userRef, {
+      trust_score: currentScore + yield_amount,
+      current_tier: currentScore + yield_amount >= 500 ? 'Active Citizen' : 'Observer',
+      updated_at: now,
+    });
+
+    await batch.commit();
+  } catch (err) {
+    console.error('[Orchestrator] Failed to award civic trust:', err);
   }
 }
 

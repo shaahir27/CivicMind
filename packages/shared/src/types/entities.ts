@@ -33,6 +33,21 @@ export interface User {
   preferred_language: string;
   created_at: string; // ISO8601 UTC
   updated_at: string;
+  
+  // Phase 4: Proof of Impact Gamification
+  trust_score?: number;
+  available_escalation_tokens?: number;
+  current_tier?: string;
+}
+
+export interface CivicTrustEvent {
+  event_id: string;
+  user_id: string;
+  event_type: 'REPORT_VERIFIED' | 'RLHF_ASSIST' | 'ESCALATION_SPEND';
+  yield_amount: number;
+  geohash: string;
+  timestamp: string;
+  idempotency_key: string;
 }
 
 // ─── 2.2 Department ──────────────────────────────────────────────────────────
