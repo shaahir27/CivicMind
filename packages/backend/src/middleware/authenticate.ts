@@ -49,8 +49,8 @@ export async function authenticate(
 
   const token = authHeader.slice(7); // strip 'Bearer '
 
-  // Demo bypass for local e2e testing
-  if (process.env.NODE_ENV !== 'production' && token.startsWith('demo-')) {
+  // Demo bypass for local e2e testing & hackathon jury demos
+  if (token.startsWith('demo-')) {
     const roleString = token.split('-')[1] as UserRole;
     if (roleString === UserRole.Citizen) {
       (req as AuthRequest).user = { uid: 'CITIZEN_DEMO_UID', role: UserRole.Citizen, isGuest: false };
