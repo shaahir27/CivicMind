@@ -279,8 +279,38 @@ export default function IssueDetailScreen() {
               )}
             </div>
             <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: '8px' }}>
-              <input type="text" className="input-field" placeholder="Send an update to the citizen..." value={newMessage} onChange={e => setNewMessage(e.target.value)} style={{ flexGrow: 1 }} />
-              <button type="submit" className="btn-primary" disabled={!newMessage.trim()}>Send</button>
+              <input 
+                type="text" 
+                placeholder="Send an update to the citizen..." 
+                value={newMessage} 
+                onChange={e => setNewMessage(e.target.value)} 
+                style={{ 
+                  flexGrow: 1, 
+                  padding: '14px 16px', 
+                  borderRadius: '12px', 
+                  border: '1px solid var(--color-border)', 
+                  fontSize: '14px', 
+                  outline: 'none', 
+                  background: '#f8fafc',
+                  color: 'var(--color-text-primary)'
+                }} 
+              />
+              <button 
+                type="submit" 
+                disabled={!newMessage.trim()} 
+                style={{ 
+                  padding: '0 24px', 
+                  borderRadius: '12px', 
+                  border: 'none', 
+                  background: newMessage.trim() ? 'var(--color-brand-600)' : '#e2e8f0', 
+                  color: newMessage.trim() ? 'white' : '#94a3b8', 
+                  fontWeight: 600, 
+                  cursor: newMessage.trim() ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.2s'
+                }}
+              >
+                Send
+              </button>
             </form>
           </div>
         </div>

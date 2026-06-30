@@ -414,8 +414,8 @@ export default function ReportCaptureScreen() {
           </div>
 
           {error && (
-            <div style={{ background: 'rgba(239,68,68,0.15)', borderRadius: '10px', padding: '10px 14px', border: '1px solid rgba(239,68,68,0.3)' }}>
-              <span style={{ color: '#fca5a5', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>{error}</span>
+            <div style={{ background: '#fef2f2', borderRadius: '10px', padding: '10px 14px', border: '1px solid #f87171' }}>
+              <span style={{ color: '#991b1b', fontSize: '13px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>{error}</span>
             </div>
           )}
 
@@ -603,8 +603,8 @@ export default function ReportCaptureScreen() {
       )}
 
       {error && (
-        <div style={{ background: 'rgba(239,68,68,0.15)', borderRadius: '10px', padding: '10px 14px', width: '100%', maxWidth: '380px', border: '1px solid rgba(239,68,68,0.3)' }}>
-          <span style={{ color: '#fca5a5', fontSize: '13px', fontFamily: 'var(--font-sans)' }}>{error}</span>
+        <div style={{ background: '#fef2f2', borderRadius: '10px', padding: '12px 16px', width: '100%', maxWidth: '380px', border: '1px solid #f87171' }}>
+          <span style={{ color: '#991b1b', fontSize: '14px', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>{error}</span>
         </div>
       )}
 
